@@ -74,9 +74,19 @@ No generated text. Any sign, screen, label, or status content will be rendered
 by Rust.
 
 Post-processing target:
-Run `tools/remove_chroma_and_validate.py`, crop transparent bounds, quantize
-towards the master palette, record anchor and bounds, then pack into the prop
-atlas if approved.
+Run `tools/remove_chroma_and_validate.py` with deterministic flags:
+python tools/remove_chroma_and_validate.py \
+  --input <source.png> \
+  --out <output.png> \
+  --auto-key border \
+  --soft-matte \
+  --transparent-threshold 12 \
+  --opaque-threshold 220 \
+  --despill \
+  --edge-contract 0
+Retry once with `--edge-contract 1` only if a thin fringe remains. Then crop
+transparent bounds, quantize towards the master palette, record anchor and
+bounds, and pack into the prop atlas if approved.
 
 Acceptance checks:
 Uniform chroma-key background; clean prop separation; no key-colour fringe;

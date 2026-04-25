@@ -91,6 +91,8 @@ reference images. Generated sources may contain richer colour, but approved
 runtime assets should be quantized or remapped towards the master palette unless
 a manifest records an exception.
 
+Caption: Palette — primary colour palette.
+
 | Name | Hex | Primary use |
 | --- | --- | --- |
 | Near black | `#07101B` | Deep outlines, recesses, and contrast anchors |
@@ -119,6 +121,8 @@ The approved roster contains eight agents. The first runtime slice may focus on
 Ava, Byte, Lex, and Sage, but the art bible records the full cast because the
 mockup already establishes their silhouettes, roles, and accessory language.
 
+Caption: Character roster — approved agent identity anchors.
+
 | Agent | Role | Silhouette and identity anchors | Role props | Accent colours |
 | --- | --- | --- | --- | --- |
 | Ava | Research specialist | Auburn hair, practical apron or waistcoat, thoughtful posture | Clipboard, laptop, mug, notebook | Warm amber, cream, moss green |
@@ -130,6 +134,26 @@ mockup already establishes their silhouettes, roles, and accessory language.
 | Ember | Community liaison | Red hair, open stance, energetic expression, casual workwear | Megaphone, heart badge, mug | Ember red, warm amber, cream |
 | Echo | Support assistant | Small hovering robot body, wing-like side shapes, cyan face display | Halo ring, cube, support beacon | Screen cyan, candle glow, brass |
 
+## Character cleanup notes
+
+Runtime character sprites must be cleaned into fixed bounds, shared scale,
+stable anchors, and palette fit before promotion. Each checklist row is
+auditable: `Owner` names who accepts cleanup, `Date` records the review date,
+and `Status` records whether the character is approved, pending, or blocked.
+
+Caption: Character cleanup — sprite cleanup contract and audit status.
+
+| Agent | Decision | Cleanup actions | Runtime sprite requirements | Owner | Date | Status |
+| --- | --- | --- | --- | --- | --- | --- |
+| Ava | Requires redraw/cleanup | Redraw hair silhouette into fewer readable clusters; simplify clipboard and mug overlap; keep auburn accent clear at 1x. | Fixed bounds; shared human scale; stable seated and standing anchors; palette fit against amber light. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Byte | Requires redraw/cleanup | Convert robot shoulders, elbows, wrists, hips, and feet to fixed pivots; simplify shell seams; preserve cyan face rectangle. | Fixed bounds; shared robot scale; stable foot and hover anchors; palette fit for white shell and cyan glow. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Lex | Requires redraw/cleanup | Simplify jacket folds and tablet or mug details; separate dark hair from navy background; remove overlapping small props. | Fixed bounds; shared human scale; stable seated and standing anchors; palette fit for slate and cyan accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Sage | Requires redraw/cleanup | Fix face glow into a stable two-eye mask; simplify hood edge; separate book, quill, and sleeve shapes. | Fixed bounds; shared robed scale; stable cloak-base anchor; palette fit for brown robe and cyan glow. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Nova | Requires redraw/cleanup | Simplify headset and wrench details; separate dark outfit from background; remove overlapping tool clutter. | Fixed bounds; shared mascot scale; stable standing anchor; palette fit for slate, cyan, and ember accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Patch | Requires redraw/cleanup | Simplify goggles and circuit-board chips; reduce small tool marks; keep cap and vest silhouette readable. | Fixed bounds; shared mascot scale; stable standing anchor; palette fit for moss, brass, and amber accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Ember | Requires redraw/cleanup | Redraw hair silhouette into fewer clusters; simplify megaphone and heart badge; keep arm and mug shapes separated. | Fixed bounds; shared human scale; stable standing anchor; palette fit for ember, amber, and cream accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Echo | Requires redraw/cleanup | Convert hover body and wing shapes to fixed pivots; simplify halo and cube props; preserve cyan display expression. | Fixed bounds; shared small-robot scale; stable hover anchor; palette fit for cyan and candle-glow accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+
 Character sheets must capture a full-body pose, seated or working pose,
 expression chips, accessory callouts, and identity notes. Runtime sprites must
 then be cleaned into fixed bounds, shared scale, stable anchors, and palette
@@ -139,6 +163,8 @@ fit.
 
 The coffee shop is the initial runtime environment. Other locations are design
 targets for later slices and should keep the same material discipline.
+
+Caption: Environments — location mood, function, zones, and lighting.
 
 | Environment | Mood | Function | Signature zones | Lighting |
 | --- | --- | --- | --- | --- |
@@ -183,6 +209,8 @@ image-derived, but the content is rendered by Rust.
 ## UI component families
 
 The mockups establish a coherent set of panel families:
+
+Caption: UI component families — visual treatment and runtime ownership.
 
 | Family | Visual treatment | Runtime rule |
 | --- | --- | --- |

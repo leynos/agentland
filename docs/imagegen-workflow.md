@@ -9,7 +9,7 @@ and renderer code are the deterministic product surface.
 
 The approved mockups under `ref/` are the current visual source of truth. Do
 not call `image_gen` for this branch unless a later task explicitly asks for
-generation or a small exploratory image is necessary and documented.
+generation.
 
 PixelLab Model Context Protocol (MCP) is out of scope. Do not configure
 PixelLab MCP, PixelLab job IDs, PixelLab character IDs, PixelLab tileset
@@ -244,9 +244,22 @@ If a thin fringe remains, retry once with `--edge-contract 1`.
 
 Ask before using true native transparency for hair, fur, smoke, glass, liquids,
 translucent materials, reflective product grounding, soft shadows, or failed
-chroma-key validation. Native transparency requires the CLI fallback with
-`gpt-image-1.5` because GPT Images 2 does not support
-`background=transparent`.
+chroma-key validation. Native transparent backgrounds were verified against the
+official OpenAI image-generation guide and Images API reference on 2026-04-25.
+The guide page was last modified on 2026-04-25 06:30:12 GMT, and the Images API
+reference page was last modified on 2026-04-25 06:50:08 GMT.
+
+`gpt-image-2` does not currently support `background: "transparent"`. Its
+documented `background` values are `opaque` and `auto`, and the Image API
+returns `png` by default while also allowing `jpeg` and `webp`. The previous
+GPT Image models `gpt-image-1.5`, `gpt-image-1`, and `gpt-image-1-mini` support
+`background` values `transparent`, `opaque`, and `auto`. When `background` is
+`transparent`, `output_format` must be `png` or `webp`.
+
+Official sources:
+
+- [OpenAI image-generation guide](https://developers.openai.com/api/docs/guides/image-generation)
+- [OpenAI Images API reference](https://developers.openai.com/api/reference/resources/images)
 
 ## User-interface ornament workflow
 
