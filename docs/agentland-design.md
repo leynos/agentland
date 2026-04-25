@@ -4,7 +4,10 @@
 
 Build a desktop mockup of an AI agent team management tool rendered as a richly lit pixel-art workplace. The core fantasy is a cosy hipster coffee shop where software agents collaborate at laptops, terminals, books, coffee cups, shelves, lamps, and status panels. The output should feel like a tiny JRPG management sim fused with a production dashboard: warm, readable, characterful, and disciplined.
 
-This version updates the earlier PixelLab MCP plan for Codex's built-in GPT Images 2 image generation skill. The new pipeline treats GPT Images 2 as a development-time raster asset and reference generator, while Rust `pixels` remains the deterministic runtime compositor.
+This version updates the earlier PixelLab Model Context Protocol (MCP) plan for
+Codex's built-in GPT Images 2 image generation skill. The new pipeline treats
+GPT Images 2 as a development-time raster asset and reference generator, while
+Rust `pixels` remains the deterministic runtime compositor.
 
 The intended result is a hybrid system:
 
@@ -27,7 +30,7 @@ Use this mental model instead:
 | Asset persistence | Store job IDs immediately | Move or copy selected outputs into the repo, then record prompt, source path, workspace path, edit history, and validation |
 | Transparent assets | Tool-specific alpha support depended on PixelLab output | Built-in first: flat chroma-key background plus local removal helper. Ask before CLI fallback for true native transparency |
 | Character consistency | Locked PixelLab parameters plus character IDs | Reference sheets, repeated anchor details, labelled input images, and strict preservation prompts. No sprite identity is truly seed-locked |
-| Animations | Queue PixelLab animations | Treat GPT Images 2 sheets as concept or source art. Build final animation deterministically or crop approved frames with manual QA |
+| Animations | Queue PixelLab animations | Treat GPT Images 2 sheets as concept or source art. Build final animation deterministically or crop approved frames with manual quality assurance (QA) |
 | Batch assets | PixelLab jobs per asset | One built-in image generation call per distinct asset or variant unless the user explicitly selects CLI batch fallback |
 | UI panels | Could use generated ornament pieces | Generate references only, then build final UI widgets algorithmically |
 
@@ -97,7 +100,7 @@ Subject:
 Style/medium:
 Composition/framing:
 Lighting/mood:
-Color palette:
+Colour palette:
 Materials/textures:
 Text (verbatim): ""
 Constraints:
@@ -270,7 +273,7 @@ Subject: same Ava identity across all poses; auburn hair, white shirt, dark apro
 Style/medium: crisp cosy pixel-art reference sheet for a game UI
 Composition/framing: full-body front pose, three small expression portraits, two accessory callouts, simple dark navy background, brass frame
 Lighting/mood: warm amber rim light, subtle cyan screen glow
-Color palette: coffee brown, brass gold, cream, warm amber, moss green accents
+Colour palette: coffee brown, brass gold, cream, warm amber, moss green accents
 Constraints: preserve one consistent character identity across the sheet; no extra text except labels requested; no watermark
 Avoid: photorealism, blurry painterly edges, excessive tiny detail, inconsistent costumes
 ```
@@ -299,7 +302,7 @@ Subject: four AI agents working in clearly separated zones: briefing desk, espre
 Style/medium: richly detailed crisp pixel-art environment sheet, game art bible presentation
 Composition/framing: 3/4 isometric cutaway, readable zones, small callout labels, generous dark navy border
 Lighting/mood: warm amber pendant lamps, subtle cyan screen glows, darker corners, bright focal work area
-Color palette: deep navy, coffee brown, walnut, brass, cream, warm amber, moss green, screen cyan
+Colour palette: deep navy, coffee brown, walnut, brass, cream, warm amber, moss green, screen cyan
 Materials/textures: brick, reclaimed wood, brass trim, ceramic mugs, glass jars, paper notes, leafy plants
 Text (verbatim): "Hipster Coffee Shop", "Briefing Desk", "Espresso Bar", "Collab Tables", "Lounge Corner"
 Constraints: text must be readable; no watermark; no extra location labels; no photorealism
@@ -355,7 +358,7 @@ Subject: brass-and-steel espresso machine with small cups, dark wood base, warm 
 Style/medium: crisp pixel-art prop, no scene background
 Composition/framing: centred object with generous padding, straight-on slight 3/4 view
 Lighting/mood: warm amber highlights on metal, no cast shadow
-Color palette: brass gold, steel grey, walnut brown, cream highlights; do not use #00ff00 in the subject
+Colour palette: brass gold, steel grey, walnut brown, cream highlights; do not use #00ff00 in the subject
 Constraints: background must be one uniform colour with no shadows, gradients, texture, reflections, floor plane, or lighting variation; crisp silhouette; no halos; no watermark; no text
 Avoid: green reflections, transparent glass complexity, smoke, steam, fur, soft shadows
 ```
@@ -812,4 +815,5 @@ The strongest route is a hybrid pipeline:
 - Rust `pixels` for fixed-resolution composition, input, text, widgets, and lighting
 - Codex CLI as the single orchestrator, with subagents for planning and review rather than chaotic parallel writing
 
-That gives you a practical creative furnace without surrendering the runtime to stochastic soup.
+That yields a practical creative furnace without surrendering the runtime to
+stochastic soup.

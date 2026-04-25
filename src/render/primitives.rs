@@ -1,7 +1,6 @@
 //! Placeholder dashboard drawing for the first Agentland runtime slice.
 
 use crate::{
-    config::{VIRTUAL_HEIGHT_USIZE, VIRTUAL_WIDTH_USIZE},
     layout::{DashboardLayout, Rect},
     render::frame::{Color, FrameBuffer},
 };
@@ -19,14 +18,21 @@ pub(crate) fn render_placeholder_dashboard(frame: &mut [u8], width: usize, heigh
 }
 
 fn draw_backplate(framebuffer: &mut FrameBuffer<'_>, bounds: Rect) {
+    let stripe_height = bounds.height().min(2);
+
     framebuffer.fill_rect(bounds, PALETTE.deep_navy);
-    framebuffer.fill_rect(Rect::new(0, 0, VIRTUAL_WIDTH_USIZE, 2), PALETTE.brass);
+    framebuffer.fill_rect(
+        Rect::new(bounds.x(), bounds.y(), bounds.width(), stripe_height),
+        PALETTE.brass,
+    );
     framebuffer.fill_rect(
         Rect::new(
-            0,
-            VIRTUAL_HEIGHT_USIZE.saturating_sub(2),
-            VIRTUAL_WIDTH_USIZE,
-            2,
+            bounds.x(),
+            bounds
+                .y()
+                .saturating_add(bounds.height().saturating_sub(stripe_height)),
+            bounds.width(),
+            stripe_height,
         ),
         PALETTE.coffee_brown,
     );

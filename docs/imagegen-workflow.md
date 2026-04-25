@@ -7,9 +7,9 @@ development-time raster images. Generated images are references, source art, or
 validated cutout sources. Rust, local scripts, manifests, atlases, palettes,
 and renderer code are the deterministic product surface.
 
-PixelLab MCP is out of scope. Do not configure PixelLab MCP, PixelLab job IDs,
-PixelLab character IDs, PixelLab tileset generation, or PixelLab animation
-assumptions for this repository.
+PixelLab Model Context Protocol (MCP) is out of scope. Do not configure
+PixelLab MCP, PixelLab job IDs, PixelLab character IDs, PixelLab tileset
+generation, or PixelLab animation assumptions for this repository.
 
 The image-generation CLI is out of scope unless the user explicitly asks for
 CLI, application programming interface (API), or model controls, or explicitly
@@ -42,7 +42,7 @@ Subject:
 Style/medium:
 Composition/framing:
 Lighting/mood:
-Color palette:
+Colour palette:
 Materials/textures:
 Text (verbatim): ""
 Constraints:

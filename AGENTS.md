@@ -103,9 +103,9 @@ architecture for its own entertainment; the repo is not a hat rack for ghosts.
 Use Codex's built-in `image_gen` tool by default for raster image generation
 and editing.
 
-Do not configure or use PixelLab MCP for this repository. Do not create
-one-off SDK runners for image generation. Do not ask for `OPENAI_API_KEY` when
-using the built-in tool.
+Do not configure or use PixelLab Model Context Protocol (MCP) for this
+repository. Do not create one-off SDK runners for image generation. Do not ask
+for `OPENAI_API_KEY` when using the built-in tool.
 
 Use CLI fallback only when the user explicitly asks for CLI/API/model controls,
 or after the user explicitly confirms a true native transparency fallback. If
@@ -143,7 +143,7 @@ Subject:
 Style/medium:
 Composition/framing:
 Lighting/mood:
-Color palette:
+Colour palette:
 Materials/textures:
 Text (verbatim): ""
 Constraints:

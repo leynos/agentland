@@ -16,9 +16,14 @@ Use the prompts sequentially. Each one assumes the prior one has already complet
 ## Prompt 01 - Bootstrap the repo
 
 ```text
-You are working in a new repository for a pixel-art desktop mockup of an AI agent team management tool set inside a hipster coffee shop with warm amber JRPG-style lighting.
+Work in a new repository for a pixel-art desktop mockup of an AI agent team
+management tool set inside a hipster coffee shop with warm amber JRPG-style
+lighting.
 
-Use Codex's built-in image generation skill as the default image authoring path. Do not configure or use PixelLab MCP. Do not use the image-generation CLI unless I explicitly ask for CLI/API/model controls, or I explicitly confirm a true native transparency fallback.
+Use Codex's built-in image generation skill as the default image authoring path.
+Do not configure or use PixelLab Model Context Protocol (MCP). Do not use the
+image-generation CLI unless explicit CLI/API/model controls are requested, or a
+true native transparency fallback is explicitly confirmed.
 
 Assume the target renderer is Rust with the `pixels` crate plus `winit`.
 
@@ -49,7 +54,8 @@ Do not generate final art yet. This task is about structure, manifests, prompt s
 ## Prompt 02 - Build the art bible from the approved mockup
 
 ```text
-We already have an approved reference mockup for the interface. I want you to turn it into an implementation-grade art bible for the repository.
+An approved reference mockup for the interface already exists; convert it into
+an implementation-grade art bible for the repository.
 
 Use the mockup as the visual source of truth. Do not call `image_gen` yet unless a tiny exploratory image is absolutely necessary.
 
@@ -81,7 +87,10 @@ Also create prompt template files under `prompts/templates/` for:
 - edit/invariant prompts
 - transparent chroma-key prompts
 
-Keep prompt language concrete. Prefer visual facts over vague praise. Do not write prompts containing words such as "stunning", "epic", "masterpiece", or "insane detail" unless you replace them with visible materials, lighting, composition, or typography.
+Keep prompt language concrete. Prefer visual facts over vague praise. Do not
+write prompts containing words such as "stunning", "epic", "masterpiece", or
+"insane detail" unless they are replaced with visible materials, lighting,
+composition, or typography.
 ```
 
 ---
@@ -102,7 +111,7 @@ Subject:
 Style/medium:
 Composition/framing:
 Lighting/mood:
-Color palette:
+Colour palette:
 Materials/textures:
 Text (verbatim): ""
 Constraints:
@@ -381,7 +390,10 @@ Tasks:
 - keep all dimensions on a coherent spacing grid
 - render important application text at runtime, not in generated images
 
-If useful, generate one additional built-in `image_gen` UI ornament reference to clarify the trim language, then convert it into deterministic reusable pieces with `tools/crop_nineslice.py`. If you generate it, record the prompt, copy the output into the workspace, and create a manifest immediately.
+If useful, generate one additional built-in `image_gen` UI ornament reference to
+clarify the trim language, then convert it into deterministic reusable pieces
+with `tools/crop_nineslice.py`. When generated, record the prompt, copy the
+output into the workspace, and create a manifest immediately.
 
 The runtime should own the final assembly:
 - no hard-coded one-off panel bitmaps unless a manifest explicitly justifies them
@@ -522,9 +534,11 @@ Also create:
 Use this as the system prompt for any local text model or Codex-authored conversion step that turns structured character options into a GPT Images 2 prompt. It is not a runtime image-generation call.
 
 ```text
-You generate concise, implementation-safe GPT Images 2 prompts for a pixel-art dashboard asset pipeline.
+Generate concise, implementation-safe GPT Images 2 prompts for a pixel-art dashboard asset pipeline.
 
-Your job is to transform structured UI inputs plus an optional house-style brief into strict JSON that maps cleanly onto the repository's shared image-generation prompt schema.
+The job is to transform structured UI inputs plus an optional house-style brief
+into strict JSON that maps cleanly onto the repository's shared
+image-generation prompt schema.
 
 Requirements:
 - Output JSON only.
@@ -611,9 +625,11 @@ Return strict JSON matching the required schema. Do not generate prose.
 Use this only after the repo already has manifests, scripts, prompt templates, and a working runtime.
 
 ```text
-I want a concentrated end-to-end feature pass.
+A concentrated end-to-end feature pass is required.
 
-Use Codex's built-in `image_gen` tool for image creation and editing by default. Do not use CLI fallback unless I explicitly request it or explicitly confirm a true native transparency fallback.
+Use Codex's built-in `image_gen` tool for image creation and editing by
+default. Do not use CLI fallback unless explicitly requested or a true native
+transparency fallback is explicitly confirmed.
 
 Spawn subagents only for read-heavy analysis and review; keep actual code writing mostly in one thread.
 
@@ -660,7 +676,7 @@ Subject: red-haired analyst with a thoughtful expression, dark apron over cream 
 Style/medium: richly detailed pixel art matching the warm coffee-shop dashboard world
 Composition/framing: clean sheet with standing view, seated typing pose, 4 expression chips, and 3 accessory callouts; generous spacing; no labels inside the sprite poses
 Lighting/mood: warm amber rim light with subtle cyan laptop glow
-Color palette: auburn hair, cream shirt, deep navy apron, brass accents, moss-green research icon accent
+Colour palette: auburn hair, cream shirt, deep navy apron, brass accents, moss-green research icon accent
 Materials/textures: cloth, leather notebook, ceramic mug, soft pixel dithering
 Text (verbatim): "Ava" only once as a sheet title
 Constraints: preserve house style; title must be readable; no watermark; no real logos; no extra characters
@@ -694,7 +710,7 @@ Subject: four clearly labelled work zones: briefing desk, espresso bar, collabor
 Style/medium: richly detailed pixel art, game environment concept sheet, crisp isometric perspective
 Composition/framing: single isometric room diorama with small callout labels around the edges and clear empty margins
 Lighting/mood: warm amber pendant pools, deep navy shadows, cyan screen glow on desks
-Color palette: coffee browns, walnut wood, brass gold, deep navy, cream highlights, moss green plants
+Colour palette: coffee browns, walnut wood, brass gold, deep navy, cream highlights, moss green plants
 Materials/textures: brick, wood grain, brass trim, ceramic cups, paper notes, glass jars
 Text (verbatim): "Briefing Desk", "Espresso Bar", "Collab Table", "Lounge Corner"
 Constraints: labels must be readable; no watermark; no real logos; no modern office sterility
@@ -712,7 +728,7 @@ Subject: single brass corner ornament, 32 px game UI scale, symmetrical carved d
 Style/medium: pixel-art game UI ornament, dark outline, restrained highlights
 Composition/framing: centred object with generous padding, no cast shadow, no floor plane
 Lighting/mood: soft warm highlight from upper left
-Color palette: brass gold, warm brown shadow, cream highlight; do not use #00ff00 in the subject
+Colour palette: brass gold, warm brown shadow, cream highlight; do not use #00ff00 in the subject
 Materials/textures: aged brass, tiny pixel bevels, subtle patina
 Text (verbatim): ""
 Constraints: background must be one uniform colour with no gradients, texture, reflections, or lighting variation; crisp edges; no watermark
@@ -730,7 +746,7 @@ Subject: outer frame corners, tab trim, status pill trim, small divider ornament
 Style/medium: pixel-art UI kit reference, ornate but readable, inspired by cosy café materials
 Composition/framing: organised reference sheet with separated components and generous spacing
 Lighting/mood: warm brass highlights, deep recessed navy panels, subtle enamel sheen
-Color palette: deep navy, slate blue, brass gold, walnut brown, cream highlights
+Colour palette: deep navy, slate blue, brass gold, walnut brown, cream highlights
 Materials/textures: brass, dark enamel, carved wood, parchment label strips
 Text (verbatim): "UI Ornament Reference" only once as title
 Constraints: no watermark; no real logos; title readable; components separated for later slicing
