@@ -19,22 +19,16 @@ The image-generation CLI is out of scope unless the user explicitly asks for
 CLI, application programming interface (API), or model controls, or explicitly
 confirms a true native transparency fallback.
 
-## Asset buckets
+## Asset classification
 
-Every generated-image request must declare one bucket before generation:
+Every generated-image request must declare one canonical asset bucket before
+generation. `docs/asset-spec.md` is the source of truth for bucket numbers,
+manifest string values, and allowed `intent_class` values.
 
-- **Bucket 1 - direct generated reference:** use built-in `image_gen`, inspect
-  the result, persist accepted output, and keep it as a reference, concept, or
-  style-book artefact.
-- **Bucket 2 - generated source converted to runtime pieces:** use built-in
-  `image_gen` for source art, then clean, slice, crop, quantize, atlas-pack, or
-  redraw into deterministic reusable assets.
-- **Bucket 3 - algorithmic asset:** create with scripts, Rust code, or checked
-  metadata. Generated images may inspire the look but are not a dependency.
-
-Bucket 1 outputs are not loaded by the runtime unless a manifest explicitly
-approves a narrow non-critical use. Bucket 2 outputs are not runtime assets
-until the full local promotion checks pass. Bucket 3 is the runtime contract.
+Use Bucket 1 for reference-only generated outputs, Bucket 2 for generated
+sources that need deterministic conversion, and Bucket 3 for script, metadata,
+or Rust-owned assets. Manifests must use the canonical string values from the
+asset specification rather than the numeric shorthand.
 
 ## Prompt schema
 
@@ -75,7 +69,8 @@ forms.
 
 Runtime fit:
 Designed as source or reference art for a 512x288 fixed-virtual-resolution Rust
-`pixels` renderer. Final runtime UI will be assembled deterministically.
+`pixels` renderer. Final runtime user interface (UI) will be assembled
+deterministically.
 ```
 
 Use these fields concretely:
@@ -84,7 +79,8 @@ Use these fields concretely:
   manifest.
 - `Focal priority` should say what must read first, second, and third.
 - `Layer intent` should state whether the image is environment, character,
-  prop, UI ornament, light source reference, or presentation-only page.
+  prop, user interface (UI) ornament, light source reference, or
+  presentation-only page.
 - `Lighting zones` should name lamp pools, screen glows, rim highlights, shadow
   pockets, and areas that must stay readable at 1x.
 - `Runtime text policy` should normally say that critical copy is rendered by
@@ -134,7 +130,7 @@ lighting, composition, typography, or texture facts.
 4. Inspect the output for subject, style, composition, text accuracy,
    avoid-list compliance, preservation invariants, and bucket fit.
 5. Decompose accepted outputs into layers, focal order, reusable ornaments,
-   deterministic UI obligations, and asset candidates.
+   deterministic user-interface obligations, and asset candidates.
 6. Copy or move accepted project-bound output into
    `assets/source/gpt-images-2/<family>/`.
 7. Save it with a stable, descriptive, non-destructive filename.
@@ -164,7 +160,8 @@ When generated text is required, use:
 Text (verbatim): "AI Agent Dashboard"
 Typography: large cream pixel-serif title, centred at the top, high contrast.
 Runtime text policy:
-Reference-page title only. Do not use this text as runtime UI copy.
+Reference-page title only. Do not use this text as runtime user-interface
+copy.
 Constraints:
 Render the text exactly once; no extra words; no duplicate text; no watermark.
 ```
@@ -251,11 +248,12 @@ chroma-key validation. Native transparency requires the CLI fallback with
 `gpt-image-1.5` because GPT Images 2 does not support
 `background=transparent`.
 
-## UI ornament workflow
+## User-interface ornament workflow
 
-Generated UI ornament references may define corner caps, dividers, plaques,
-badges, swatch frames, callout tags, and trim texture. They must not define
-runtime text, state, layout, hit areas, chart values, or responsive behaviour.
+Generated user-interface (UI) ornament references may define corner caps,
+dividers, plaques, badges, swatch frames, callout tags, and trim texture. They
+must not define runtime text, state, layout, hit areas, chart values, or
+responsive behaviour.
 
 Runtime panels should be built from deterministic geometry, nine-slice metrics,
 or approved processed ornament sprites. Any image-derived ornament needs slice
@@ -267,7 +265,7 @@ Every accepted project-bound built-in `image_gen` output needs a manifest.
 At minimum, the manifest records:
 
 - asset ID and family;
-- bucket and runtime intent;
+- canonical `bucket`, `intent_class`, and runtime intent;
 - status;
 - tool mode `codex_builtin_image_gen`;
 - model family `gpt-images-2`;
@@ -281,9 +279,10 @@ At minimum, the manifest records:
 - validation notes;
 - runtime use, layer, consumer, and text policy.
 
-The manifest must make it clear whether the output is `reference only`,
-`sliceable source`, `ornament source`, `runtime processed`, `lightmask source`,
-or `layout reference`.
+The manifest must use the canonical `bucket` and `intent_class` values from
+`docs/asset-spec.md`. `tools/check_manifests.py` validates those fields
+together with the required `asset_contract`, `files.validation_report_path`,
+and `postprocess.nine_slice` keys.
 
 ## Validation
 

@@ -8,11 +8,13 @@ Asset type:
 Pixel-art prop cutout source.
 
 Bucket:
-2 - generated source converted to deterministic reusable pieces.
+Bucket 2, using manifest value `generated-source-converted`. Use
+`docs/asset-spec.md` as the canonical bucket source.
 
 Primary request:
 Create one isolated [prop name] for the Agentland coffee-shop dashboard.
-The prop is a [role prop / zone prop / ambient prop / UI icon source].
+The prop is a [role prop / zone prop / ambient prop / user interface (UI) icon
+source].
 
 Input images:
 Image 1: approved dashboard-world mockup, material and lighting reference,

@@ -56,25 +56,21 @@ assets/
 
 Create directories only when a change needs them.
 
-## Asset buckets
+## Canonical classification values
 
-Every asset belongs to one implementation bucket:
+This section is the canonical source for bucket and `intent_class` values.
+Other documents and prompt templates may use the numeric shorthand, but
+manifests must use the string identifier from this table.
 
-- **Bucket 1 - direct generated reference:** built-in `image_gen` output kept
-  as reference, style-book, or concept art. It is not a runtime dependency.
-- **Bucket 2 - generated source converted to deterministic pieces:** built-in
-  `image_gen` output used as source for crops, slices, cleaned sprites,
-  cutouts, texture studies, or ornament references. It becomes runtime-usable
-  only after deterministic post-processing and validation.
-- **Bucket 3 - algorithmic or code-owned:** scripts, Rust code, metadata,
-  palette files, light masks, layout, text, charts, and validation reports.
-  Generated images may inspire these assets but do not define them.
+| Shorthand | Manifest `bucket` value | Meaning |
+| --- | --- | --- |
+| Bucket 1 | `direct-generated-reference` | Built-in `image_gen` output kept as reference, style-book, or concept art. It is not a runtime dependency. |
+| Bucket 2 | `generated-source-converted` | Built-in `image_gen` output used as source for deterministic crops, slices, cleaned sprites, cutouts, texture studies, or ornament references. |
+| Bucket 3 | `algorithmic` | Scripts, Rust code, metadata, palette files, light masks, layout, text, charts, validation reports, or other code-owned assets. |
 
-## Intent classes
+Allowed `intent_class` values are:
 
-Manifests and validation notes should use these intent classes:
-
-- `reference-only`: human-facing source of truth, not loaded at runtime.
+- `reference-only`: human-facing source of truth that is not loaded at runtime.
 - `sliceable-source`: image source intended for deterministic crop or slice.
 - `ornament-source`: image source intended for trim, plaque, badge, or
   nine-slice extraction.
@@ -83,6 +79,9 @@ Manifests and validation notes should use these intent classes:
   placement.
 - `layout-reference`: visual reference for spacing, zone naming, or spatial
   hierarchy.
+
+Use the numeric bucket shorthand in tables where it keeps the layout readable.
+Use the manifest string values in JSON and validation output.
 
 ## Full asset inventory
 
@@ -118,7 +117,7 @@ Manifests and validation notes should use these intent classes:
 | Parchment plaques | 2 | `assets/processed/ui/plaques/` | Crop, define nine-slice metrics, quantize | Geometry and text deterministic | `ui-ornament-reference` |
 | Outer frames and dividers | 2 | `assets/processed/ui/frames/` | Crop, redraw, or derive nine-slice metrics | Fixed border thickness and corner rules | `ui-ornament-reference` |
 | Nine-slice panels | 3 | Future Rust render module or checked metrics | Validate slice regions if sprite-backed | Deterministic scaling and clipping | Atlas manifest only if image-backed |
-| Tabs | 3 | Future Rust UI module | None | Code-owned active, hover, focus states | No image manifest |
+| Tabs | 3 | Future Rust user interface (UI) module | None | Code-owned active, hover, focus states | No image manifest |
 | Stat cards and task cards | 3 | Future Rust UI module | None | Code-owned layout and content | No image manifest |
 | Status pills | 3 | Future Rust UI module and palette file | None | Code-owned enum, colour, label, icon | No image manifest |
 | Progress bars and meters | 3 | Future Rust render module | None | Exact data-to-pixel mapping | No image manifest |
@@ -279,6 +278,12 @@ The expected tool surface is:
 
 Scripts must be deterministic, emit clear failures, and avoid hiding outputs in
 paths that manifests cannot trace.
+
+`tools/check_manifests.py` validates the canonical classification fields and
+the manifest fields added by this specification, including `bucket`,
+`intent_class`, `asset_contract`, `files.validation_report_path`, and
+`postprocess.nine_slice`. `tools/check_assets.py` runs the manifest checks and
+is the extension point for future alpha, palette, atlas, and scale validation.
 
 ## Promotion gates
 

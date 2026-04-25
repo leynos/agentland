@@ -8,7 +8,8 @@ Asset type:
 Pixel-art character reference sheet.
 
 Bucket:
-1 - direct generated reference.
+Bucket 1, using manifest value `direct-generated-reference`. Use
+`docs/asset-spec.md` as the canonical bucket source.
 
 Primary request:
 Create one clean reference sheet for [agent name], the [role]. Show a
@@ -73,8 +74,8 @@ painted robot shell.
 Text (verbatim): ""
 
 Runtime text policy:
-No runtime-critical text in the image. Names, roles, labels, statuses, and UI
-copy will be rendered by Rust.
+No runtime-critical text in the image. Names, roles, labels, statuses, and
+user interface (UI) copy will be rendered by Rust.
 
 Post-processing target:
 Reference-only manifest first. Future processing may crop portraits,

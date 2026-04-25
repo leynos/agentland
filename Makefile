@@ -1,9 +1,10 @@
-.PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie graphs check-graphs
+.PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie graphs check-graphs manifest-check assets-check
 
 
 TARGET ?= agentland
 
 CARGO ?= cargo
+PYTHON ?= python3
 BUILD_JOBS ?=
 RUST_FLAGS ?=
 RUST_FLAGS := -D warnings $(RUST_FLAGS)
@@ -56,6 +57,12 @@ check-fmt: ## Verify formatting
 
 markdownlint: ## Lint Markdown files
 	$(MDLINT) '**/*.md'
+
+manifest-check: ## Validate asset manifest schema
+	$(PYTHON) tools/check_manifests.py
+
+assets-check: manifest-check ## Validate asset metadata and manifests
+	$(PYTHON) tools/check_assets.py
 
 nixie: ## Validate Mermaid diagrams
 	$(NIXIE) --no-sandbox

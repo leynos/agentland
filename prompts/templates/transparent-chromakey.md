@@ -8,7 +8,8 @@ Asset type:
 Pixel-art chroma-key source.
 
 Bucket:
-2 - generated source converted to deterministic reusable pieces.
+Bucket 2, using manifest value `generated-source-converted`. Use
+`docs/asset-spec.md` as the canonical bucket source.
 
 Primary request:
 Create one isolated [asset name] on a perfectly flat chroma-key background for
@@ -35,8 +36,8 @@ removal. The background must be one uniform colour with no shadows, gradients,
 texture, reflections, floor plane, or lighting variation.
 
 Subject:
-[asset name] as a [character accessory / role prop / zone prop / ambient prop
-/ UI ornament source].
+[asset name] as a [character accessory / role prop / zone prop / ambient prop /
+user interface (UI) ornament source].
 Required details:
 - Detail:
 - Detail:

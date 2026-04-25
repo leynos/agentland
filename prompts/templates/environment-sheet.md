@@ -8,9 +8,10 @@ Asset type:
 Pixel-art environment sheet.
 
 Bucket:
-1 - direct generated reference, or 2 - generated source converted to
-deterministic reusable pieces when the sheet is explicitly meant for backplate,
-tile, or prop extraction.
+Bucket 1, using manifest value `direct-generated-reference`, or Bucket 2,
+using manifest value `generated-source-converted`, when the sheet is explicitly
+meant for backplate, tile, or prop extraction. Use `docs/asset-spec.md` as the
+canonical bucket source.
 
 Primary request:
 Create an environment sheet for [environment name], a [perspective type]
@@ -35,7 +36,7 @@ props third, ambient detail fourth.
 
 Layer intent:
 Environment concept and spatial reference. Runtime layout, camera framing,
-layer order, hit areas, and UI overlays remain deterministic.
+layer order, hit areas, and user interface (UI) overlays remain deterministic.
 
 Scene/backdrop:
 [side-view coffee shop / isometric room / location card / material study]

@@ -18,9 +18,9 @@ Preserve:
 Text (verbatim): ""
 
 Runtime text policy:
-Runtime labels, statuses, chart text, task copy, and UI state strings are
-rendered by Rust. Do not add or modify text unless the Change section quotes
-the exact copy.
+Runtime labels, statuses, chart text, task copy, and user interface (UI) state
+strings are rendered by Rust. Do not add or modify text unless the Change
+section quotes the exact copy.
 
 Acceptance checks:
 Only the requested change is visible; preservation invariants still hold; no

@@ -1,4 +1,4 @@
-# UI ornament reference prompt template
+# User interface (UI) ornament reference prompt template
 
 ```text
 Use case:
@@ -8,7 +8,8 @@ Asset type:
 Pixel-art UI ornament reference sheet.
 
 Bucket:
-2 - generated source converted to deterministic reusable pieces.
+Bucket 2, using manifest value `generated-source-converted`. Use
+`docs/asset-spec.md` as the canonical bucket source.
 
 Primary request:
 Create a clean reference sheet of [ornament family], such as brass corner

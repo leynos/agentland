@@ -173,7 +173,8 @@ labels.
 - Observatory props: telescope, lanterns, star charts, stone floor, skyline
   rail, and glass.
 - Character accessories: each roster member gets one to three role-defining
-  accessories that can become either cleaned props or deterministic UI icons.
+  accessories that can become either cleaned props or deterministic user
+  interface (UI) icons.
 
 Runtime props need bounds, anchor points, layer assignment, optional hit area,
 and light-response notes. If a prop has a screen or sign, the prop frame may be
@@ -250,24 +251,26 @@ modes, and layer order.
 
 ## Asset inventory
 
-Use the asset-spec buckets for implementation:
+Use the canonical classification values in `docs/asset-spec.md` for
+implementation. The list below uses the numeric bucket shorthand only for
+readability:
 
-- Direct generated references: approved design-book pages, future style-book
-  pages, roster overviews, individual character reference sheets, animation
-  reference sheets, environment concepts, typography references, and
+- Bucket 1 (`direct-generated-reference`): approved design-book pages, future
+  style-book pages, roster overviews, individual character reference sheets,
+  animation reference sheets, environment concepts, typography references, and
   presentation-only icon mood.
-- Generated sources converted into deterministic pieces: standing sprites,
-  seated sprites, portrait chips, expression chips, accessory crops,
+- Bucket 2 (`generated-source-converted`): standing sprites, seated sprites,
+  portrait chips, expression chips, accessory crops,
   coffee-shop backplate layers, material tiles, espresso machine, lamps,
   shelves, books, mugs, plants, laptops, desk clutter, sign frames, brass
   corners, plaques, and outer-frame ornaments.
-- Algorithmic or script-built assets: nine-slice panels, tabs, status cards,
-  status pills, charts, progress bars, deterministic icons, bitmap text
-  layout, palette files, colour ramps, light masks, focus rings, hit-test data,
-  atlas metadata, validation reports, and Day 2 request JSON.
+- Bucket 3 (`algorithmic`): nine-slice panels, tabs, status cards, status
+  pills, charts, progress bars, deterministic icons, bitmap text layout,
+  palette files, colour ramps, light masks, focus rings, hit-test data, atlas
+  metadata, validation reports, and Day 2 request JSON.
 
-Bucket-one assets are visual authority only. Bucket-two assets are not runtime
-assets until cleaned and validated. Bucket-three assets define runtime truth.
+Bucket 1 assets are visual authority only. Bucket 2 assets are not runtime
+assets until cleaned and validated. Bucket 3 assets define runtime truth.
 
 ## Post-processing requirements
 

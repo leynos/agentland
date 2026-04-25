@@ -8,9 +8,10 @@ Asset type:
 Pixel-art animation reference sheet.
 
 Bucket:
-1 - direct generated reference by default. Promote to Bucket 2 only after
-manual review confirms the sheet is suitable for deterministic slicing and
-cleanup.
+Bucket 1, using manifest value `direct-generated-reference`, by default.
+Promote to Bucket 2, using manifest value `generated-source-converted`, only
+after manual review confirms the sheet is suitable for deterministic slicing
+and cleanup. Use `docs/asset-spec.md` as the canonical bucket source.
 
 Primary request:
 Create a reference sheet for [agent name] performing [motion name], such as
