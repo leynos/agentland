@@ -389,6 +389,8 @@ Tasks:
 - implement icon rendering for repeated dashboard functions where algorithmic pixel icons are more robust than generated art
 - keep all dimensions on a coherent spacing grid
 - render important application text at runtime, not in generated images
+- align navigation, debug overlay, detail panels, and asset preview states with
+  `docs/ui-state-graph-design.md`
 
 If useful, generate one additional built-in `image_gen` UI ornament reference to
 clarify the trim language, then convert it into deterministic reusable pieces
@@ -411,7 +413,9 @@ Update the app so the dashboard now looks structurally complete even if some sce
 Integrate approved generated sources into the Rust `pixels` runtime.
 
 Before coding:
-- inspect `docs/art-bible.md`, `docs/asset-spec.md`, manifests, palette files, and processed atlas metadata
+- inspect `docs/art-bible.md`, `docs/asset-spec.md`,
+  `docs/ui-state-graph-design.md`, manifests, palette files, and processed
+  atlas metadata
 - identify which generated images are direct sources, which are references only, and which assets are still placeholders
 
 Then:
@@ -517,7 +521,9 @@ Implementation tasks:
 - define request and response structs with serde
 - create a prompt template for converting a brief into the shared GPT Images 2 schema
 - persist generated prompts and accepted output paths in manifests
-- add a preview state machine for missing, pending, processed, rejected, and approved assets
+- add a preview state machine that follows `docs/ui-state-graph-design.md`,
+  including awaiting authoring, pending import, processed preview, rejected
+  preview, and approved preview states
 - document the limitation that built-in Codex image generation is an authoring workflow, not app runtime infrastructure
 
 Also create:
@@ -544,6 +550,9 @@ Requirements:
 - Output JSON only.
 - Never output markdown.
 - Keep visual instructions concise, concrete, and specific.
+- Keep Day 2 authoring output compatible with `docs/ui-state-graph-design.md`
+  so the runtime can show awaiting, pending, processed, rejected, and approved
+  preview states.
 - Prefer nouns and adjectives that change silhouette, attitude, costume, lighting, prop, palette, material, and scene fit.
 - Avoid vague praise such as stunning, epic, masterpiece, beautiful, premium, or cinematic unless replaced by visible details.
 - Respect the provided house style.
@@ -642,7 +651,8 @@ Goal:
 - leave the repo in a runnable state with docs and tests updated
 
 Before editing:
-- inspect current docs, manifests, prompts, generated sources, processed atlases, and runtime modules
+- inspect current docs, especially `docs/ui-state-graph-design.md`, manifests,
+  prompts, generated sources, processed atlases, and runtime modules
 - identify what is still placeholder, inconsistent, undocumented, or not copied into the workspace
 
 Then implement the missing work end-to-end:

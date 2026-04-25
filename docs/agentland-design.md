@@ -311,7 +311,23 @@ Avoid: muddy shadows, clutter that obscures agents, unstructured fantasy scenery
 
 ## 8. UI and deterministic runtime design
 
-The UI is a product interface, not just decoration. Keep generated imagery out of the critical text and layout path.
+The UI is a product interface, not just decoration. Keep generated imagery out
+of the critical text and layout path.
+
+The state model in `docs/ui-state-graph-design.md` is the navigation and
+authoring-state companion to this design document. Its rendered artefacts are:
+
+- `docs/ui-state-graph.svg` for the full runtime, brief-editor, and Codex
+  authoring state graph
+- `docs/ui-state-graph-overview.svg` for the compact UI-to-asset-pipeline
+  overview
+- `docs/ui-state-graph.dot` and `docs/ui-state-graph-overview.dot` as the
+  Graphviz sources rebuilt by `make graphs`
+
+When runtime navigation, Day 2 character authoring, asset import, or preview
+states change, update the state graph and regenerate the SVGs in the same
+change. The graph pipeline assumes Graphviz `dot` is installed, or that the
+`DOT` Make variable points at a compatible renderer.
 
 ### 8.1 Generated references
 
@@ -463,6 +479,11 @@ Generate without AI:
 │  ├─ runtime-architecture.md
 │  ├─ imagegen-workflow.md
 │  ├─ prompt-style-guide.md
+│  ├─ ui-state-graph-design.md
+│  ├─ ui-state-graph.dot
+│  ├─ ui-state-graph.svg
+│  ├─ ui-state-graph-overview.dot
+│  ├─ ui-state-graph-overview.svg
 │  ├─ known-limitations.md
 │  └─ iteration-backlog.md
 ├─ assets/
@@ -728,7 +749,8 @@ Purpose:
 
 ## 16. Day 2: prompt composer, not magic runtime generation
 
-Codex's built-in `image_gen` tool is a development workflow, not a Rust runtime API. The app should not pretend it can directly call the Codex tool.
+Codex's built-in `image_gen` tool is a development workflow, not a Rust
+runtime API. The app should not pretend it can directly call the Codex tool.
 
 A sensible Day 2 feature is a **prompt composer panel**:
 
@@ -736,10 +758,19 @@ A sensible Day 2 feature is a **prompt composer panel**:
 2. app writes a JSON asset request under `assets/requests/`
 3. Codex reads the request during a development session
 4. Codex turns it into a structured GPT Images 2 prompt
-5. Codex generates the image, moves it into the workspace, post-processes it, and updates manifests
+5. Codex generates the image, moves it into the workspace, post-processes it,
+   and updates manifests
 6. the app reloads the approved asset from disk
 
-If the actual product needs user-triggered runtime image generation, design a separate OpenAI Images API integration. Keep that separate from the Codex built-in tool, with explicit API keys, error handling, moderation, cost controls, and user consent.
+Use `docs/ui-state-graph-design.md` as the state contract for this flow. The
+runtime should expose the `CharacterBriefEditor`, `AwaitCodexAuthoring`,
+`PendingImport`, `ProcessedPreview`, `RejectedPreview`, and `ApprovedPreview`
+states described there rather than inventing parallel names.
+
+If the actual product needs user-triggered runtime image generation, design a
+separate OpenAI Images API integration. Keep that separate from the Codex
+built-in tool, with explicit API keys, error handling, moderation, cost
+controls, and user consent.
 
 Example request schema:
 

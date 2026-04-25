@@ -1,0 +1,168 @@
+digraph UIStateGraph {
+  graph [
+    rankdir=LR,
+    bgcolor="#07101B",
+    pad="0.35",
+    nodesep="0.45",
+    ranksep="0.75",
+    splines=ortho,
+    fontname="DejaVu Sans",
+    label="UI State Graph: Codex GPT Images 2 authoring + Rust pixels runtime",
+    labelloc="t",
+    fontsize=22,
+    fontcolor="#F2E6C9"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="DejaVu Sans",
+    fontsize=11,
+    margin="0.13,0.08",
+    color="#D4AF37",
+    fontcolor="#F2E6C9",
+    fillcolor="#0F1A2E"
+  ];
+
+  edge [
+    color="#D4AF37",
+    fontname="DejaVu Sans",
+    fontsize=9,
+    fontcolor="#F2E6C9",
+    arrowsize=0.7
+  ];
+
+  subgraph cluster_runtime {
+    label="Rust pixels runtime UI";
+    color="#7A4A2B";
+    fontcolor="#FFD98A";
+    style="rounded";
+
+    Boot [label="Boot", fillcolor="#1E2B44"];
+    LoadProjectState [label="Load project state"];
+    LoadManifests [label="Load manifests\nand atlases"];
+    CheckAssets [shape=diamond, label="Assets valid?", fillcolor="#4B2E1A"];
+    PlaceholderMode [label="Placeholder mode\nwith warning badges", fillcolor="#7A4A2B"];
+    DashboardShell [label="Dashboard shell", fillcolor="#2E5B3F"];
+    Overview [label="Overview tab"];
+    Agents [label="Agents tab"];
+    Tasks [label="Tasks tab"];
+    Analytics [label="Analytics tab"];
+    AgentDetail [label="Agent detail"];
+    TaskDetail [label="Task detail"];
+    DebugOverlay [label="Debug overlay", fillcolor="#1E2B44"];
+    RuntimeReady [label="Runtime-ready asset", fillcolor="#2E5B3F"];
+    ErrorView [label="Error view", fillcolor="#7A2E1A"];
+  }
+
+  subgraph cluster_brief {
+    label="Day 2 character brief editor";
+    color="#2E5B3F";
+    fontcolor="#FFD98A";
+    style="rounded";
+
+    CharacterBriefEditor [label="Character brief editor", fillcolor="#2E5B3F"];
+    EditingBrief [label="Editing brief"];
+    ValidateBrief [shape=diamond, label="Brief valid?", fillcolor="#4B2E1A"];
+    BriefError [label="Brief error", fillcolor="#7A2E1A"];
+    BriefSaved [label="Brief saved"];
+    AwaitCodexAuthoring [label="Await Codex authoring"];
+    PendingImport [label="Pending import"];
+    ProcessedPreview [label="Processed preview"];
+    RejectedPreview [label="Rejected preview", fillcolor="#7A2E1A"];
+    ApprovedPreview [label="Approved preview", fillcolor="#2E5B3F"];
+  }
+
+  subgraph cluster_codex {
+    label="Codex authoring pipeline, outside runtime";
+    color="#1E2B44";
+    fontcolor="#FFD98A";
+    style="rounded,dashed";
+
+    AuthoringRequest [label="Authoring request"];
+    ReadBriefOrPrompt [label="Read brief or prompt"];
+    BuildStructuredPrompt [label="Build structured\nGPT Images 2 prompt"];
+    BuiltInImageGen [label="Built-in image_gen", fillcolor="#2E5B3F"];
+    InspectOutput [shape=diamond, label="Style, subject,\ntext pass?", fillcolor="#4B2E1A"];
+    RejectedSource [label="Rejected source", fillcolor="#7A2E1A"];
+    WorkspaceCopy [label="Copy source into\nworkspace"];
+    ManifestDraft [label="Manifest draft"];
+    ChromaKeySource [label="Chroma-key source"];
+    RemoveChromaKey [label="Remove chroma key"];
+    ValidateAlpha [shape=diamond, label="Alpha clean?", fillcolor="#4B2E1A"];
+    AskCliFallback [label="Ask before CLI\ntransparency fallback", fillcolor="#7A4A2B"];
+    CliFallback [label="CLI fallback\nwhen confirmed", fillcolor="#7A4A2B"];
+    PostProcess [label="Post-process source"];
+    ValidateProcessedAsset [shape=diamond, label="Processed asset\nvalid?", fillcolor="#4B2E1A"];
+    RejectedProcessed [label="Rejected processed\nasset", fillcolor="#7A2E1A"];
+    AtlasPack [label="Pack atlas\nand metadata"];
+    ManifestApproved [label="Approved manifest", fillcolor="#2E5B3F"];
+    RuntimeCanLoad [label="Runtime can load", fillcolor="#2E5B3F"];
+  }
+
+  Boot -> LoadProjectState [label="AppStarted"];
+  LoadProjectState -> LoadManifests;
+  LoadManifests -> CheckAssets;
+  CheckAssets -> DashboardShell [label="valid"];
+  CheckAssets -> PlaceholderMode [label="missing or invalid"];
+  PlaceholderMode -> DashboardShell [label="still runnable"];
+  DashboardShell -> Overview;
+  Overview -> Agents [label="tab"];
+  Agents -> Tasks [label="tab"];
+  Tasks -> Analytics [label="tab"];
+  Analytics -> Overview [label="tab"];
+  Overview -> AgentDetail [label="select agent"];
+  Agents -> AgentDetail [label="select roster item"];
+  Tasks -> TaskDetail [label="select task"];
+  AgentDetail -> Overview [label="close"];
+  TaskDetail -> Tasks [label="close"];
+  Overview -> DebugOverlay [label="toggle debug"];
+  Agents -> DebugOverlay [label="toggle debug"];
+  Tasks -> DebugOverlay [label="toggle debug"];
+  Analytics -> DebugOverlay [label="toggle debug"];
+  DebugOverlay -> Overview [label="close debug"];
+  DashboardShell -> CharacterBriefEditor [label="create or edit character"];
+  CharacterBriefEditor -> EditingBrief;
+  CharacterBriefEditor -> DashboardShell [label="cancel or close"];
+  EditingBrief -> ValidateBrief [label="save"];
+  ValidateBrief -> BriefError [label="invalid"];
+  BriefError -> EditingBrief [label="fix controls"];
+  ValidateBrief -> BriefSaved [label="valid"];
+  BriefSaved -> AwaitCodexAuthoring [label="no generated asset yet"];
+  AwaitCodexAuthoring -> PendingImport [label="generation started"];
+  PendingImport -> ProcessedPreview [label="processed asset appears"];
+  PendingImport -> RejectedPreview [label="validation failed"];
+  ProcessedPreview -> ApprovedPreview [label="approve"];
+  RejectedPreview -> EditingBrief [label="revise"];
+  ApprovedPreview -> RuntimeReady [label="atlas updated"];
+  RuntimeReady -> LoadProjectState [label="reload assets"];
+  DashboardShell -> ErrorView [label="unrecoverable error"];
+  ErrorView -> LoadProjectState [label="retry"];
+
+  AuthoringRequest -> ReadBriefOrPrompt;
+  AwaitCodexAuthoring -> AuthoringRequest [label="Codex hand-off", style=dashed, color="#8FB3D9"];
+  ReadBriefOrPrompt -> BuildStructuredPrompt;
+  BuildStructuredPrompt -> BuiltInImageGen;
+  BuiltInImageGen -> InspectOutput;
+  InspectOutput -> RejectedSource [label="fails"];
+  RejectedSource -> BuildStructuredPrompt [label="one focused revision"];
+  InspectOutput -> WorkspaceCopy [label="accepted"];
+  WorkspaceCopy -> ManifestDraft;
+  ManifestDraft -> PostProcess;
+  BuiltInImageGen -> ChromaKeySource [label="cutout requested"];
+  ChromaKeySource -> RemoveChromaKey;
+  RemoveChromaKey -> ValidateAlpha;
+  ValidateAlpha -> PostProcess [label="clean"];
+  ValidateAlpha -> ChromaKeySource [label="retry edge settings once"];
+  ValidateAlpha -> AskCliFallback [label="complex transparency"];
+  AskCliFallback -> CliFallback [label="explicitly confirmed"];
+  CliFallback -> InspectOutput;
+  PostProcess -> ValidateProcessedAsset;
+  ValidateProcessedAsset -> RejectedProcessed [label="fails"];
+  RejectedProcessed -> PostProcess [label="local process fix"];
+  RejectedProcessed -> BuildStructuredPrompt [label="source wrong"];
+  ValidateProcessedAsset -> AtlasPack [label="passes"];
+  AtlasPack -> ManifestApproved;
+  ManifestApproved -> RuntimeCanLoad;
+  RuntimeCanLoad -> LoadProjectState [label="reload files", style=dashed, color="#8FB3D9"];
+}
