@@ -3,13 +3,18 @@
 These prompts are written to be pasted directly into Codex CLI. They assume:
 
 - Codex's image-generation skill is available.
-- Built-in `image_gen` is the default path for raster image generation and edits.
-- CLI fallback is used only when explicitly requested, or after a confirmed true native transparency fallback.
+- Built-in `image_gen` is the default path for raster image generation and
+  edits.
+- CLI fallback is used only when explicitly requested, or after a confirmed
+  true native transparency fallback.
 - The Rust renderer uses the `pixels` crate plus `winit`.
 - Asset manifests are checked into `assets/manifests/`.
-- Generated project-bound images must be copied into the workspace before code references them.
+- Generated project-bound images must be copied into the workspace before code
+  references them.
 
-Use the prompts sequentially. Each one assumes the prior one has already completed. The flock has an order; no asset goose should wander off with an uncited PNG.
+Use the prompts sequentially. Each one assumes the prior one has already
+completed. The flock has an order; no asset goose should wander off with an
+uncited PNG.
 
 ---
 
@@ -27,26 +32,36 @@ true native transparency fallback is explicitly confirmed.
 
 Assume the target renderer is Rust with the `pixels` crate plus `winit`.
 
-Spawn three read-heavy subagents in parallel, wait for all of them, and then implement the result yourself:
-1. An art-direction subagent that defines the visual grammar, scene layers, palette intent, and the boundary between GPT Images 2-generated references and algorithmic assets.
-2. A runtime-architecture subagent that proposes the Rust module layout for a `pixels`-based renderer with fixed virtual resolution, sprite composition, lighting overlays, and hit-testing.
-3. An asset-pipeline subagent that proposes the manifest schema, folder layout, and post-processing scripts for Codex `image_gen` outputs.
+Spawn three read-heavy subagents in parallel, wait for all of them, and then
+implement the result yourself:
+1. An art-direction subagent that defines the visual grammar, scene layers,
+   palette intent, and the boundary between GPT Images 2-generated references
+   and algorithmic assets.
+2. A runtime-architecture subagent that proposes the Rust module layout for a
+   `pixels`-based renderer with fixed virtual resolution, sprite composition,
+   lighting overlays, and hit-testing.
+3. An asset-pipeline subagent that proposes the manifest schema, folder layout,
+   and post-processing scripts for Codex `image_gen` outputs.
 
 After all three return:
 - create `AGENTS.md`
-- create `.codex/config.toml` if missing, but do not overwrite an existing working config without preserving it
+- create `.codex/config.toml` if missing, but do not overwrite an existing
+  working config without preserving it
 - create `docs/art-bible.md`
 - create `docs/imagegen-workflow.md`
 - create `docs/runtime-architecture.md`
 - create `docs/asset-spec.md`
 - create `assets/manifests/README.md`
 - scaffold the Rust application with `pixels` + `winit`
-- make the app open a window and render a placeholder layout at a fixed virtual resolution of 512x288
-- implement placeholder rectangles for the top bar, centre scene viewport, and bottom stat cards
+- make the app open a window and render a placeholder layout at a fixed virtual
+  resolution of 512x288
+- implement placeholder rectangles for the top bar, centre scene viewport, and
+  bottom stat cards
 - ensure resize handling preserves integer-scaled pixel rendering
 - document every assumption in the docs
 
-Do not generate final art yet. This task is about structure, manifests, prompt standards, and a running placeholder renderer.
+Do not generate final art yet. This task is about structure, manifests, prompt
+standards, and a running placeholder renderer.
 ```
 
 ---
@@ -57,16 +72,20 @@ Do not generate final art yet. This task is about structure, manifests, prompt s
 An approved reference mockup for the interface already exists; convert it into
 an implementation-grade art bible for the repository.
 
-Use the mockup as the visual source of truth. Do not call `image_gen` yet unless a tiny exploratory image is absolutely necessary.
+Use the mockup as the visual source of truth. Do not call `image_gen` yet
+unless a tiny exploratory image is absolutely necessary.
 
 Spawn two read-heavy subagents in parallel:
-1. A composition analyst that decomposes the mockup into visual layers, focal areas, panel families, props, characters, lighting zones, typography behaviour, and dashboard hierarchy.
+1. A composition analyst that decomposes the mockup into visual layers, focal
+   areas, panel families, props, characters, lighting zones, typography
+   behaviour, and dashboard hierarchy.
 2. An asset strategist that classifies every needed asset into one of three buckets:
    - generate directly with built-in `image_gen`
    - generate with built-in `image_gen` as reference and convert into deterministic reusable pieces
    - create algorithmically with scripts or Rust code
 
-Wait for both, then update `docs/art-bible.md`, `docs/imagegen-workflow.md`, and `docs/asset-spec.md` with:
+Wait for both, then update `docs/art-bible.md`,
+`docs/imagegen-workflow.md`, and `docs/asset-spec.md` with:
 - a full asset inventory
 - a palette strategy
 - character roster definitions
@@ -125,16 +144,21 @@ Constraints:
 
 Rules to document:
 - use built-in `image_gen` by default
-- do not use CLI fallback unless explicitly requested or confirmed for true native transparency
+- do not use CLI fallback unless explicitly requested or confirmed for true
+  native transparency
 - do not rely on a destination-path argument for the built-in tool
-- after generation, copy project-bound outputs from the built-in output area into the workspace
+- after generation, copy project-bound outputs from the built-in output area
+  into the workspace
 - every accepted generated image needs a manifest
-- for transparent assets, generate on a perfectly flat chroma-key background, then run the installed chroma-key removal helper
+- for transparent assets, generate on a perfectly flat chroma-key background,
+  then run the installed chroma-key removal helper
 - ask before using CLI `gpt-image-1.5` for true transparency
 - for edits, repeat the preserve list every iteration
 - for multi-image generation or compositing, label each input image by role
-- for exact text, put it under `Text (verbatim)` and specify typography, placement, and "no duplicate text"
-- important runtime UI text should be drawn by the Rust renderer, not baked into generated images
+- for exact text, put it under `Text (verbatim)` and specify typography,
+  placement, and "no duplicate text"
+- important runtime UI text should be drawn by the Rust renderer, not baked
+  into generated images
 
 Create these template files:
 - `prompts/templates/character-sheet.md`
@@ -165,13 +189,13 @@ Create and persist manifests for these project-bound images:
 - UI material and ornament guide page
 
 For each image:
-- write the final structured prompt to `prompts/generated/style_guides/`
+- write the final structured prompt to `prompts/generated/style-book/`
 - use the shared prompt schema from `docs/imagegen-workflow.md`
 - label any input reference images by role
 - call built-in `image_gen`
 - inspect the output for style match, text accuracy, layout quality, and obvious artefacts
-- copy the accepted output into `assets/source/imagegen/style_guides/`
-- create a manifest under `assets/manifests/style_guides/`
+- copy the accepted output into `assets/source/gpt-images-2/style-book/`
+- create a manifest under `assets/manifests/style-book/`
 - write an evaluation note: approved, rejected, or iterate
 
 Prompt requirements:
@@ -205,22 +229,28 @@ For each character:
 - write a structured prompt file under `prompts/generated/characters/`
 - use `Use case: stylized-concept`
 - use `Asset type: pixel-art character reference sheet`
-- include the approved dashboard-world style anchor as an input image if available, labelled as style reference
-- ask for a clean sheet with standing view, seated working pose, expression chips, accessory callouts, and a simple uniform background
-- keep identity details concise and concrete: silhouette, head/hair/hood, clothing, prop, attitude, palette accents
+- include the approved dashboard-world style anchor as an input image if
+  available, labelled as style reference
+- ask for a clean sheet with standing view, seated working pose, expression
+  chips, accessory callouts, and a simple uniform background
+- keep identity details concise and concrete: silhouette, head/hair/hood,
+  clothing, prop, attitude, palette accents
 - avoid tiny text inside sprite poses
 - call built-in `image_gen` once per character
 - inspect the result
-- copy approved outputs into `assets/source/imagegen/characters/`
+- copy approved outputs into `assets/source/gpt-images-2/characters/`
 - create per-character manifests under `assets/manifests/characters/`
 
 After the sheets land:
 - create or update `tools/slice_sheet.py`
 - create or update `tools/quantize.py`
-- create a first shared palette file under `assets/palette/coffee_shop_master_v1.json`
-- add notes to `docs/art-bible.md` about which character details worked and which should be redrawn or cleaned manually
+- create a first shared palette file under
+  `assets/palette/coffee_shop_master_v1.json`
+- add notes to `docs/art-bible.md` about which character details worked and
+  which should be redrawn or cleaned manually
 
-Do not claim these sheets are deterministic sprite atlases. Treat them as source references until slicing, cleanup, and validation pass.
+Do not claim these sheets are deterministic sprite atlases. Treat them as source
+references until slicing, cleanup, and validation pass.
 ```
 
 ---
@@ -249,7 +279,7 @@ Initial animations:
 
 For each generated sheet:
 - inspect frame consistency
-- copy approved outputs into `assets/source/imagegen/animations/`
+- copy approved outputs into `assets/source/gpt-images-2/animations/`
 - create a manifest under `assets/manifests/animations/`
 - run or stub `tools/slice_sheet.py`
 - record whether the sheet is approved for runtime cleanup or reference only
@@ -277,18 +307,20 @@ For each environment:
 - use `Use case: stylized-concept`
 - use `Asset type: game environment concept art` or `isometric environment sheet`
 - specify zones, props, light sources, materials, and intended use
-- include palette and material cues: warm amber lamps, dark wood, brass trim, deep navy UI recesses, cyan screen glow, moss-green plants
+- include palette and material cues: warm amber lamps, dark wood, brass trim,
+  deep navy UI recesses, cyan screen glow, moss-green plants
 - keep generated labels non-critical unless this is a design-book page
 - avoid real logos and watermarks
 - call built-in `image_gen` once per environment
 - inspect composition, perspective, style match, and readability
-- copy accepted outputs into `assets/source/imagegen/environments/`
+- copy accepted outputs into `assets/source/gpt-images-2/environments/`
 - create manifests under `assets/manifests/environments/`
 
 After generation:
 - update `docs/art-bible.md` with environmental storytelling rules
 - update `docs/asset-spec.md` with extractable prop and texture candidates
-- create a list of zones that the Rust renderer will assemble deterministically rather than baking into one giant bitmap
+- create a list of zones that the Rust renderer will assemble deterministically
+  rather than baking into one giant bitmap
 ```
 
 ---
@@ -315,21 +347,34 @@ Props needed:
 For simple opaque props that need alpha:
 - prompt the prop on a perfectly flat solid chroma-key background
 - use #00ff00 unless the prop contains green, then use #ff00ff
-- require no shadow, no floor plane, no gradients, no texture, no reflection, and generous padding
+- require no shadow, no floor plane, no gradients, no texture, no reflection,
+  and generous padding
 - require the key colour not to appear inside the subject
 
 After each built-in generation:
-- copy the selected source image into `assets/source/imagegen/transparent_sources/`
+- copy the selected source image into
+  `assets/source/gpt-images-2/transparent-sources/`
 - run the installed helper:
 
-python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" --input <source.png> --out <alpha.png> --auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220 --despill
+python tools/remove_chroma_and_validate.py \
+  --input <source.png> \
+  --out <alpha.png> \
+  --auto-key border \
+  --soft-matte \
+  --transparent-threshold 12 \
+  --opaque-threshold 220 \
+  --despill \
+  --edge-contract 0
 
-- validate alpha corners, edge quality, subject coverage, and absence of green or magenta fringe
+- validate alpha corners, edge quality, subject coverage, and absence of green
+  or magenta fringe
 - retry once with `--edge-contract 1` if needed
 - save final alpha images under `assets/processed/props/`
 - create manifests under `assets/manifests/props/`
 
-For complex transparent subjects such as fur, glass, smoke, liquids, translucent material, reflective objects, or soft realistic shadows, stop and ask before using true native transparency via CLI fallback.
+For complex transparent subjects such as fur, glass, smoke, liquids,
+translucent material, reflective objects, or soft realistic shadows, stop and
+ask before using true native transparency via CLI fallback.
 ```
 
 ---
@@ -349,7 +394,7 @@ Implement or update:
 - `tools/sync_manifests.py`
 
 Pipeline requirements:
-- consume accepted images from `assets/source/imagegen/`
+- consume accepted images from `assets/source/gpt-images-2/`
 - never depend on files remaining under `$CODEX_HOME/generated_images/...`
 - quantize approved assets toward `assets/palette/coffee_shop_master_v1.json`
 - preserve glyph and generated-text assets separately where quantization would damage readability
@@ -386,7 +431,8 @@ Tasks:
 - implement recent activity cards
 - implement stat cards
 - implement tiny chart and meter widgets
-- implement icon rendering for repeated dashboard functions where algorithmic pixel icons are more robust than generated art
+- implement icon rendering for repeated dashboard functions where algorithmic
+  pixel icons are more robust than generated art
 - keep all dimensions on a coherent spacing grid
 - render important application text at runtime, not in generated images
 - align navigation, debug overlay, detail panels, and asset preview states with
@@ -461,7 +507,9 @@ Keep the effect restrained:
 - do not smear pixels with excessive blur
 - keep animation loops quiet enough for a productivity dashboard
 
-If the current architecture supports it cleanly, use a custom `pixels.render_with(...)` pass for the final full-screen lighting treatment. Otherwise implement it in the CPU compositor and document the trade-off.
+If the current architecture supports it cleanly, use a custom
+`pixels.render_with(...)` pass for the final full-screen lighting treatment.
+Otherwise implement it in the CPU compositor and document the trade-off.
 
 Also perform a QA pass:
 - test multiple integer scales
@@ -479,18 +527,24 @@ Also perform a QA pass:
 Run a hardening pass on the project.
 
 Spawn three subagents in parallel:
-1. Runtime reviewer: integer scaling, resize behaviour, sprite composition correctness, input mapping.
-2. Asset pipeline reviewer: manifest completeness, prompt provenance, atlas packing, post-processing quality, no lingering dependency on `$CODEX_HOME/generated_images/...`.
-3. UX reviewer: readability, motion restraint, panel consistency, status semantics, generated-text accuracy, and edit-invariant compliance.
+1. Runtime reviewer: integer scaling, resize behaviour, sprite composition
+   correctness, input mapping.
+2. Asset pipeline reviewer: manifest completeness, prompt provenance, atlas
+   packing, post-processing quality, no lingering dependency on
+   `$CODEX_HOME/generated_images/...`.
+3. UX reviewer: readability, motion restraint, panel consistency, status
+   semantics, generated-text accuracy, and edit-invariant compliance.
 
 Wait for all three, then:
 - make any necessary fixes yourself
 - add tests where practical
 - add missing documentation
 - add a short `docs/known-limitations.md`
-- add a `docs/iteration-backlog.md` with sensible future improvements, clearly separated from the finished scope
+- add a `docs/iteration-backlog.md` with sensible future improvements, clearly
+  separated from the finished scope
 
-Do not balloon scope. This pass is for correctness, consistency, and explicit limitations.
+Do not balloon scope. This pass is for correctness, consistency, and explicit
+limitations.
 ```
 
 ---
@@ -501,12 +555,17 @@ Do not balloon scope. This pass is for correctness, consistency, and explicit li
 Add a Day 2 character brief authoring flow to the project.
 
 Important boundary:
-Codex's built-in `image_gen` tool is available to Codex during authoring sessions. It is not a runtime API that the Rust application can call directly. Do not implement the app as though it can invoke Codex's built-in tool.
+Codex's built-in `image_gen` tool is available to Codex during authoring
+sessions. It is not a runtime API that the Rust application can call directly.
+Do not implement the app as though it can invoke Codex's built-in tool.
 
 Goal:
-- the user edits structured character options in the UI or in a local authoring panel
+- the user edits structured character options in the UI or in a local
+  authoring panel
 - the app saves those options as a strict JSON character brief
-- a Codex authoring session can read the brief, turn it into a structured GPT Images 2 prompt, call built-in `image_gen`, post-process the result, and import the asset
+- a Codex authoring session can read the brief, turn it into a structured GPT
+  Images 2 prompt, call built-in `image_gen`, post-process the result, and
+  import the asset
 - the character appears in a preview panel once processed assets are available
 
 Constraints:
@@ -524,7 +583,8 @@ Implementation tasks:
 - add a preview state machine that follows `docs/ui-state-graph-design.md`,
   including awaiting authoring, pending import, processed preview, rejected
   preview, and approved preview states
-- document the limitation that built-in Codex image generation is an authoring workflow, not app runtime infrastructure
+- document the limitation that built-in Codex image generation is an authoring
+  workflow, not app runtime infrastructure
 
 Also create:
 - `docs/day2-character-briefs.md`
@@ -537,7 +597,9 @@ Also create:
 
 ## Prompt 15 - Character brief JSON-to-prompt system prompt
 
-Use this as the system prompt for any local text model or Codex-authored conversion step that turns structured character options into a GPT Images 2 prompt. It is not a runtime image-generation call.
+Use this as the system prompt for any local text model or Codex-authored
+conversion step that turns structured character options into a GPT Images 2
+prompt. It is not a runtime image-generation call.
 
 ```text
 Generate concise, implementation-safe GPT Images 2 prompts for a pixel-art dashboard asset pipeline.
@@ -553,13 +615,17 @@ Requirements:
 - Keep Day 2 authoring output compatible with `docs/ui-state-graph-design.md`
   so the runtime can show awaiting, pending, processed, rejected, and approved
   preview states.
-- Prefer nouns and adjectives that change silhouette, attitude, costume, lighting, prop, palette, material, and scene fit.
-- Avoid vague praise such as stunning, epic, masterpiece, beautiful, premium, or cinematic unless replaced by visible details.
+- Prefer nouns and adjectives that change silhouette, attitude, costume,
+  lighting, prop, palette, material, and scene fit.
+- Avoid vague praise such as stunning, epic, masterpiece, beautiful, premium,
+  or cinematic unless replaced by visible details.
 - Respect the provided house style.
 - Do not invent unsupported tool arguments.
 - Put exact in-image text only in `text_verbatim`.
-- For character sheets, request a simple uniform background, clear spacing, and no tiny labels inside sprite poses.
-- If the inputs are contradictory or insufficient, still return best-effort JSON using the safest coherent interpretation.
+- For character sheets, request a simple uniform background, clear spacing, and
+  no tiny labels inside sprite poses.
+- If the inputs are contradictory or insufficient, still return best-effort JSON
+  using the safest coherent interpretation.
 
 Return this schema exactly:
 {
@@ -619,7 +685,8 @@ Palette accents:
 {{palette_accents}}
 
 Scene fit:
-This character should belong in a warmly lit pixel-art coffee shop dashboard scene and should read clearly at small sprite scale.
+This character should belong in a warmly lit pixel-art coffee shop dashboard
+scene and should read clearly at small sprite scale.
 
 Additional notes:
 {{additional_notes}}
@@ -631,7 +698,8 @@ Return strict JSON matching the required schema. Do not generate prose.
 
 ## Prompt 17 - One-shot full pipeline prompt
 
-Use this only after the repo already has manifests, scripts, prompt templates, and a working runtime.
+Use this only after the repo already has manifests, scripts, prompt templates,
+and a working runtime.
 
 ```text
 A concentrated end-to-end feature pass is required.
@@ -640,7 +708,8 @@ Use Codex's built-in `image_gen` tool for image creation and editing by
 default. Do not use CLI fallback unless explicitly requested or a true native
 transparency fallback is explicitly confirmed.
 
-Spawn subagents only for read-heavy analysis and review; keep actual code writing mostly in one thread.
+Spawn subagents only for read-heavy analysis and review; keep actual code
+writing mostly in one thread.
 
 Goal:
 - finish the coffee shop dashboard scene
@@ -653,7 +722,8 @@ Goal:
 Before editing:
 - inspect current docs, especially `docs/ui-state-graph-design.md`, manifests,
   prompts, generated sources, processed atlases, and runtime modules
-- identify what is still placeholder, inconsistent, undocumented, or not copied into the workspace
+- identify what is still placeholder, inconsistent, undocumented, or not copied
+  into the workspace
 
 Then implement the missing work end-to-end:
 - generate or iterate only the missing core assets
@@ -665,26 +735,32 @@ Then implement the missing work end-to-end:
 - update docs
 - run tests and report any real blockers explicitly
 
-Bias toward shipping a coherent, runnable vertical slice rather than beginning a giant unfinished architecture rewrite.
+Bias toward shipping a coherent, runnable vertical slice rather than beginning
+a giant unfinished architecture rewrite.
 ```
 
 ---
 
-# Appendix A - Copy-paste GPT Images 2 asset prompts
+## Appendix A - Copy-paste GPT Images 2 asset prompts
 
-These are starting points. Keep user-provided requirements. Do not inflate every prompt with extra lore.
+These are starting points. Keep user-provided requirements. Do not inflate
+every prompt with extra lore.
 
 ## Character reference sheet
 
 ```text
 Use case: stylized-concept
 Asset type: pixel-art character reference sheet
-Primary request: character sheet for Ava, a research specialist in a cosy AI agent dashboard world
+Primary request: character sheet for Ava, a research specialist in a cosy AI
+agent dashboard world
 Input images: Image 1: approved dashboard style anchor
 Scene/backdrop: simple warm parchment backdrop with faint navy-and-brass frame motifs, no clutter
-Subject: red-haired analyst with a thoughtful expression, dark apron over cream shirt, small notebook and coffee mug, readable silhouette at small sprite scale
+Subject: red-haired analyst with a thoughtful expression, dark apron over cream
+shirt, small notebook and coffee mug, readable silhouette at small sprite scale
 Style/medium: richly detailed pixel art matching the warm coffee-shop dashboard world
-Composition/framing: clean sheet with standing view, seated typing pose, 4 expression chips, and 3 accessory callouts; generous spacing; no labels inside the sprite poses
+Composition/framing: clean sheet with standing view, seated typing pose, 4
+expression chips, and 3 accessory callouts; generous spacing; no labels inside
+the sprite poses
 Lighting/mood: warm amber rim light with subtle cyan laptop glow
 Colour palette: auburn hair, cream shirt, deep navy apron, brass accents, moss-green research icon accent
 Materials/textures: cloth, leather notebook, ceramic mug, soft pixel dithering
@@ -733,15 +809,18 @@ Avoid: photorealism; 3D render; fisheye perspective; unreadable micro-text
 Use case: stylized-concept
 Asset type: pixel-art prop cutout source
 Primary request: ornate brass corner ornament for a dashboard frame
-Scene/backdrop: perfectly flat solid #00ff00 chroma-key background for local background removal
-Subject: single brass corner ornament, 32 px game UI scale, symmetrical carved detail, readable silhouette
+Scene/backdrop: perfectly flat solid #00ff00 chroma-key background for local
+background removal
+Subject: single brass corner ornament, 32 px game UI scale, symmetrical carved
+detail, readable silhouette
 Style/medium: pixel-art game UI ornament, dark outline, restrained highlights
 Composition/framing: centred object with generous padding, no cast shadow, no floor plane
 Lighting/mood: soft warm highlight from upper left
 Colour palette: brass gold, warm brown shadow, cream highlight; do not use #00ff00 in the subject
 Materials/textures: aged brass, tiny pixel bevels, subtle patina
 Text (verbatim): ""
-Constraints: background must be one uniform colour with no gradients, texture, reflections, or lighting variation; crisp edges; no watermark
+Constraints: background must be one uniform colour with no gradients, texture,
+reflections, or lighting variation; crisp edges; no watermark
 Avoid: green inside the subject; shadow; reflection; multiple objects; text
 ```
 
@@ -770,8 +849,11 @@ Change:
 Warm the hanging lamps and add a subtle cyan screen glow to the laptop areas.
 
 Preserve:
-Keep the original composition, characters, poses, dashboard layout, text placement, wood shelves, plant positions, camera angle, and pixel-art style unchanged.
+Keep the original composition, characters, poses, dashboard layout, text
+placement, wood shelves, plant positions, camera angle, and pixel-art style
+unchanged.
 
 Constraints:
-Do not add new characters, signs, logos, or extra UI panels. No watermark. Do not blur or smear pixel edges.
+Do not add new characters, signs, logos, or extra UI panels. No watermark. Do
+not blur or smear pixel edges.
 ```

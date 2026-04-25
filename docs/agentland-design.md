@@ -2,7 +2,12 @@
 
 ## 1. Objective
 
-Build a desktop mockup of an AI agent team management tool rendered as a richly lit pixel-art workplace. The core fantasy is a cosy hipster coffee shop where software agents collaborate at laptops, terminals, books, coffee cups, shelves, lamps, and status panels. The output should feel like a tiny JRPG management sim fused with a production dashboard: warm, readable, characterful, and disciplined.
+Build a desktop mockup of an AI agent team management tool rendered as a richly
+lit pixel-art workplace. The core fantasy is a cosy hipster coffee shop where
+software agents collaborate at laptops, terminals, books, coffee cups, shelves,
+lamps, and status panels. The output should feel like a tiny JRPG management
+sim fused with a production dashboard: warm, readable, characterful, and
+disciplined.
 
 This version updates the earlier PixelLab Model Context Protocol (MCP) plan for
 Codex's built-in GPT Images 2 image generation skill. The new pipeline treats
@@ -11,30 +16,43 @@ Rust `pixels` remains the deterministic runtime compositor.
 
 The intended result is a hybrid system:
 
-- **Codex CLI** orchestrates planning, code generation, prompt authoring, image generation, review, post-processing, and integration.
-- **Codex built-in `image_gen`** generates and edits raster images by default: style-book pages, character references, environment concepts, prop sheets, UI ornament references, texture references, and chroma-key cutout sources.
-- **Algorithmic asset generation** produces repetitive or structurally constrained pieces: frames, tabs, buttons, dividers, graphs, nine-slice panels, lighting masks, text layout, status bars, debug overlays, and deterministic pixel icons.
-- **Rust `pixels`** provides the low-level framebuffer renderer for the final application.
+- **Codex CLI** orchestrates planning, code generation, prompt authoring, image
+  generation, review, post-processing, and integration.
+- **Codex built-in `image_gen`** generates and edits raster images by default:
+  style-book pages, character references, environment concepts, prop sheets, UI
+  ornament references, texture references, and chroma-key cutout sources.
+- **Algorithmic asset generation** produces repetitive or structurally
+  constrained pieces: frames, tabs, buttons, dividers, graphs, nine-slice
+  panels, lighting masks, text layout, status bars, debug overlays, and
+  deterministic pixel icons.
+- **Rust `pixels`** provides the low-level framebuffer renderer for the final
+  application.
 
 ## 2. Important change from the PixelLab version
 
-The previous plan assumed PixelLab MCP tools such as `create_character`, `create_map_object`, `create_tiles_pro`, `create_topdown_tileset`, and `animate_character`. The built-in GPT Images 2 workflow is different.
+The previous plan assumed PixelLab MCP tools such as `create_character`,
+`create_map_object`, `create_tiles_pro`, `create_topdown_tileset`, and
+`animate_character`. The built-in GPT Images 2 workflow is different.
 
 Use this mental model instead:
 
-| Area | PixelLab-era assumption | GPT Images 2 built-in workflow |
-| --- | --- | --- |
-| Tool access | PixelLab MCP server in `.codex/config.toml` | Built-in Codex `image_gen` skill, preferred for normal generation and editing |
-| API key | PixelLab token required | No `OPENAI_API_KEY` needed for built-in mode |
-| Job model | Non-blocking jobs and polling | Built-in generation returns visible results and saved images under Codex's generated image area |
-| Asset persistence | Store job IDs immediately | Move or copy selected outputs into the repo, then record prompt, source path, workspace path, edit history, and validation |
-| Transparent assets | Tool-specific alpha support depended on PixelLab output | Built-in first: flat chroma-key background plus local removal helper. Ask before CLI fallback for true native transparency |
-| Character consistency | Locked PixelLab parameters plus character IDs | Reference sheets, repeated anchor details, labelled input images, and strict preservation prompts. No sprite identity is truly seed-locked |
-| Animations | Queue PixelLab animations | Treat GPT Images 2 sheets as concept or source art. Build final animation deterministically or crop approved frames with manual quality assurance (QA) |
-| Batch assets | PixelLab jobs per asset | One built-in image generation call per distinct asset or variant unless the user explicitly selects CLI batch fallback |
-| UI panels | Could use generated ornament pieces | Generate references only, then build final UI widgets algorithmically |
+| Area                  | PixelLab-era assumption                                 | GPT Images 2 built-in workflow                                                                                                                         |
+| --------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Tool access           | PixelLab MCP server in `.codex/config.toml`             | Built-in Codex `image_gen` skill, preferred for normal generation and editing                                                                          |
+| API key               | PixelLab token required                                 | No `OPENAI_API_KEY` needed for built-in mode                                                                                                           |
+| Job model             | Non-blocking jobs and polling                           | Built-in generation returns visible results and saved images under Codex's generated image area                                                        |
+| Asset persistence     | Store job IDs immediately                               | Move or copy selected outputs into the repo, then record prompt, source path, workspace path, edit history, and validation                             |
+| Transparent assets    | Tool-specific alpha support depended on PixelLab output | Built-in first: flat chroma-key background plus local removal helper. Ask before CLI fallback for true native transparency                             |
+| Character consistency | Locked PixelLab parameters plus character IDs           | Reference sheets, repeated anchor details, labelled input images, and strict preservation prompts. No sprite identity is truly seed-locked             |
+| Animations            | Queue PixelLab animations                               | Treat GPT Images 2 sheets as concept or source art. Build final animation deterministically or crop approved frames with manual quality assurance (QA) |
+| Batch assets          | PixelLab jobs per asset                                 | One built-in image generation call per distinct asset or variant unless the user explicitly selects CLI batch fallback                                 |
+| UI panels             | Could use generated ornament pieces                     | Generate references only, then build final UI widgets algorithmically                                                                                  |
 
-The dragon in the room: GPT Images 2 can create gorgeous concept and reference images, but it does not give a game-asset pipeline with guaranteed direction sets, sprite identity locks, animation loops, tile autotiling, or a stable seed contract in the built-in Codex surface. Design the repo around that truth rather than pretending the model is a tiny deterministic goblin press.
+The dragon in the room: GPT Images 2 can create gorgeous concept and reference
+images, but it does not give a game-asset pipeline with guaranteed direction
+sets, sprite identity locks, animation loops, tile autotiling, or a stable seed
+contract in the built-in Codex surface. Design the repo around that truth
+rather than pretending the model is a tiny deterministic goblin press.
 
 ## 3. Codex image generation rules
 
@@ -45,32 +63,43 @@ Use Codex's built-in `image_gen` tool by default for:
 - new raster images
 - editing images already visible to Codex
 - visual variants from references
-- style guides, concept sheets, mockups, spritesheet references, textures, props, and cutout sources
+- style guides, concept sheets, mockups, spritesheet references, textures,
+  props, and cutout sources
 - simple transparent-background requests using chroma-key plus local removal
 
-Do not add PixelLab MCP configuration to the repo. Do not ask for an API key for the built-in path.
+Do not add PixelLab MCP configuration to the repo. Do not ask for an API key
+for the built-in path.
 
 ### 3.2 CLI fallback
 
-Use the fallback CLI only when the user explicitly asks for CLI/API/model controls, or when they explicitly confirm a true native transparency fallback. Do not silently downgrade or switch models.
+Use the fallback CLI only when the user explicitly asks for CLI/API/model
+controls, or when they explicitly confirm a true native transparency fallback.
+Do not silently downgrade or switch models.
 
 In particular:
 
 - `gpt-image-2` is the normal GPT Images 2 path.
-- Do not set `input_fidelity` for GPT Images 2. Image inputs already use high fidelity in the documented guidance.
-- Use CLI model, quality, output path, masks, and explicit size flags only when the user has chosen CLI mode.
-- For true native transparent output, explain that the fallback uses `gpt-image-1.5` because GPT Images 2 does not support `background=transparent`, then ask before proceeding.
+- Do not set `input_fidelity` for GPT Images 2. Image inputs already use high
+  fidelity in the documented guidance.
+- Use CLI model, quality, output path, masks, and explicit size flags only when
+  the user has chosen CLI mode.
+- For true native transparent output, explain that the fallback uses
+  `gpt-image-1.5` because GPT Images 2 does not support
+  `background=transparent`, then ask before proceeding.
 
 ### 3.3 Project-bound save policy
 
 For every generated image that the repo consumes:
 
 1. Generate with built-in `image_gen`.
-2. Inspect the output for subject, style, composition, text accuracy, avoid-list compliance, and preservation invariants.
-3. Move or copy the selected output from Codex's generated image area into the workspace.
+2. Inspect the output for subject, style, composition, text accuracy,
+   avoid-list compliance, and preservation invariants.
+3. Move or copy the selected output from Codex's generated image area into the
+   workspace.
 4. Save it under a stable, descriptive, non-destructive filename.
 5. Record the final prompt and validation notes in an asset manifest.
-6. Never leave a project-referenced image only under `$CODEX_HOME/generated_images/...`.
+6. Never leave a project-referenced image only under
+   `$CODEX_HOME/generated_images/...`.
 
 Suggested directories:
 
@@ -88,7 +117,8 @@ assets/palette/
 
 ## 4. Prompt grammar for this project
 
-GPT Images 2 responds best to concrete structure. Every generation prompt should use this spine unless the user provides a more precise form:
+GPT Images 2 responds best to concrete structure. Every generation prompt
+should use this spine unless the user provides a more precise form:
 
 ```text
 Use case:
@@ -107,7 +137,8 @@ Constraints:
 Avoid:
 ```
 
-For longer prompts, linebreaks are not decoration. They are steering ropes. Keep each section short and specific.
+For longer prompts, linebreaks are not decoration. They are steering ropes.
+Keep each section short and specific.
 
 ### 4.1 Pixel-art additions
 
@@ -115,17 +146,22 @@ For this dashboard, add the following details when relevant:
 
 ```text
 Pixel-art requirements:
-Crisp pixel-art rendering, readable silhouettes, controlled dithering, no painterly smearing, no blurry anti-aliased edges in the subject, clear sprite-scale forms.
+Crisp pixel-art rendering, readable silhouettes, controlled dithering, no
+painterly smearing, no blurry anti-aliased edges in the subject, clear
+sprite-scale forms.
 
 Runtime fit:
-Designed as source/reference art for a 512x288 fixed-virtual-resolution Rust `pixels` renderer. Final runtime UI will be assembled deterministically.
+Designed as source/reference art for a 512x288 fixed-virtual-resolution Rust
+`pixels` renderer. Final runtime UI will be assembled deterministically.
 ```
 
-Use these clauses judiciously. A design-book poster does not need the same restrictions as a tiny prop cutout.
+Use these clauses judiciously. A design-book poster does not need the same
+restrictions as a tiny prop cutout.
 
 ### 4.2 Anti-slop rules
 
-Avoid vague praise words as instructions. They add noise without telling the model what to render.
+Avoid vague praise words as instructions. They add noise without telling the
+model what to render.
 
 Weak:
 
@@ -136,10 +172,14 @@ Stunning, epic, ultra-detailed, beautiful, award-winning, masterpiece, premium.
 Useful:
 
 ```text
-Warm amber pendant lamps, dark walnut shelves, brass trim, deep navy UI panels, pixel-perfect borders, legible cream typography, tiny cyan screen glows, moss-green status accents.
+Warm amber pendant lamps, dark walnut shelves, brass trim, deep navy UI panels,
+pixel-perfect borders, legible cream typography, tiny cyan screen glows,
+moss-green status accents.
 ```
 
-Say the real thing. If the scene needs a dashboard stat card, say dashboard stat card. If the asset must be a cutout espresso machine, say espresso machine cutout. If text matters, quote it exactly and say where it goes.
+Say the real thing. If the scene needs a dashboard stat card, say dashboard
+stat card. If the asset must be a cutout espresso machine, say espresso machine
+cutout. If text matters, quote it exactly and say where it goes.
 
 ### 4.3 Text-in-image rules
 
@@ -153,7 +193,9 @@ Typography: large cream pixel-serif title, centred at the top, high contrast, cl
 Constraints: render the text exactly once; no extra words; no duplicate text; no watermark.
 ```
 
-For tricky labels, spell the intended copy in a separate line and keep the number of text elements small. For final runtime text, prefer deterministic bitmap fonts in Rust rather than generated text.
+For tricky labels, spell the intended copy in a separate line and keep the
+number of text elements small. For final runtime text, prefer deterministic
+bitmap fonts in Rust rather than generated text.
 
 ### 4.4 Edit prompts
 
@@ -164,7 +206,8 @@ Change:
 Replace only the inactive tab colour with muted brass.
 
 Preserve:
-Keep the original layout, frame geometry, title text, character positions, lighting, pixel-art style, and all other UI panels unchanged.
+Keep the original layout, frame geometry, title text, character positions,
+lighting, pixel-art style, and all other UI panels unchanged.
 
 Constraints:
 No extra text, no new characters, no watermark, no redesign.
@@ -183,17 +226,21 @@ Image 2: style-book page showing the preferred frame language.
 Image 3: character roster reference for agent proportions and palette.
 
 Primary request:
-Generate a new isometric coffee-shop environment sheet using Image 1 for mood, Image 2 for presentation layout, and Image 3 for character scale.
+Generate a new isometric coffee-shop environment sheet using Image 1 for mood,
+Image 2 for presentation layout, and Image 3 for character scale.
 
 Constraints:
-Do not copy the reference exactly. Preserve the visual language: warm amber light, deep navy panels, brass trim, readable pixel forms, cosy work atmosphere.
+Do not copy the reference exactly. Preserve the visual language: warm amber
+light, deep navy panels, brass trim, readable pixel forms, cosy work atmosphere.
 ```
 
 ## 5. House style
 
 ### 5.1 Scene mood
 
-The world is a productive coffee shop that knows how to compile code and foam oat milk. It should feel warm rather than saccharine, detailed rather than cluttered, and playful rather than unserious.
+The world is a productive coffee shop that knows how to compile code and foam
+oat milk. It should feel warm rather than saccharine, detailed rather than
+cluttered, and playful rather than unserious.
 
 Target qualities:
 
@@ -204,28 +251,31 @@ Target qualities:
 - moss green, slate blue, amber, and ember red state colours
 - readable silhouettes at small scale
 - controlled contrast: cosy, not muddy
-- environmental detail that hints at ongoing work: half-full mugs, open notebooks, pinned notes, screens, books, tools, lamps, plants, and signs
+- environmental detail that hints at ongoing work: half-full mugs, open
+  notebooks, pinned notes, screens, books, tools, lamps, plants, and signs
 
 ### 5.2 Core palette
 
 Use this palette as a target, not a prison:
 
-| Name | Hex | Use |
-| --- | --- | --- |
-| Near black | `#07101B` | deepest panel recesses, outlines |
-| Deep navy | `#0F1A2E` | main UI background |
-| Slate blue | `#1E2B44` | inactive panels, inner fills |
-| Coffee brown | `#4B2E1A` | shelves, leather, dark wood |
-| Walnut wood | `#7A4A2B` | counter, furniture, props |
-| Brass gold | `#D4AF37` | trim, icons, dividers |
-| Warm amber | `#FFB347` | lamps, highlight glow |
-| Candle glow | `#FFD98A` | bright light accents, title highlights |
-| Moss green | `#2E5B3F` | active state, plant accents |
-| Screen cyan | `#61D6FF` | displays, robot eyes, data glow |
-| Ember red | `#B94A2E` | busy or warning states |
-| Cream | `#F2E6C9` | text, parchment, high-contrast glyphs |
+| Name         | Hex       | Use                                    |
+| ------------ | --------- | -------------------------------------- |
+| Near black   | `#07101B` | deepest panel recesses, outlines       |
+| Deep navy    | `#0F1A2E` | main UI background                     |
+| Slate blue   | `#1E2B44` | inactive panels, inner fills           |
+| Coffee brown | `#4B2E1A` | shelves, leather, dark wood            |
+| Walnut wood  | `#7A4A2B` | counter, furniture, props              |
+| Brass gold   | `#D4AF37` | trim, icons, dividers                  |
+| Warm amber   | `#FFB347` | lamps, highlight glow                  |
+| Candle glow  | `#FFD98A` | bright light accents, title highlights |
+| Moss green   | `#2E5B3F` | active state, plant accents            |
+| Screen cyan  | `#61D6FF` | displays, robot eyes, data glow        |
+| Ember red    | `#B94A2E` | busy or warning states                 |
+| Cream        | `#F2E6C9` | text, parchment, high-contrast glyphs  |
 
-Generated source images may exceed this palette. Approved runtime assets should be quantized or remapped toward the shared palette unless the asset has a documented exception.
+Generated source images may exceed this palette. Approved runtime assets should
+be quantized or remapped toward the shared palette unless the asset has a
+documented exception.
 
 ### 5.3 Pixel discipline
 
@@ -233,35 +283,40 @@ Generated source images may exceed this palette. Approved runtime assets should 
 - Keep final runtime sprites small enough to integrate at 512x288.
 - Avoid generated micro-text in runtime assets. Render app text in code.
 - Preserve outline consistency across characters and props.
-- Allow richer source art for style-book pages, but simplify runtime pieces during post-processing.
+- Allow richer source art for style-book pages, but simplify runtime pieces
+  during post-processing.
 - Test sprites at 1x, 2x, 3x, and 4x integer scales.
 
 ## 6. Character roster
 
-The main team should support both dashboard readability and little narrative sparks.
+The main team should support both dashboard readability and little narrative
+sparks.
 
-| Character | Role | Silhouette and details | Primary colour accents | Runtime use |
-| --- | --- | --- | --- | --- |
-| Ava | Research Specialist | auburn hair, apron or waistcoat, laptop or clipboard, attentive posture | amber, cream, moss green | seated analyst card, research task activity |
-| Byte | Operations Manager | rounded white robot shell, cyan face display, blue ear modules, small hands | screen cyan, cream, brass | central operations avatar, status animations |
-| Lex | Data Analyst | dark hair, rolled sleeves, mug or tablet, focused expression | slate blue, brass, cyan | analytics card, report review state |
-| Sage | Knowledge Advisor | brown hood, dark face void, glowing cyan eyes, book and quill | coffee brown, moss green, candle glow | support and Q&A card, knowledge scene |
-| Nova | Systems Engineer | dark cat-like mascot or engineer, headset, wrench, calm competence | slate blue, cyan, brass | systems status, debug and infrastructure panels |
-| Patch | Tech Tinkerer | fox or dog-like mechanic, goggles, overalls, tool belt | moss green, amber, walnut | workshop scenes, repair tasks |
-| Ember | Community Liaison | red-orange hair, friendly expression, mug or megaphone | ember, cream, brass | announcements, team activity |
-| Echo | Support Assistant | small hovering drone, cyan face display, tiny wings or propellers | cyan, cream, brass | help, notifications, onboarding tips |
+| Character | Role                | Silhouette and details                                                      | Primary colour accents                | Runtime use                                     |
+| --------- | ------------------- | --------------------------------------------------------------------------- | ------------------------------------- | ----------------------------------------------- |
+| Ava       | Research Specialist | auburn hair, apron or waistcoat, laptop or clipboard, attentive posture     | amber, cream, moss green              | seated analyst card, research task activity     |
+| Byte      | Operations Manager  | rounded white robot shell, cyan face display, blue ear modules, small hands | screen cyan, cream, brass             | central operations avatar, status animations    |
+| Lex       | Data Analyst        | dark hair, rolled sleeves, mug or tablet, focused expression                | slate blue, brass, cyan               | analytics card, report review state             |
+| Sage      | Knowledge Advisor   | brown hood, dark face void, glowing cyan eyes, book and quill               | coffee brown, moss green, candle glow | support and Q&A card, knowledge scene           |
+| Nova      | Systems Engineer    | dark cat-like mascot or engineer, headset, wrench, calm competence          | slate blue, cyan, brass               | systems status, debug and infrastructure panels |
+| Patch     | Tech Tinkerer       | fox or dog-like mechanic, goggles, overalls, tool belt                      | moss green, amber, walnut             | workshop scenes, repair tasks                   |
+| Ember     | Community Liaison   | red-orange hair, friendly expression, mug or megaphone                      | ember, cream, brass                   | announcements, team activity                    |
+| Echo      | Support Assistant   | small hovering drone, cyan face display, tiny wings or propellers           | cyan, cream, brass                    | help, notifications, onboarding tips            |
 
 ### 6.1 Character reference workflow
 
-Use GPT Images 2 for reference sheets, not as a guaranteed final animation factory.
+Use GPT Images 2 for reference sheets, not as a guaranteed final animation
+factory.
 
 Recommended output types:
 
 - group roster sheet for global consistency
-- individual character sheet with full-body pose, expression chips, and accessories
+- individual character sheet with full-body pose, expression chips, and
+  accessories
 - small portrait chip sheet for UI cards
 - sprite-scale static pose sheet for possible cropping
-- edit iterations that preserve face, proportions, palette, outfit, and silhouette
+- edit iterations that preserve face, proportions, palette, outfit, and
+  silhouette
 
 Character consistency prompt pattern:
 
@@ -269,9 +324,11 @@ Character consistency prompt pattern:
 Use case: stylized-concept
 Asset type: pixel-art character reference sheet
 Primary request: character sheet for Ava, the Research Specialist
-Subject: same Ava identity across all poses; auburn hair, white shirt, dark apron, thoughtful face, laptop and notebook accessories
+Subject: same Ava identity across all poses; auburn hair, white shirt, dark
+apron, thoughtful face, laptop and notebook accessories
 Style/medium: crisp cosy pixel-art reference sheet for a game UI
-Composition/framing: full-body front pose, three small expression portraits, two accessory callouts, simple dark navy background, brass frame
+Composition/framing: full-body front pose, three small expression portraits,
+two accessory callouts, simple dark navy background, brass frame
 Lighting/mood: warm amber rim light, subtle cyan screen glow
 Colour palette: coffee brown, brass gold, cream, warm amber, moss green accents
 Constraints: preserve one consistent character identity across the sheet; no extra text except labels requested; no watermark
@@ -280,16 +337,17 @@ Avoid: photorealism, blurry painterly edges, excessive tiny detail, inconsistent
 
 ## 7. Environments and locations
 
-Use environment sheets to establish spatial logic, lighting, and props. Use the runtime to assemble final compositions.
+Use environment sheets to establish spatial logic, lighting, and props. Use the
+runtime to assemble final compositions.
 
-| Location | Function | Mood | Signature details |
-| --- | --- | --- | --- |
-| Hipster Coffee Shop | main dashboard workplace | warm, productive, social | bar counter, espresso machine, jars, shelves, plants, pendant lamps, dashboard panels |
-| Library Archive | deep research and memory | quiet, timeless, focused | book stacks, ladders, lamps, globes, terminal bank, card drawers |
-| Neon Data Loft | analytics and sprints | energetic, modern, collaborative | city view, neon motto, server racks, dashboards, cool cyan and magenta light |
-| Rooftop Garden Workspace | solo focus and writing | calm, green, reflective | pergola, planters, string lights, city skyline, outdoor desks |
-| Observatory Terrace | strategy and long-range thinking | serene, expansive, night-blue | telescope, stars, lanterns, city lights, charts and notebooks |
-| Bot Workshop | prototyping and maintenance | hands-on, industrious, cluttered | workbench, tools, robot parts, monitors, soldering gear, labelled drawers |
+| Location                 | Function                         | Mood                             | Signature details                                                                     |
+| ------------------------ | -------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------- |
+| Hipster Coffee Shop      | main dashboard workplace         | warm, productive, social         | bar counter, espresso machine, jars, shelves, plants, pendant lamps, dashboard panels |
+| Library Archive          | deep research and memory         | quiet, timeless, focused         | book stacks, ladders, lamps, globes, terminal bank, card drawers                      |
+| Neon Data Loft           | analytics and sprints            | energetic, modern, collaborative | city view, neon motto, server racks, dashboards, cool cyan and magenta light          |
+| Rooftop Garden Workspace | solo focus and writing           | calm, green, reflective          | pergola, planters, string lights, city skyline, outdoor desks                         |
+| Observatory Terrace      | strategy and long-range thinking | serene, expansive, night-blue    | telescope, stars, lanterns, city lights, charts and notebooks                         |
+| Bot Workshop             | prototyping and maintenance      | hands-on, industrious, cluttered | workbench, tools, robot parts, monitors, soldering gear, labelled drawers             |
 
 ### 7.1 Environment prompt pattern
 
@@ -357,7 +415,9 @@ Build these in Rust or scripts:
 - text layout, clipping, and contrast rules
 - focus rings, cursor, tooltip shells, modals
 
-Runtime text should come from a bitmap font or code-rendered glyph atlas. Generated UI mockups can include text for concept validation, but final dashboard copy should not depend on generated lettering.
+Runtime text should come from a bitmap font or code-rendered glyph atlas.
+Generated UI mockups can include text for concept validation, but final
+dashboard copy should not depend on generated lettering.
 
 ## 9. Transparent and cutout assets
 
@@ -368,31 +428,39 @@ Prompt pattern:
 ```text
 Use case: background-extraction
 Asset type: pixel-art prop cutout source
-Primary request: isolated espresso machine for a cosy pixel-art coffee shop dashboard
+Primary request: isolated espresso machine for a cosy pixel-art coffee shop
+dashboard
 Scene/backdrop: perfectly flat solid #00ff00 chroma-key background for local background removal
-Subject: brass-and-steel espresso machine with small cups, dark wood base, warm highlights, readable at small game-prop scale
+Subject: brass-and-steel espresso machine with small cups, dark wood base, warm
+highlights, readable at small game-prop scale
 Style/medium: crisp pixel-art prop, no scene background
 Composition/framing: centred object with generous padding, straight-on slight 3/4 view
 Lighting/mood: warm amber highlights on metal, no cast shadow
 Colour palette: brass gold, steel grey, walnut brown, cream highlights; do not use #00ff00 in the subject
-Constraints: background must be one uniform colour with no shadows, gradients, texture, reflections, floor plane, or lighting variation; crisp silhouette; no halos; no watermark; no text
+Constraints: background must be one uniform colour with no shadows, gradients,
+texture, reflections, floor plane, or lighting variation; crisp silhouette; no
+halos; no watermark; no text
 Avoid: green reflections, transparent glass complexity, smoke, steam, fur, soft shadows
 ```
 
 Post-processing sequence:
 
 ```bash
-python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" \
+python tools/remove_chroma_and_validate.py \
   --input <source.png> \
   --out <final.png> \
   --auto-key border \
   --soft-matte \
   --transparent-threshold 12 \
   --opaque-threshold 220 \
-  --despill
+  --despill \
+  --edge-contract 0
 ```
 
-Validate alpha, corners, edge fringing, subject coverage, palette, and scale. If a thin fringe remains, retry once with `--edge-contract 1`. Ask before using CLI true transparency for hair, fur, smoke, glass, liquids, translucent materials, reflective product grounding, or soft shadows.
+Validate alpha, corners, edge fringing, subject coverage, palette, and scale.
+If a thin fringe remains, retry once with `--edge-contract 1`. Ask before using
+CLI true transparency for hair, fur, smoke, glass, liquids, translucent
+materials, reflective product grounding, or soft shadows.
 
 ## 10. Asset taxonomy
 
@@ -526,7 +594,11 @@ Generate without AI:
 
 ## 12. Manifest format
 
-Treat generation metadata as source code. Built-in image generation may not provide a job ID in the same way a remote job queue does, so preserve the information that actually matters: prompt, reference roles, selected source file, workspace file, edits, post-processing, validation, and runtime integration.
+Treat generation metadata as source code. Built-in image generation may not
+provide a job ID in the same way a remote job queue does, so preserve the
+information that actually matters: prompt, reference roles, selected source
+file, workspace file, edits, post-processing, validation, and runtime
+integration.
 
 Example `assets/manifests/characters/ava_reference_sheet.json`:
 
@@ -543,7 +615,7 @@ Example `assets/manifests/characters/ava_reference_sheet.json`:
   "prompt": {
     "use_case": "stylized-concept",
     "asset_type": "pixel-art character reference sheet",
-    "text": "Use case: stylized-concept\nAsset type: pixel-art character reference sheet\nPrimary request: character sheet for Ava...",
+    "text": "Use case: stylized-concept\nAsset type: pixel-art character reference sheet\nPrimary request: ...",
     "input_images": [
       {
         "label": "Image 1",
@@ -599,7 +671,8 @@ For chroma-key cutouts, include helper settings:
 
 ## 13. Codex configuration strategy
 
-The built-in image generation tool does not require an MCP server entry. Keep `.codex/config.toml` simple unless the repo needs network for other reasons.
+The built-in image generation tool does not require an MCP server entry. Keep
+`.codex/config.toml` simple unless the repo needs network for other reasons.
 
 ```toml
 approval_policy = "on-request"
@@ -613,7 +686,8 @@ max_threads = 4
 max_depth = 1
 ```
 
-Set `network_access = true` only when the repo actually needs shell-side downloads, API tests, or explicit CLI fallback workflows.
+Set `network_access = true` only when the repo actually needs shell-side
+downloads, API tests, or explicit CLI fallback workflows.
 
 ### 13.1 `AGENTS.md` baseline
 
@@ -702,7 +776,8 @@ Purpose:
 
 - analyse the approved mockup image
 - produce asset list, palette targets, composition map, and prompt templates
-- decide what becomes built-in imagegen output, what becomes imagegen reference, and what becomes procedural
+- decide what becomes built-in imagegen output, what becomes imagegen
+  reference, and what becomes procedural
 
 ### Phase 3: style anchors
 
@@ -731,7 +806,8 @@ Purpose:
 
 ### Phase 6: deterministic UI kit
 
-- build nine-slice panels, tabs, buttons, stat cards, charts, and icons algorithmically
+- build nine-slice panels, tabs, buttons, stat cards, charts, and icons
+  algorithmically
 - use generated ornament references only as style inspiration
 - render all final dashboard text with runtime glyphs
 
@@ -749,8 +825,8 @@ Purpose:
 
 ## 16. Day 2: prompt composer, not magic runtime generation
 
-Codex's built-in `image_gen` tool is a development workflow, not a Rust
-runtime API. The app should not pretend it can directly call the Codex tool.
+Codex's built-in `image_gen` tool is a development workflow, not a Rust runtime
+API. The app should not pretend it can directly call the Codex tool.
 
 A sensible Day 2 feature is a **prompt composer panel**:
 
@@ -808,7 +884,8 @@ Mitigation:
 - create roster and individual reference sheets early
 - repeat anchor details in every prompt
 - label input reference images by role
-- use edit prompts that preserve identity, face, proportions, outfit, and palette
+- use edit prompts that preserve identity, face, proportions, outfit, and
+  palette
 - reject inconsistent outputs rather than warping the design around them
 
 ### Risk 3: unreadable generated text
@@ -824,7 +901,8 @@ Mitigation:
 Mitigation:
 
 - use flat chroma-key backgrounds with generous padding
-- avoid shadow, smoke, glass, fur, hair, and reflective complexity in cutout prompts
+- avoid shadow, smoke, glass, fur, hair, and reflective complexity in cutout
+  prompts
 - run alpha validation
 - ask before true native transparency fallback
 
@@ -841,10 +919,14 @@ Mitigation:
 
 The strongest route is a hybrid pipeline:
 
-- GPT Images 2 built-in for visual exploration, style anchors, character references, environment sheets, prop cutout sources, and edit iterations
-- scripts for cutout cleanup, quantization, atlas packing, and deterministic texture/UI preparation
-- Rust `pixels` for fixed-resolution composition, input, text, widgets, and lighting
-- Codex CLI as the single orchestrator, with subagents for planning and review rather than chaotic parallel writing
+- GPT Images 2 built-in for visual exploration, style anchors, character
+  references, environment sheets, prop cutout sources, and edit iterations
+- scripts for cutout cleanup, quantization, atlas packing, and deterministic
+  texture/UI preparation
+- Rust `pixels` for fixed-resolution composition, input, text, widgets, and
+  lighting
+- Codex CLI as the single orchestrator, with subagents for planning and review
+  rather than chaotic parallel writing
 
 That yields a practical creative furnace without surrendering the runtime to
 stochastic soup.

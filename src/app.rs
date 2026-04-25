@@ -80,7 +80,10 @@ impl ApplicationHandler for AgentlandApp {
         }
 
         match Runtime::new(event_loop) {
-            Ok(runtime) => self.runtime = Some(runtime),
+            Ok(runtime) => {
+                runtime.request_redraw();
+                self.runtime = Some(runtime);
+            }
             Err(error) => self.set_error(event_loop, error),
         }
     }
@@ -109,15 +112,11 @@ impl ApplicationHandler for AgentlandApp {
             WindowEvent::Resized(size) => {
                 if let Err(error) = runtime.resize(size) {
                     self.set_error(event_loop, error);
+                } else {
+                    runtime.request_redraw();
                 }
             }
             _ => {}
-        }
-    }
-
-    fn about_to_wait(&mut self, _event_loop: &ActiveEventLoop) {
-        if let Some(runtime) = self.runtime.as_ref() {
-            runtime.request_redraw();
         }
     }
 }
@@ -158,17 +157,18 @@ impl Runtime {
     fn window_id(&self) -> WindowId { self.window.id() }
 
     fn request_redraw(&self) {
-        if self.is_surface_visible {
+        if self.is_surface_visible && self.viewport.is_fittable() {
             self.window.request_redraw();
         }
     }
 
     fn resize(&mut self, size: PhysicalSize<u32>) -> Result<(), AppError> {
+        self.viewport = Viewport::from_window_size(PhysicalViewportSize::from(size));
+
         if is_zero_sized(size) {
             self.is_surface_visible = false;
             Ok(())
         } else {
-            self.viewport = Viewport::from_window_size(PhysicalViewportSize::from(size));
             self.pixels.resize_surface(size.width, size.height)?;
             self.is_surface_visible = true;
             Ok(())
@@ -176,7 +176,7 @@ impl Runtime {
     }
 
     fn render(&mut self) -> Result<(), AppError> {
-        if self.is_surface_visible {
+        if self.is_surface_visible && self.viewport.is_fittable() {
             render_placeholder_dashboard(
                 self.pixels.frame_mut(),
                 VIRTUAL_WIDTH_USIZE,

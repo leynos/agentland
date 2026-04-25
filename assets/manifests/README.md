@@ -32,4 +32,4 @@ Each manifest records:
 - validation notes;
 - runtime use.
 
-See `docs/asset-spec.md` for the canonical schema.
+See [`docs/asset-spec.md`](../../docs/asset-spec.md) for the canonical schema.

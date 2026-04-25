@@ -27,7 +27,7 @@ prompts/
 assets/
 ├─ source/
 │  ├─ gpt-images-2/
-│  │  ├─ style-guides/
+│  │  ├─ style-book/
 │  │  ├─ characters/
 │  │  ├─ animations/
 │  │  ├─ environments/

@@ -58,9 +58,9 @@ impl Viewport {
     pub fn from_window_size(size: PhysicalViewportSize) -> Self {
         let width_scale = size.width.checked_div(VIRTUAL_WIDTH).unwrap_or(0);
         let height_scale = size.height.checked_div(VIRTUAL_HEIGHT).unwrap_or(0);
-        let scale = width_scale.min(height_scale).max(1);
-        let width = VIRTUAL_WIDTH.saturating_mul(scale).min(size.width);
-        let height = VIRTUAL_HEIGHT.saturating_mul(scale).min(size.height);
+        let scale = width_scale.min(height_scale);
+        let width = VIRTUAL_WIDTH.saturating_mul(scale);
+        let height = VIRTUAL_HEIGHT.saturating_mul(scale);
         let x = centred_offset(size.width, width);
         let y = centred_offset(size.height, height);
 
@@ -103,6 +103,10 @@ impl Viewport {
     /// Physical size of the scaled framebuffer inside the window.
     #[must_use]
     pub const fn size(self) -> (u32, u32) { (self.width, self.height) }
+
+    /// Whether the window can present the full virtual framebuffer.
+    #[must_use]
+    pub(crate) const fn is_fittable(self) -> bool { self.scale > 0 }
 }
 
 fn centred_offset(outer: u32, inner: u32) -> u32 {
@@ -123,7 +127,7 @@ mod tests {
     #[case((1024, 576), 2, (0, 0), (1024, 576))]
     #[case((1200, 700), 2, (88, 62), (1024, 576))]
     #[case((900, 1200), 1, (194, 456), (512, 288))]
-    #[case((320, 200), 1, (0, 0), (320, 200))]
+    #[case((320, 200), 0, (160, 100), (0, 0))]
     fn viewport_uses_largest_integer_scale_that_fits(
         #[case] window_size: (u32, u32),
         #[case] expected_scale: u32,
@@ -154,5 +158,16 @@ mod tests {
             .map(|point| (point.x(), point.y()));
 
         assert_eq!(actual, expected);
+    }
+
+    #[test]
+    fn physical_points_do_not_map_when_window_cannot_fit_framebuffer() {
+        let viewport = Viewport::from_window_size(PhysicalViewportSize::new(320, 200));
+
+        assert_eq!(
+            viewport.physical_to_virtual(PhysicalPosition::new(160, 100)),
+            None
+        );
+        assert!(!viewport.is_fittable());
     }
 }

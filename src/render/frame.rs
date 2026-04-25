@@ -17,7 +17,7 @@ impl Color {
         }
     }
 
-    const fn channels(self) -> [u8; CHANNEL_COUNT] { self.channels }
+    pub(crate) const fn channels(self) -> [u8; CHANNEL_COUNT] { self.channels }
 }
 
 /// Mutable view over a fixed-size RGBA framebuffer.

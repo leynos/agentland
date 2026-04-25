@@ -131,14 +131,15 @@ requested.
 Run:
 
 ```bash
-python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" \
+python tools/remove_chroma_and_validate.py \
   --input <source.png> \
   --out <output.png> \
   --auto-key border \
   --soft-matte \
   --transparent-threshold 12 \
   --opaque-threshold 220 \
-  --despill
+  --despill \
+  --edge-contract 0
 ```
 
 If a thin fringe remains, retry once with `--edge-contract 1`.
@@ -146,8 +147,7 @@ If a thin fringe remains, retry once with `--edge-contract 1`.
 Ask before using true native transparency for hair, fur, smoke, glass, liquids,
 translucent materials, reflective product grounding, soft shadows, or failed
 chroma-key validation. Native transparency requires the CLI fallback with
-`gpt-image-1.5` because GPT Images 2 does not support
-`background=transparent`.
+`gpt-image-1.5` because GPT Images 2 does not support `background=transparent`.
 
 ## Validation
 

@@ -113,7 +113,7 @@ const OUTER_MARGIN: usize = 8;
 const TOP_BAR_HEIGHT: usize = 28;
 const SCENE_HEIGHT: usize = 188;
 const STAT_CARD_HEIGHT: usize = 48;
-const CARD_GAP: usize = 6;
+pub(crate) const CARD_GAP: usize = 6;
 const STAT_CARD_COUNT: usize = 4;
 
 fn stat_card_width() -> usize {
@@ -129,7 +129,7 @@ fn stat_card_width() -> usize {
 mod tests {
     //! Tests for the fixed virtual dashboard layout.
 
-    use super::{DashboardLayout, Rect};
+    use super::{CARD_GAP, DashboardLayout, Rect};
     use crate::config::{VIRTUAL_HEIGHT_USIZE, VIRTUAL_WIDTH_USIZE};
 
     #[test]
@@ -161,5 +161,14 @@ mod tests {
                     && card.height() == expected.height()
             })
         }));
+
+        for (previous, next) in cards.iter().zip(cards.iter().skip(1)) {
+            let actual_gap = next
+                .x()
+                .saturating_sub(previous.x())
+                .saturating_sub(previous.width());
+
+            assert_eq!(actual_gap, CARD_GAP);
+        }
     }
 }

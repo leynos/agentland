@@ -8,9 +8,9 @@ role-playing game (JRPG) management scene fused with an operational dashboard:
 warm, readable, characterful, and disciplined.
 
 The current visual authority is `docs/agentland-design.md`,
-`docs/agentland-prompt-pack.md`, the reference images under `ref/`, accepted
-asset manifests, and this document. More specific approved manifests take
-precedence for individual assets.
+`docs/prompt-style-guide.md`, the reference images under
+`assets/source/references/`, accepted asset manifests, and this document. More
+specific approved manifests take precedence for individual assets.
 
 ## Assumptions
 

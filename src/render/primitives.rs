@@ -5,6 +5,36 @@ use crate::{
     render::frame::{Color, FrameBuffer},
 };
 
+const BACKPLATE_STRIPE_HEIGHT: usize = 2;
+const PANEL_BORDER_THICKNESS: usize = 2;
+const PANEL_BORDER_TOTAL: usize = PANEL_BORDER_THICKNESS.saturating_mul(2);
+const TOP_BAR_BOTTOM_BORDER_HEIGHT: usize = PANEL_BORDER_THICKNESS;
+const TOP_BAR_LEFT_BADGE_X_OFFSET: usize = 8;
+const TOP_BAR_BADGE_Y_OFFSET: usize = 7;
+const TOP_BAR_LEFT_BADGE_WIDTH: usize = 92;
+const TOP_BAR_RIGHT_BADGE_OUTSET: usize = 92;
+const TOP_BAR_RIGHT_BADGE_WIDTH: usize = 76;
+const TOP_BAR_BADGE_HEIGHT: usize = 14;
+const SCENE_PANEL_INSET: usize = 3;
+const SCENE_PANEL_INSET_TOTAL: usize = SCENE_PANEL_INSET.saturating_mul(2);
+const VIEWPORT_BOTTOM_STRIP_HEIGHT: usize = 36;
+const VIEWPORT_LEFT_BLOCK_X_OFFSET: usize = 22;
+const VIEWPORT_LEFT_BLOCK_Y_OFFSET: usize = 18;
+const VIEWPORT_LEFT_BLOCK_WIDTH: usize = 46;
+const VIEWPORT_LEFT_BLOCK_HEIGHT: usize = 68;
+const VIEWPORT_RIGHT_BLOCK_OUTSET: usize = 86;
+const VIEWPORT_RIGHT_BLOCK_Y_OFFSET: usize = 30;
+const VIEWPORT_RIGHT_BLOCK_WIDTH: usize = 58;
+const VIEWPORT_RIGHT_BLOCK_HEIGHT: usize = 42;
+const STAT_CARD_COUNT: usize = 4;
+const STAT_CARD_ACCENT_INSET: usize = 5;
+const STAT_CARD_ACCENT_INSET_TOTAL: usize = STAT_CARD_ACCENT_INSET.saturating_mul(2);
+const STAT_CARD_ACCENT_HEIGHT: usize = 6;
+const STAT_CARD_BODY_X_INSET: usize = 6;
+const STAT_CARD_BODY_X_INSET_TOTAL: usize = STAT_CARD_BODY_X_INSET.saturating_mul(2);
+const STAT_CARD_BODY_Y_OFFSET: usize = 20;
+const STAT_CARD_BODY_HEIGHT: usize = 18;
+
 /// Renders the deterministic placeholder dashboard into a fixed RGBA frame.
 pub(crate) fn render_placeholder_dashboard(frame: &mut [u8], width: usize, height: usize) {
     let mut framebuffer = FrameBuffer::new(frame, width, height);
@@ -18,7 +48,7 @@ pub(crate) fn render_placeholder_dashboard(frame: &mut [u8], width: usize, heigh
 }
 
 fn draw_backplate(framebuffer: &mut FrameBuffer<'_>, bounds: Rect) {
-    let stripe_height = bounds.height().min(2);
+    let stripe_height = bounds.height().min(BACKPLATE_STRIPE_HEIGHT);
 
     framebuffer.fill_rect(bounds, PALETTE.deep_navy);
     framebuffer.fill_rect(
@@ -41,24 +71,29 @@ fn draw_backplate(framebuffer: &mut FrameBuffer<'_>, bounds: Rect) {
 fn draw_top_bar(framebuffer: &mut FrameBuffer<'_>, rect: Rect) {
     framebuffer.fill_rect(rect, PALETTE.slate_blue);
     framebuffer.fill_rect(
-        Rect::new(rect.x(), rect.bottom().saturating_sub(2), rect.width(), 2),
+        Rect::new(
+            rect.x(),
+            rect.bottom().saturating_sub(TOP_BAR_BOTTOM_BORDER_HEIGHT),
+            rect.width(),
+            TOP_BAR_BOTTOM_BORDER_HEIGHT,
+        ),
         PALETTE.brass,
     );
     framebuffer.fill_rect(
         Rect::new(
-            rect.x().saturating_add(8),
-            rect.y().saturating_add(7),
-            92,
-            14,
+            rect.x().saturating_add(TOP_BAR_LEFT_BADGE_X_OFFSET),
+            rect.y().saturating_add(TOP_BAR_BADGE_Y_OFFSET),
+            TOP_BAR_LEFT_BADGE_WIDTH,
+            TOP_BAR_BADGE_HEIGHT,
         ),
         PALETTE.coffee_brown,
     );
     framebuffer.fill_rect(
         Rect::new(
-            rect.right().saturating_sub(92),
-            rect.y().saturating_add(7),
-            76,
-            14,
+            rect.right().saturating_sub(TOP_BAR_RIGHT_BADGE_OUTSET),
+            rect.y().saturating_add(TOP_BAR_BADGE_Y_OFFSET),
+            TOP_BAR_RIGHT_BADGE_WIDTH,
+            TOP_BAR_BADGE_HEIGHT,
         ),
         PALETTE.moss_green,
     );
@@ -67,60 +102,60 @@ fn draw_top_bar(framebuffer: &mut FrameBuffer<'_>, rect: Rect) {
 fn draw_scene_viewport(framebuffer: &mut FrameBuffer<'_>, rect: Rect) {
     draw_panel(framebuffer, rect, PALETTE.coffee_brown, PALETTE.brass);
     let inner = Rect::new(
-        rect.x().saturating_add(3),
-        rect.y().saturating_add(3),
-        rect.width().saturating_sub(6),
-        rect.height().saturating_sub(6),
+        rect.x().saturating_add(SCENE_PANEL_INSET),
+        rect.y().saturating_add(SCENE_PANEL_INSET),
+        rect.width().saturating_sub(SCENE_PANEL_INSET_TOTAL),
+        rect.height().saturating_sub(SCENE_PANEL_INSET_TOTAL),
     );
     framebuffer.fill_rect(inner, PALETTE.deep_navy);
     framebuffer.fill_rect(
         Rect::new(
             inner.x(),
-            inner.bottom().saturating_sub(36),
+            inner.bottom().saturating_sub(VIEWPORT_BOTTOM_STRIP_HEIGHT),
             inner.width(),
-            36,
+            VIEWPORT_BOTTOM_STRIP_HEIGHT,
         ),
         PALETTE.walnut,
     );
     framebuffer.fill_rect(
         Rect::new(
-            inner.x().saturating_add(22),
-            inner.y().saturating_add(18),
-            46,
-            68,
+            inner.x().saturating_add(VIEWPORT_LEFT_BLOCK_X_OFFSET),
+            inner.y().saturating_add(VIEWPORT_LEFT_BLOCK_Y_OFFSET),
+            VIEWPORT_LEFT_BLOCK_WIDTH,
+            VIEWPORT_LEFT_BLOCK_HEIGHT,
         ),
         PALETTE.warm_amber,
     );
     framebuffer.fill_rect(
         Rect::new(
-            inner.right().saturating_sub(86),
-            inner.y().saturating_add(30),
-            58,
-            42,
+            inner.right().saturating_sub(VIEWPORT_RIGHT_BLOCK_OUTSET),
+            inner.y().saturating_add(VIEWPORT_RIGHT_BLOCK_Y_OFFSET),
+            VIEWPORT_RIGHT_BLOCK_WIDTH,
+            VIEWPORT_RIGHT_BLOCK_HEIGHT,
         ),
         PALETTE.screen_cyan,
     );
 }
 
-fn draw_stat_cards(framebuffer: &mut FrameBuffer<'_>, cards: &[Rect; 4]) {
+fn draw_stat_cards(framebuffer: &mut FrameBuffer<'_>, cards: &[Rect; STAT_CARD_COUNT]) {
     for (card_index, card) in cards.iter().copied().enumerate() {
         draw_panel(framebuffer, card, PALETTE.slate_blue, PALETTE.brass);
         let accent = card_accent(card_index);
         framebuffer.fill_rect(
             Rect::new(
-                card.x().saturating_add(5),
-                card.y().saturating_add(5),
-                card.width().saturating_sub(10),
-                6,
+                card.x().saturating_add(STAT_CARD_ACCENT_INSET),
+                card.y().saturating_add(STAT_CARD_ACCENT_INSET),
+                card.width().saturating_sub(STAT_CARD_ACCENT_INSET_TOTAL),
+                STAT_CARD_ACCENT_HEIGHT,
             ),
             accent,
         );
         framebuffer.fill_rect(
             Rect::new(
-                card.x().saturating_add(6),
-                card.y().saturating_add(20),
-                card.width().saturating_sub(12),
-                18,
+                card.x().saturating_add(STAT_CARD_BODY_X_INSET),
+                card.y().saturating_add(STAT_CARD_BODY_Y_OFFSET),
+                card.width().saturating_sub(STAT_CARD_BODY_X_INSET_TOTAL),
+                STAT_CARD_BODY_HEIGHT,
             ),
             PALETTE.deep_navy,
         );
@@ -131,10 +166,10 @@ fn draw_panel(framebuffer: &mut FrameBuffer<'_>, rect: Rect, fill: Color, border
     framebuffer.fill_rect(rect, border);
     framebuffer.fill_rect(
         Rect::new(
-            rect.x().saturating_add(2),
-            rect.y().saturating_add(2),
-            rect.width().saturating_sub(4),
-            rect.height().saturating_sub(4),
+            rect.x().saturating_add(PANEL_BORDER_THICKNESS),
+            rect.y().saturating_add(PANEL_BORDER_THICKNESS),
+            rect.width().saturating_sub(PANEL_BORDER_TOTAL),
+            rect.height().saturating_sub(PANEL_BORDER_TOTAL),
         ),
         fill,
     );
@@ -174,3 +209,80 @@ const PALETTE: Palette = Palette {
     screen_cyan: Color::rgba(97, 214, 255, 255),
     ember_red: Color::rgba(185, 74, 46, 255),
 };
+
+#[cfg(test)]
+mod tests {
+    //! Pixel-level tests for the deterministic placeholder renderer.
+
+    use super::{PALETTE, render_placeholder_dashboard};
+    use crate::{
+        config::{VIRTUAL_HEIGHT_USIZE, VIRTUAL_WIDTH_USIZE},
+        layout::DashboardLayout,
+    };
+
+    #[test]
+    fn placeholder_dashboard_renders_stable_regions() {
+        let mut frame = vec![0; VIRTUAL_WIDTH_USIZE * VIRTUAL_HEIGHT_USIZE * 4];
+        let layout = DashboardLayout::new();
+
+        render_placeholder_dashboard(&mut frame, VIRTUAL_WIDTH_USIZE, VIRTUAL_HEIGHT_USIZE);
+
+        assert_pixel(&frame, 4, 32, PALETTE.deep_navy);
+        assert_pixel(&frame, 4, 4, PALETTE.slate_blue);
+        assert_pixel(&frame, 4, VIRTUAL_HEIGHT_USIZE - 1, PALETTE.coffee_brown);
+        assert_pixel(
+            &frame,
+            layout.top_bar().x() + 10,
+            layout.top_bar().y() + 10,
+            PALETTE.coffee_brown,
+        );
+        assert_pixel(
+            &frame,
+            layout.scene_viewport().x() + 4,
+            layout.scene_viewport().y() + 4,
+            PALETTE.deep_navy,
+        );
+        assert_pixel(
+            &frame,
+            layout.scene_viewport().x() + 30,
+            layout.scene_viewport().y() + 30,
+            PALETTE.warm_amber,
+        );
+        assert_pixel(
+            &frame,
+            layout.scene_viewport().right() - 60,
+            layout.scene_viewport().y() + 40,
+            PALETTE.screen_cyan,
+        );
+
+        for (index, card) in layout.stat_cards().iter().copied().enumerate() {
+            assert_pixel(&frame, card.x() + 1, card.y() + 1, PALETTE.brass);
+            assert_pixel(&frame, card.x() + 7, card.y() + 22, PALETTE.deep_navy);
+            assert_pixel(
+                &frame,
+                card.x() + 6,
+                card.y() + 6,
+                expected_card_accent(index),
+            );
+        }
+    }
+
+    fn assert_pixel(frame: &[u8], x: usize, y: usize, expected: super::Color) {
+        let offset = (y * VIRTUAL_WIDTH_USIZE + x) * 4;
+        let expected_channels = expected.channels();
+
+        assert_eq!(
+            frame.get(offset..offset + 4),
+            Some(expected_channels.as_slice())
+        );
+    }
+
+    const fn expected_card_accent(index: usize) -> super::Color {
+        match index {
+            0 => PALETTE.moss_green,
+            1 => PALETTE.screen_cyan,
+            2 => PALETTE.warm_amber,
+            _ => PALETTE.ember_red,
+        }
+    }
+}

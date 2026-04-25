@@ -217,14 +217,15 @@ requested.
 Run chroma-key removal with the installed helper path:
 
 ```bash
-python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" \
+python tools/remove_chroma_and_validate.py \
   --input <source.png> \
   --out <output.png> \
   --auto-key border \
   --soft-matte \
   --transparent-threshold 12 \
   --opaque-threshold 220 \
-  --despill
+  --despill \
+  --edge-contract 0
 ```
 
 Validate alpha, transparent corners, subject coverage, palette fit, and edge
@@ -433,7 +434,9 @@ Rust rules:
 - Use `cap_std`, `cap_std::fs_utf8`, and `camino` instead of `std::fs` and
   `std::path` where capability-oriented filesystem access or UTF-8 paths
   improve correctness.
-- Use explicit caret-compatible crate versions in `Cargo.toml`.
+- Use implicit semver caret versioning in `Cargo.toml`; caret semantics are
+  implied by plain version strings, so written carets such as `^1.2.3` are
+  forbidden.
 - Do not use wildcard or open-ended dependency requirements.
 - Use tilde requirements only for a documented patch-level lock.
 
