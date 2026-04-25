@@ -1,0 +1,117 @@
+digraph OverviewStateGraph {
+  graph [
+    rankdir=TB,
+    bgcolor="#07101B",
+    pad="0.35",
+    nodesep="0.5",
+    ranksep="0.45",
+    splines=ortho,
+    fontname="DejaVu Sans",
+    label="How the UI, Codex GPT Images 2, manifests, and Rust pixels fit together",
+    labelloc="t",
+    fontsize=24,
+    fontcolor="#F2E6C9"
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="DejaVu Sans",
+    fontsize=14,
+    margin="0.16,0.09",
+    color="#D4AF37",
+    fontcolor="#F2E6C9",
+    fillcolor="#0F1A2E"
+  ];
+
+  edge [
+    color="#D4AF37",
+    fontname="DejaVu Sans",
+    fontsize=11,
+    fontcolor="#F2E6C9",
+    arrowsize=0.8
+  ];
+
+  subgraph cluster_runtime {
+    label="Runtime UI: deterministic Rust pixels app";
+    color="#7A4A2B";
+    fontcolor="#FFD98A";
+    style="rounded";
+
+    Start [label="App starts"];
+    LoadRepoState [label="Load manifests, palettes,\natlas metadata, app config"];
+    AssetGate [shape=diamond, label="Assets ready?", fillcolor="#4B2E1A"];
+    PlaceholderDashboard [label="Dashboard with placeholders\nand warning badges", fillcolor="#7A4A2B"];
+    Dashboard [label="Dashboard shell\nOverview / Agents / Tasks / Analytics", fillcolor="#2E5B3F"];
+    BriefEditor [label="Day 2 brief editor\nstructured controls only"];
+    BriefSaved [label="Strict JSON brief saved\nNo runtime image call", fillcolor="#1E2B44"];
+    RuntimePreview [label="Preview approved asset\ninside roster or detail panel", fillcolor="#2E5B3F"];
+  }
+
+  subgraph cluster_authoring {
+    label="Codex authoring session: image generation happens here";
+    color="#1E2B44";
+    fontcolor="#FFD98A";
+    style="rounded,dashed";
+
+    ReadBrief [label="Read brief and style docs"];
+    StructuredPrompt [label="Build structured\nGPT Images 2 prompt"];
+    ImageGen [label="Built-in image_gen", fillcolor="#2E5B3F"];
+    Inspect [shape=diamond, label="Subject, style, text,\nand avoid-list pass?", fillcolor="#4B2E1A"];
+    RevisePrompt [label="Revise one thing\nand regenerate", fillcolor="#7A2E1A"];
+    CopyWorkspace [label="Copy accepted source\ninto assets/source/gpt-images-2"];
+    Manifest [label="Create or update manifest\nprompt provenance + validation"];
+  }
+
+  subgraph cluster_pipeline {
+    label="Local asset pipeline: deterministic transformation";
+    color="#2E5B3F";
+    fontcolor="#FFD98A";
+    style="rounded";
+
+    NeedsAlpha [shape=diamond, label="Needs alpha?", fillcolor="#4B2E1A"];
+    ChromaKey [label="Chroma-key source\nthen remove key locally"];
+    AlphaGate [shape=diamond, label="Alpha clean?", fillcolor="#4B2E1A"];
+    AskFallback [label="Ask before CLI\ntrue transparency", fillcolor="#7A4A2B"];
+    PostProcess [label="Crop, quantize, slice,\nnormalize, validate"];
+    ProcessGate [shape=diamond, label="Runtime quality pass?", fillcolor="#4B2E1A"];
+    Atlas [label="Pack atlas + metadata"];
+    ApprovedManifest [label="Approved runtime manifest", fillcolor="#2E5B3F"];
+  }
+
+  Start -> LoadRepoState;
+  LoadRepoState -> AssetGate;
+  AssetGate -> Dashboard [label="yes"];
+  AssetGate -> PlaceholderDashboard [label="no"];
+  PlaceholderDashboard -> Dashboard [label="still runnable"];
+  Dashboard -> BriefEditor [label="create or edit character"];
+  BriefEditor -> BriefSaved [label="save valid brief"];
+
+  BriefSaved -> ReadBrief [label="Codex hand-off", style=dashed, color="#8FB3D9"];
+  ReadBrief -> StructuredPrompt;
+  StructuredPrompt -> ImageGen;
+  ImageGen -> Inspect;
+  Inspect -> RevisePrompt [label="no"];
+  RevisePrompt -> StructuredPrompt;
+  Inspect -> CopyWorkspace [label="yes"];
+  CopyWorkspace -> Manifest;
+
+  Manifest -> NeedsAlpha;
+  NeedsAlpha -> ChromaKey [label="yes"];
+  ChromaKey -> AlphaGate;
+  AlphaGate -> PostProcess [label="yes"];
+  AlphaGate -> ChromaKey [label="retry once"];
+  AlphaGate -> AskFallback [label="complex fail"];
+  NeedsAlpha -> PostProcess [label="no"];
+  PostProcess -> ProcessGate;
+  ProcessGate -> RevisePrompt [label="source problem"];
+  ProcessGate -> PostProcess [label="local fix"];
+  ProcessGate -> Atlas [label="yes"];
+  Atlas -> ApprovedManifest;
+  ApprovedManifest -> LoadRepoState [
+    label="reload files",
+    style=dashed,
+    color="#8FB3D9"
+  ];
+  Dashboard -> RuntimePreview [label="asset selected"];
+}

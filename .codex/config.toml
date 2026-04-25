@@ -1,0 +1,13 @@
+# Repository-local Codex configuration.
+#
+# Agentland uses Codex built-in image generation for development-time raster
+# references and source art. This file intentionally does not configure
+# PixelLab MCP or any image-generation CLI runner.
+
+[project]
+name = "agentland"
+
+[image_generation]
+default_authoring_path = "codex_builtin_image_gen"
+pixellab_mcp = false
+cli_fallback = "explicit_user_request_only"

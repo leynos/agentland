@@ -1,4 +1,4 @@
-.PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie
+.PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie graphs check-graphs
 
 
 TARGET ?= agentland
@@ -15,6 +15,10 @@ TEST_FLAGS ?= $(CARGO_FLAGS)
 TEST_CMD := $(if $(shell $(CARGO) nextest --version 2>/dev/null),nextest run,test)
 MDLINT ?= markdownlint-cli2
 NIXIE ?= nixie
+DOT ?= dot
+
+STATE_GRAPH_DOTS := docs/ui-state-graph.dot docs/ui-state-graph-overview.dot
+STATE_GRAPH_SVGS := $(STATE_GRAPH_DOTS:.dot=.svg)
 
 build: target/debug/$(TARGET) ## Build debug binary
 release: target/release/$(TARGET) ## Build release binary
@@ -55,6 +59,24 @@ markdownlint: ## Lint Markdown files
 
 nixie: ## Validate Mermaid diagrams
 	$(NIXIE) --no-sandbox
+
+graphs: $(STATE_GRAPH_SVGS) ## Rebuild generated state graph SVGs
+
+check-graphs: ## Verify generated state graph SVGs are current
+	@tmp_dir=$$(mktemp -d); \
+	trap 'rm -rf "$$tmp_dir"' EXIT; \
+	for dot_file in $(STATE_GRAPH_DOTS); do \
+		svg_file="$${dot_file%.dot}.svg"; \
+		tmp_file="$$tmp_dir/$$(basename "$$svg_file")"; \
+		$(DOT) -Tsvg "$$dot_file" -o "$$tmp_file"; \
+		cmp -s "$$tmp_file" "$$svg_file" || { \
+			echo "$$svg_file is out of date; run 'make graphs'."; \
+			exit 1; \
+		}; \
+	done
+
+docs/%.svg: docs/%.dot
+	$(DOT) -Tsvg $< -o $@
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?##' $(MAKEFILE_LIST) | \

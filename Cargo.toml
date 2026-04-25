@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+pixels = "0.17.0"
+thiserror = "2.0.18"
+winit = "0.30.12"
 
 [lints.clippy]
 pedantic = { level = "warn", priority = -1 }
@@ -72,3 +75,6 @@ missing_docs                        = "deny"
 
 [lints.rustdoc]
 missing_crate_level_docs            = "deny"
+
+[dev-dependencies]
+rstest = "0.26.1"
