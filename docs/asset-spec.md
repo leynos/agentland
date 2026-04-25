@@ -136,8 +136,8 @@ Use the manifest string values in JSON and validation output.
 | Hit-test and draw-order metadata | 3 | Rust structs or atlas JSON | Schema validation | Deterministic input mapping | Atlas or validation metadata |
 | Character, prop, UI, and environment atlases | 3 | `assets/atlases/**` | Deterministic packing and validation | Stable sprite IDs, rects, anchors | `atlas` manifest |
 | Atlas metadata JSON | 3 | `assets/atlases/**/*.json` | Schema and path validation | Runtime loading contract | `atlas` manifest |
-| Chroma-key removal outputs | 3 | `tools/remove_chroma_and_validate.py` outputs | Alpha validation and despill | Deterministic command settings | Source manifest postprocess update |
-| Quantized runtime assets | 3 | `tools/quantize.py` outputs | Palette remap and readability check | Deterministic palette mapping | Source manifest postprocess update |
+| Chroma-key removal outputs | 2 | `tools/remove_chroma_and_validate.py` outputs | Alpha validation and despill | Deterministic command settings recorded in the Bucket 2 source manifest | Source manifest postprocess update required before runtime promotion |
+| Quantized runtime assets | 2 | `tools/quantize.py` outputs | Palette remap and readability check | Deterministic palette mapping recorded in the Bucket 2 source manifest | Source manifest postprocess update required before runtime promotion |
 | Sprite slicing metadata | 3 | `tools/slice_sheet.py` outputs | Equal-cell and bounds checks | Deterministic frame extraction | Source manifest `slice` data |
 | Nine-slice crop metrics | 3 | `tools/crop_nineslice.py` outputs | Validate all nine regions | Deterministic panel rendering | Ornament and atlas manifests |
 | Manifest schema and checks | 3 | `tools/check_manifests.py` | JSON schema validation | Deterministic gate | Governs all manifests |
@@ -299,8 +299,14 @@ Bucket 2 assets may become `approved-runtime` only when:
 - the consuming runtime layer and asset ID are named.
 
 Bucket 3 assets use deterministic gates rather than image-generation manifests.
-If a Bucket 3 asset is image-backed, such as an atlas or light mask, it still
-needs a manifest for path, schema, palette, dimensions, and runtime use.
+Deterministic processing of generated-image sources does not move the output to
+Bucket 3; chroma-key removal, quantized runtime images, slices, and other
+processed outputs remain Bucket 2 assets until their source manifest records
+the full post-processing and promotion evidence.
+
+If a Bucket 3 asset is image-backed without a generated-image source, such as a
+script-built atlas or light mask, it still needs a manifest for path, schema,
+palette, dimensions, and runtime use.
 
 ## Runtime contract
 
