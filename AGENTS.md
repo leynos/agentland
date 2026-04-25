@@ -434,11 +434,10 @@ Rust rules:
 - Use `cap_std`, `cap_std::fs_utf8`, and `camino` instead of `std::fs` and
   `std::path` where capability-oriented filesystem access or UTF-8 paths
   improve correctness.
-- Use implicit semver caret versioning in `Cargo.toml`; caret semantics are
-  implied by plain version strings, so written carets such as `^1.2.3` are
-  forbidden.
-- Do not use wildcard or open-ended dependency requirements.
-- Use tilde requirements only for a documented patch-level lock.
+- Dependency versions in `Cargo.toml` must use implicit caret semantics (for
+  example, `1.2.3`) and must not include a literal caret character
+  (`^1.2.3`), wildcard, open-ended requirement, or tilde except for documented
+  patch-level locks.
 
 ### Rust tests
 

@@ -144,6 +144,10 @@ python tools/remove_chroma_and_validate.py \
 
 If a thin fringe remains, retry once with `--edge-contract 1`.
 
+The script must produce deterministic outputs, return clear non-zero exit codes
+when validation fails, and write outputs to traceable repository-relative
+artefact paths so manifests can validate the result.
+
 Ask before using true native transparency for hair, fur, smoke, glass, liquids,
 translucent materials, reflective product grounding, soft shadows, or failed
 chroma-key validation. Native transparency requires the CLI fallback with

@@ -33,7 +33,7 @@ true native transparency fallback is explicitly confirmed.
 Assume the target renderer is Rust with the `pixels` crate plus `winit`.
 
 Spawn three read-heavy subagents in parallel, wait for all of them, and then
-implement the result yourself:
+implement the result locally:
 1. An art-direction subagent that defines the visual grammar, scene layers,
    palette intent, and the boundary between GPT Images 2-generated references
    and algorithmic assets.
@@ -189,13 +189,13 @@ Create and persist manifests for these project-bound images:
 - UI material and ornament guide page
 
 For each image:
-- write the final structured prompt to `prompts/generated/style-book/`
+- write the final structured prompt to `prompts/generated/style_guides/`
 - use the shared prompt schema from `docs/imagegen-workflow.md`
 - label any input reference images by role
 - call built-in `image_gen`
 - inspect the output for style match, text accuracy, layout quality, and obvious artefacts
-- copy the accepted output into `assets/source/gpt-images-2/style-book/`
-- create a manifest under `assets/manifests/style-book/`
+- copy the accepted output into `assets/source/gpt-images-2/style_guides/`
+- create a manifest under `assets/manifests/style_guides/`
 - write an evaluation note: approved, rejected, or iterate
 
 Prompt requirements:
@@ -536,7 +536,7 @@ Spawn three subagents in parallel:
    semantics, generated-text accuracy, and edit-invariant compliance.
 
 Wait for all three, then:
-- make any necessary fixes yourself
+- make any necessary fixes locally
 - add tests where practical
 - add missing documentation
 - add a short `docs/known-limitations.md`
