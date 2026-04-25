@@ -126,6 +126,7 @@ struct Runtime {
     window: Arc<Window>,
     pixels: Pixels<'static>,
     viewport: Viewport,
+    is_surface_visible: bool,
 }
 
 impl Runtime {
@@ -150,26 +151,66 @@ impl Runtime {
             window,
             pixels,
             viewport: Viewport::from_window_size(PhysicalViewportSize::from(surface_size)),
+            is_surface_visible: true,
         })
     }
 
     fn window_id(&self) -> WindowId { self.window.id() }
 
-    fn request_redraw(&self) { self.window.request_redraw(); }
+    fn request_redraw(&self) {
+        if self.is_surface_visible {
+            self.window.request_redraw();
+        }
+    }
 
     fn resize(&mut self, size: PhysicalSize<u32>) -> Result<(), AppError> {
-        self.viewport = Viewport::from_window_size(PhysicalViewportSize::from(size));
-        self.pixels.resize_surface(size.width, size.height)?;
-        Ok(())
+        if is_zero_sized(size) {
+            self.is_surface_visible = false;
+            Ok(())
+        } else {
+            self.viewport = Viewport::from_window_size(PhysicalViewportSize::from(size));
+            self.pixels.resize_surface(size.width, size.height)?;
+            self.is_surface_visible = true;
+            Ok(())
+        }
     }
 
     fn render(&mut self) -> Result<(), AppError> {
-        render_placeholder_dashboard(
-            self.pixels.frame_mut(),
-            VIRTUAL_WIDTH_USIZE,
-            VIRTUAL_HEIGHT_USIZE,
-        );
-        self.pixels.render()?;
-        Ok(())
+        if self.is_surface_visible {
+            render_placeholder_dashboard(
+                self.pixels.frame_mut(),
+                VIRTUAL_WIDTH_USIZE,
+                VIRTUAL_HEIGHT_USIZE,
+            );
+            self.pixels.render()?;
+            Ok(())
+        } else {
+            Ok(())
+        }
+    }
+}
+
+const fn is_zero_sized(size: PhysicalSize<u32>) -> bool { size.width == 0 || size.height == 0 }
+
+#[cfg(test)]
+mod tests {
+    //! Tests for window lifecycle helpers.
+
+    use rstest::rstest;
+    use winit::dpi::PhysicalSize;
+
+    use super::is_zero_sized;
+
+    #[rstest]
+    #[case(0, 288, true)]
+    #[case(512, 0, true)]
+    #[case(0, 0, true)]
+    #[case(512, 288, false)]
+    fn zero_sized_surface_detection_matches_pixels_surface_constraints(
+        #[case] width: u32,
+        #[case] height: u32,
+        #[case] expected: bool,
+    ) {
+        assert_eq!(is_zero_sized(PhysicalSize::new(width, height)), expected);
     }
 }
