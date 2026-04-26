@@ -108,3 +108,75 @@ Codex built-in image generation is a development-time authoring path. The Rust
 runtime must not call `image_gen` directly. Runtime code should load only
 approved, processed, repository-local assets whose manifests describe prompt
 provenance, validation, post-processing, and intended use.
+
+### Manifest and asset validation
+
+Use these Makefile targets for asset pipeline checks:
+
+- `make manifest-check` validates JSON manifest structure, required fields, and
+  canonical enum values documented in `docs/asset-spec.md` and
+  `assets/manifests/README.md`.
+- `make assets-check` runs `manifest-check` and then checks asset metadata
+  consistency. It is the extension point for alpha, palette, atlas, scale, and
+  runtime-use validation as those checks are implemented.
+
+Both targets are prerequisites of `make all`, so the aggregate repository gate
+now covers manifest schema validation and combined asset metadata validation.
+
+### Bucket and intent-class classification
+
+`docs/asset-spec.md` is the canonical source for manifest `bucket` and
+`intent_class` values. Manifests must use the string values below rather than
+numeric shorthand.
+
+Buckets:
+
+- `direct-generated-reference`: built-in `image_gen` output kept as reference,
+  style-book, or concept art and not loaded by the runtime.
+- `generated-source-converted`: built-in `image_gen` output used as source for
+  deterministic crops, slices, cleaned sprites, cutouts, texture studies, or
+  ornament references.
+- `algorithmic`: scripts, Rust code, metadata, palette files, light masks,
+  layout, text, charts, validation reports, or other code-owned assets.
+
+Intent classes:
+
+- `reference-only`: human-facing source of truth that is not loaded at runtime.
+- `sliceable-source`: image source intended for deterministic crop or slice.
+- `ornament-source`: image source intended for trim, plaque, badge, or
+  nine-slice extraction.
+- `runtime-processed`: cleaned output approved for runtime loading.
+- `lightmask-source`: deterministic mask image or generated reference for mask
+  placement.
+- `layout-reference`: visual reference for spacing, zone naming, or spatial
+  hierarchy.
+
+### Prompt templates
+
+`prompts/templates/` contains concrete prompt templates for repeatable
+development-time asset generation. Keep prompts specific, visual, and aligned
+with `docs/prompt-style-guide.md`.
+
+- `character-sheet.md` defines character reference sheets for roster identity,
+  silhouettes, accessories, pose language, and cleanup notes.
+- `animation-sheet.md` defines animation reference sheets for motion studies,
+  pose sequences, timing notes, and sliceability checks.
+- `prop-cutout.md` defines isolated prop cutout prompts for chroma-key cleanup,
+  bounds recording, palette normalization, and atlas promotion.
+- `environment-sheet.md` defines environment reference sheets for room layouts,
+  material zones, lighting placement, and background-layer planning.
+- `ui-ornament.md` defines user interface (UI) ornament references for frames,
+  plaques, tabs, badges, dividers, and nine-slice candidates.
+- `edit-invariants.md` defines edit prompts that preserve approved identity,
+  composition, palette, lighting, and text-safety constraints.
+- `transparent-chromakey.md` defines flat chroma-key prompts for deterministic
+  local background removal and alpha validation.
+
+### Planned tools
+
+The intended post-processing tool surface is listed in the
+`docs/asset-spec.md` "Post-processing scripts" section. Several tools are
+marked *(planned)* there, including chroma-key removal, palette normalization,
+transparent-bounds cropping, sheet slicing, nine-slice extraction, sprite
+packing, and light-mask generation. Do not document those planned scripts as
+available commands until the corresponding files exist under `tools/`.
