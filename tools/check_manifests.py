@@ -335,8 +335,8 @@ def validate_optional_path(
         errors.append(ValidationError(field, f"must be repository-relative {value!r}"))
         return
 
-    root_path = root.resolve()
-    candidate = (root_path / path).resolve()
+    root_path = root.resolve(strict=False)
+    candidate = (root_path / path).resolve(strict=False)
     try:
         candidate.relative_to(root_path)
     except ValueError:

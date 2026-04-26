@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import io
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -52,7 +53,7 @@ def test_validate_enum(value: Any, expected: list[str]) -> None:
 
     check_manifests.validate_enum(value, {"one", "two"}, "bucket", errors)
 
-    assert rendered_errors(errors) == expected
+    assert rendered_errors(errors) == expected, "expected enum validation errors"
 
 
 @pytest.mark.parametrize(
@@ -177,7 +178,7 @@ def test_validate_manifest_fields_accepts_minimal_valid_manifest(
 
     check_manifests.validate_manifest_fields(tmp_path, valid_manifest(), errors)
 
-    assert errors == []
+    assert errors == [], "expected minimal valid manifest fields to pass"
 
 
 def test_validate_manifest_accepts_valid_json(tmp_path: Path) -> None:
@@ -185,7 +186,7 @@ def test_validate_manifest_accepts_valid_json(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert errors == []
+    assert errors == [], "expected valid manifest JSON to pass"
 
 
 def test_validate_manifest_returns_error_for_malformed_json(
@@ -197,9 +198,11 @@ def test_validate_manifest_returns_error_for_malformed_json(
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert len(errors) == 1
-    assert errors[0].field == "manifest"
-    assert errors[0].message.startswith("invalid JSON:")
+    assert len(errors) == 1, "expected one malformed JSON error"
+    assert errors[0].field == "manifest", "expected manifest field error"
+    assert errors[0].message.startswith("invalid JSON:"), (
+        "expected invalid JSON error"
+    )
 
 
 def test_load_manifest_returns_data_for_valid_json(tmp_path: Path) -> None:
@@ -207,8 +210,8 @@ def test_load_manifest_returns_data_for_valid_json(tmp_path: Path) -> None:
 
     data, errors = check_manifests.load_manifest(manifest_path)
 
-    assert data == valid_manifest()
-    assert errors == []
+    assert data == valid_manifest(), "expected parsed manifest data"
+    assert errors == [], "expected no load errors"
 
 
 def test_load_manifest_returns_error_for_unreadable_file(
@@ -218,10 +221,12 @@ def test_load_manifest_returns_error_for_unreadable_file(
 
     data, errors = check_manifests.load_manifest(manifest_path)
 
-    assert data is None
-    assert len(errors) == 1
-    assert errors[0].field == "manifest"
-    assert errors[0].message.startswith("cannot read file:")
+    assert data is None, "expected unreadable manifest to return no data"
+    assert len(errors) == 1, "expected one unreadable file error"
+    assert errors[0].field == "manifest", "expected manifest field error"
+    assert errors[0].message.startswith("cannot read file:"), (
+        "expected cannot read file error"
+    )
 
 
 def test_validate_manifest_reports_missing_top_level_field(
@@ -233,7 +238,9 @@ def test_validate_manifest_reports_missing_top_level_field(
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert "manifest.bucket is required" in rendered_errors(errors)
+    assert "manifest.bucket is required" in rendered_errors(errors), (
+        "expected missing bucket error"
+    )
 
 
 def test_validate_manifest_reports_invalid_bucket(tmp_path: Path) -> None:
@@ -244,7 +251,9 @@ def test_validate_manifest_reports_invalid_bucket(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert any("not-a-bucket" in rendered(error) for error in errors)
+    assert any("not-a-bucket" in rendered(error) for error in errors), (
+        "expected invalid bucket value error"
+    )
 
 
 def test_validate_manifest_reports_files_mapping_error(tmp_path: Path) -> None:
@@ -253,7 +262,9 @@ def test_validate_manifest_reports_files_mapping_error(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert "files must be an object" in rendered_errors(errors)
+    assert "files must be an object" in rendered_errors(errors), (
+        "expected files mapping error"
+    )
 
 
 def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
@@ -262,7 +273,9 @@ def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert "notes must be an array" in rendered_errors(errors)
+    assert "notes must be an array" in rendered_errors(errors), (
+        "expected notes array error"
+    )
 
 
 def test_render_errors_writes_path_prefixed_messages() -> None:
@@ -276,7 +289,7 @@ def test_render_errors_writes_path_prefixed_messages() -> None:
 
     assert output.getvalue() == (
         "assets/manifests/invalid.json: bucket must be a string\n"
-    )
+    ), "expected path-prefixed rendered error"
 
 
 @pytest.mark.parametrize(
@@ -296,7 +309,7 @@ def test_main_returns_zero_for_valid_manifest_directory(
     for i in range(manifest_count):
         write_manifest(tmp_path, f"valid-{i}.json", valid_manifest())
     monkeypatch.setattr(
-        __import__("sys"),
+        sys,
         "argv",
         ["check_manifests.py", "--root", str(tmp_path)],
     )
