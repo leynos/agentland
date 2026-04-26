@@ -78,8 +78,8 @@ loaded by the application until it has been processed, checked, and approved
 through a manifest.
 
 Run `make manifest-check` to validate manifest records, or `make assets-check`
-to run the same manifest validation (the extension point for future alpha,
-palette, and runtime-use checks as they are implemented).
+to run manifest validation plus deterministic asset metadata checks. This is
+the extension point for future alpha, palette, and runtime-use checks.
 
 The current build does not display final art assets. Its placeholder shapes
 reserve the dashboard regions where future approved scene, character, prop, and

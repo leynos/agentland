@@ -109,23 +109,23 @@ runtime must not call `image_gen` directly. Runtime code should load only
 approved, processed, repository-local assets whose manifests describe prompt
 provenance, validation, post-processing, and intended use.
 
-### Manifest and asset validation
+### 3. Manifest and asset validation
 
 Use these Makefile targets for asset pipeline checks:
 
 - `make manifest-check` validates JSON manifest structure, required fields, and
   canonical enum values documented in `docs/asset-spec.md` and
   `assets/manifests/README.md`.
-- `make assets-check` currently delegates to `manifest-check` and performs
-  the same manifest schema validation. It is the designated extension point:
-  alpha, palette, atlas, scale, and runtime-use validation will be added here
-  as those checks are implemented.
+- `make assets-check` runs manifest validation and deterministic asset metadata
+  consistency checks. It is the designated extension point: alpha, palette,
+  atlas, scale, and runtime-use validation will be expanded here as those
+  checks are implemented.
 
 `make assets-check` is a prerequisite of `make all`, so the aggregate
 repository gate covers the current manifest-backed asset validation pass without
 running manifest validation twice.
 
-### tools/check_manifests.py
+#### tools/check_manifests.py
 
 Validates JSON manifests under `assets/manifests/` against the canonical
 schema. Public API:
@@ -143,13 +143,13 @@ schema. Public API:
 - `ValidationError(field, message)` — frozen dataclass for domain validation
   failures.
 
-### tools/check_assets.py
+#### tools/check_assets.py
 
-Extension-point entrypoint that currently delegates to
-`check_manifests.main()`. Intended to accumulate additional asset-level checks,
-including alpha, palette, and atlas checks, as they are implemented.
+Extension-point entrypoint that runs `check_manifests.main()` and deterministic
+asset-level metadata checks. Intended to accumulate additional alpha, palette,
+and atlas checks as they are implemented.
 
-### Bucket and intent-class classification
+### 4. Bucket and intent-class classification
 
 `docs/asset-spec.md` is the canonical source for manifest `bucket` and
 `intent_class` values. Manifests must use the string values below rather than
@@ -177,7 +177,7 @@ Intent classes:
 - `layout-reference`: visual reference for spacing, zone naming, or spatial
   hierarchy.
 
-### Prompt templates
+### 5. Prompt templates
 
 `prompts/templates/` contains concrete prompt templates for repeatable
 development-time asset generation. Keep prompts specific, visual, and aligned
@@ -198,7 +198,7 @@ with `docs/prompt-style-guide.md`.
 - `transparent-chromakey.md` defines flat chroma-key prompts for deterministic
   local background removal and alpha validation.
 
-### Planned tools
+### 6. Planned tools
 
 The intended post-processing tool surface is listed in the
 `docs/asset-spec.md` "Post-processing scripts" section. Several tools are
