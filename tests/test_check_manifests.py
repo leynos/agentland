@@ -2,14 +2,26 @@
 
 from __future__ import annotations
 
+import io
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 
 import check_manifests
+
+
+def rendered(error: check_manifests.ValidationError) -> str:
+    """Render an error without a manifest path for compact assertions."""
+    if error.message.startswith(error.field):
+        return error.message
+    return f"{error.field} {error.message}"
+
+
+def rendered_errors(errors: list[check_manifests.ValidationError]) -> list[str]:
+    """Render validation errors without path prefixes."""
+    return [rendered(error) for error in errors]
 
 
 def valid_manifest(source_path: str | None = None) -> dict[str, Any]:
@@ -113,11 +125,11 @@ def write_manifest(root: Path, name: str, manifest: dict[str, Any]) -> Path:
     ],
 )
 def test_validate_enum(value: Any, expected: list[str]) -> None:
-    errors: list[str] = []
+    errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_enum(value, {"one", "two"}, "bucket", errors)
 
-    assert errors == expected
+    assert rendered_errors(errors) == expected
 
 
 @pytest.mark.parametrize(
@@ -130,12 +142,12 @@ def test_validate_enum(value: Any, expected: list[str]) -> None:
 def test_require_mapping(
     value: Any, expected_result: bool, expected_errors: list[str]
 ) -> None:
-    errors: list[str] = []
+    errors: list[check_manifests.ValidationError] = []
 
     result = check_manifests.require_mapping(value, "manifest", errors)
 
     assert result is expected_result
-    assert errors == expected_errors
+    assert rendered_errors(errors) == expected_errors
 
 
 @pytest.mark.parametrize(
@@ -153,11 +165,11 @@ def test_require_mapping(
 def test_require_keys(
     value: dict[str, Any], required: set[str], expected_errors: list[str]
 ) -> None:
-    errors: list[str] = []
+    errors: list[check_manifests.ValidationError] = []
 
     check_manifests.require_keys(value, required, "manifest", errors)
 
-    assert errors == expected_errors
+    assert rendered_errors(errors) == expected_errors
 
 
 @pytest.mark.parametrize(
@@ -176,7 +188,7 @@ def test_require_keys(
 def test_validate_optional_path_variants(
     tmp_path: Path, value: Any, field: str, expected_error: str | None
 ) -> None:
-    errors: list[str] = []
+    errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_optional_path(tmp_path, value, field, errors)
 
@@ -184,14 +196,14 @@ def test_validate_optional_path_variants(
         assert errors == []
     else:
         assert len(errors) == 1
-        assert expected_error in errors[0]
+        assert expected_error in rendered(errors[0])
 
 
 def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
     asset_path = tmp_path / "assets" / "source.png"
     asset_path.parent.mkdir(parents=True)
     asset_path.write_text("image placeholder", encoding="utf-8")
-    errors: list[str] = []
+    errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_optional_path(
         tmp_path, "assets/source.png", "files.workspace_source_path", errors
@@ -200,8 +212,10 @@ def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
     assert errors == []
 
 
-def test_validate_manifest_fields_accepts_minimal_valid_manifest(tmp_path: Path) -> None:
-    errors: list[str] = []
+def test_validate_manifest_fields_accepts_minimal_valid_manifest(
+    tmp_path: Path,
+) -> None:
+    errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_manifest_fields(tmp_path, valid_manifest(), errors)
 
@@ -224,7 +238,28 @@ def test_validate_manifest_returns_error_for_malformed_json(tmp_path: Path) -> N
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
     assert len(errors) == 1
-    assert errors[0].startswith("invalid JSON:")
+    assert errors[0].field == "manifest"
+    assert errors[0].message.startswith("invalid JSON:")
+
+
+def test_load_manifest_returns_data_for_valid_json(tmp_path: Path) -> None:
+    manifest_path = write_manifest(tmp_path, "valid.json", valid_manifest())
+
+    data, errors = check_manifests.load_manifest(manifest_path)
+
+    assert data == valid_manifest()
+    assert errors == []
+
+
+def test_load_manifest_returns_error_for_unreadable_file(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "assets" / "manifests" / "missing.json"
+
+    data, errors = check_manifests.load_manifest(manifest_path)
+
+    assert data is None
+    assert len(errors) == 1
+    assert errors[0].field == "manifest"
+    assert errors[0].message.startswith("invalid JSON:")
 
 
 def test_validate_manifest_reports_missing_top_level_field(tmp_path: Path) -> None:
@@ -234,7 +269,7 @@ def test_validate_manifest_reports_missing_top_level_field(tmp_path: Path) -> No
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert "manifest.bucket is required" in errors
+    assert "manifest.bucket is required" in rendered_errors(errors)
 
 
 def test_validate_manifest_reports_invalid_bucket(tmp_path: Path) -> None:
@@ -244,7 +279,7 @@ def test_validate_manifest_reports_invalid_bucket(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert any("not-a-bucket" in error for error in errors)
+    assert any("not-a-bucket" in rendered(error) for error in errors)
 
 
 def test_validate_manifest_reports_files_mapping_error(tmp_path: Path) -> None:
@@ -254,7 +289,7 @@ def test_validate_manifest_reports_files_mapping_error(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert "files must be an object" in errors
+    assert "files must be an object" in rendered_errors(errors)
 
 
 def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
@@ -264,15 +299,27 @@ def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
 
-    assert "notes must be an array" in errors
+    assert "notes must be an array" in rendered_errors(errors)
+
+
+def test_render_errors_writes_path_prefixed_messages() -> None:
+    output = io.StringIO()
+
+    check_manifests.render_errors(
+        Path("assets/manifests/invalid.json"),
+        [check_manifests.ValidationError("bucket", "must be a string")],
+        output,
+    )
+
+    assert output.getvalue() == (
+        "assets/manifests/invalid.json: bucket must be a string\n"
+    )
 
 
 def test_main_returns_zero_for_directory_with_zero_manifests(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    monkeypatch.setattr(sys, "argv", ["check_manifests.py", "--root", str(tmp_path)])
-
-    result = check_manifests.main()
+    result = check_manifests.main(["--root", str(tmp_path)])
     captured = capsys.readouterr()
 
     assert result == 0
@@ -281,12 +328,11 @@ def test_main_returns_zero_for_directory_with_zero_manifests(
 
 
 def test_main_returns_zero_for_directory_with_one_valid_manifest(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     write_manifest(tmp_path, "valid.json", valid_manifest())
-    monkeypatch.setattr(sys, "argv", ["check_manifests.py", "--root", str(tmp_path)])
 
-    result = check_manifests.main()
+    result = check_manifests.main(["--root", str(tmp_path)])
     captured = capsys.readouterr()
 
     assert result == 0
@@ -295,20 +341,34 @@ def test_main_returns_zero_for_directory_with_one_valid_manifest(
 
 
 def test_main_reports_invalid_manifest_path_and_error(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path,
 ) -> None:
     manifest = valid_manifest()
     manifest["bucket"] = "bad-bucket"
     write_manifest(tmp_path, "invalid.json", manifest)
-    monkeypatch.setattr(sys, "argv", ["check_manifests.py", "--root", str(tmp_path)])
+    output = io.StringIO()
 
-    result = check_manifests.main()
-    captured = capsys.readouterr()
+    result = check_manifests.main(["--root", str(tmp_path)], output)
 
     assert result == 1
-    assert captured.out == ""
     assert (
         "assets/manifests/invalid.json: bucket has invalid value 'bad-bucket'"
-        in captured.err
+        in output.getvalue()
     )
-    assert "Manifest validation failed for 1 file(s)." in captured.err
+    assert "Manifest validation failed for 1 file(s)." in output.getvalue()
+
+
+def test_main_writes_errors_to_injected_output(tmp_path: Path) -> None:
+    manifest = valid_manifest()
+    manifest["files"] = []
+    write_manifest(tmp_path, "invalid.json", manifest)
+    output_path = tmp_path / "stderr.txt"
+
+    with output_path.open("w", encoding="utf-8") as output:
+        result = check_manifests.main(["--root", str(tmp_path)], output)
+
+    assert result == 1
+    assert (
+        "assets/manifests/invalid.json: files must be an object"
+        in output_path.read_text(encoding="utf-8")
+    )
