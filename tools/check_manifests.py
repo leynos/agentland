@@ -174,6 +174,51 @@ def validate_optional_path(
         errors.append(f"{field} points to missing path {value!r}")
 
 
+def validate_top_level_fields(data: dict[str, Any], errors: list[str]) -> None:
+    """Validate required top-level fields and their enum values."""
+    require_keys(data, REQUIRED_TOP_LEVEL, "manifest", errors)
+    validate_enum(data.get("family"), ALLOWED_FAMILIES, "family", errors)
+    validate_enum(data.get("status"), ALLOWED_STATUSES, "status", errors)
+    validate_enum(data.get("bucket"), ALLOWED_BUCKETS, "bucket", errors)
+    validate_enum(
+        data.get("intent_class"), ALLOWED_INTENT_CLASSES, "intent_class", errors
+    )
+
+
+def validate_files(root: Path, data: dict[str, Any], errors: list[str]) -> None:
+    """Validate manifest file path fields."""
+    files = data.get("files")
+    if require_mapping(files, "files", errors):
+        require_keys(files, REQUIRED_FILES, "files", errors)
+        for field in sorted(REQUIRED_FILES):
+            validate_optional_path(root, files.get(field), f"files.{field}", errors)
+
+
+def validate_required_section(
+    data: dict[str, Any], field: str, required: set[str], errors: list[str]
+) -> None:
+    """Validate a required manifest object section by key set."""
+    section = data.get(field)
+    if require_mapping(section, field, errors):
+        require_keys(section, required, field, errors)
+
+
+def validate_manifest_fields(
+    root: Path, data: dict[str, Any], errors: list[str]
+) -> None:
+    """Validate a parsed manifest object."""
+    validate_top_level_fields(data, errors)
+    validate_files(root, data, errors)
+    validate_required_section(
+        data, "asset_contract", REQUIRED_ASSET_CONTRACT, errors
+    )
+    validate_required_section(data, "postprocess", REQUIRED_POSTPROCESS, errors)
+    validate_required_section(data, "validation", REQUIRED_VALIDATION, errors)
+
+    if not isinstance(data.get("notes"), list):
+        errors.append("notes must be an array")
+
+
 def validate_manifest(root: Path, path: Path) -> list[str]:
     """Validate one manifest and return human-readable errors."""
     errors: list[str] = []
@@ -185,40 +230,7 @@ def validate_manifest(root: Path, path: Path) -> list[str]:
     if not require_mapping(data, "manifest", errors):
         return errors
 
-    require_keys(data, REQUIRED_TOP_LEVEL, "manifest", errors)
-    validate_enum(data.get("family"), ALLOWED_FAMILIES, "family", errors)
-    validate_enum(data.get("status"), ALLOWED_STATUSES, "status", errors)
-    validate_enum(data.get("bucket"), ALLOWED_BUCKETS, "bucket", errors)
-    validate_enum(
-        data.get("intent_class"), ALLOWED_INTENT_CLASSES, "intent_class", errors
-    )
-
-    files = data.get("files")
-    if require_mapping(files, "files", errors):
-        require_keys(files, REQUIRED_FILES, "files", errors)
-        for field in sorted(REQUIRED_FILES):
-            validate_optional_path(root, files.get(field), f"files.{field}", errors)
-
-    asset_contract = data.get("asset_contract")
-    if require_mapping(asset_contract, "asset_contract", errors):
-        require_keys(
-            asset_contract,
-            REQUIRED_ASSET_CONTRACT,
-            "asset_contract",
-            errors,
-        )
-
-    postprocess = data.get("postprocess")
-    if require_mapping(postprocess, "postprocess", errors):
-        require_keys(postprocess, REQUIRED_POSTPROCESS, "postprocess", errors)
-
-    validation = data.get("validation")
-    if require_mapping(validation, "validation", errors):
-        require_keys(validation, REQUIRED_VALIDATION, "validation", errors)
-
-    if not isinstance(data.get("notes"), list):
-        errors.append("notes must be an array")
-
+    validate_manifest_fields(root, data, errors)
     return errors
 
 
