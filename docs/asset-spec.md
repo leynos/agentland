@@ -268,17 +268,20 @@ Use this baseline structure:
 
 ## Post-processing scripts
 
-The expected tool surface is:
+The following scripts define the intended tool surface. Those marked
+*(planned)* do not yet exist.
 
-- `tools/remove_chroma_and_validate.py` for cutout removal and alpha checks.
-- `tools/quantize.py` for palette normalization.
-- `tools/crop_transparent.py` for transparent bounds.
-- `tools/slice_sheet.py` for validated reference-sheet slicing.
-- `tools/crop_nineslice.py` for guided ornament extraction.
-- `tools/pack_sprites.py` for atlas generation.
-- `tools/build_lightmask.py` for deterministic lamp and screen-glow masks.
-- `tools/check_manifests.py` for manifest schema checks.
-- `tools/check_assets.py` for combined asset validation.
+- `tools/remove_chroma_and_validate.py` *(planned)* — cutout removal and alpha
+  checks.
+- `tools/quantize.py` *(planned)* — palette normalisation.
+- `tools/crop_transparent.py` *(planned)* — transparent bounds.
+- `tools/slice_sheet.py` *(planned)* — validated reference-sheet slicing.
+- `tools/crop_nineslice.py` *(planned)* — guided ornament extraction.
+- `tools/pack_sprites.py` *(planned)* — atlas generation.
+- `tools/build_lightmask.py` *(planned)* — deterministic lamp and screen-glow
+  masks.
+- `tools/check_manifests.py` — manifest schema checks.
+- `tools/check_assets.py` — combined asset validation.
 
 Scripts must be deterministic, emit clear failures, and avoid hiding outputs in
 paths that manifests cannot trace.
