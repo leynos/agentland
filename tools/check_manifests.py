@@ -85,6 +85,29 @@ REQUIRED_FILES = {
     "validation_report_path",
 }
 
+REQUIRED_TOOL = {
+    "mode",
+    "model_family",
+    "fallback_cli",
+    "cli_reason",
+}
+
+REQUIRED_PROMPT = {
+    "path",
+    "use_case",
+    "asset_type",
+    "text",
+    "input_images",
+}
+
+REQUIRED_SOURCE_ASSET = {
+    "dimensions",
+    "format",
+    "has_alpha",
+    "intended_scale",
+    "source_kind",
+}
+
 REQUIRED_ASSET_CONTRACT = {
     "focal_role",
     "layer",
@@ -120,6 +143,14 @@ REQUIRED_VALIDATION = {
     "approved_by",
     "notes",
     "rejection_notes",
+}
+
+REQUIRED_RUNTIME_USE = {
+    "kind",
+    "consumer",
+    "layer",
+    "asset_id",
+    "notes",
 }
 
 
@@ -182,7 +213,7 @@ def validate_optional_path(
     if not isinstance(value, str):
         errors.append(f"{field} must be a string or null")
         return
-    if value.startswith("$CODEX_HOME/"):
+    if value.startswith("$CODEX_HOME/") and field == "files.codex_generated_path":
         return
     if not (root / value).exists():
         errors.append(f"{field} points to missing path {value!r}")
@@ -222,12 +253,16 @@ def validate_manifest_fields(
 ) -> None:
     """Validate a parsed manifest object."""
     validate_top_level_fields(data, errors)
+    validate_required_section(data, "tool", REQUIRED_TOOL, errors)
+    validate_required_section(data, "prompt", REQUIRED_PROMPT, errors)
     validate_files(root, data, errors)
+    validate_required_section(data, "source_asset", REQUIRED_SOURCE_ASSET, errors)
     validate_required_section(
         data, "asset_contract", REQUIRED_ASSET_CONTRACT, errors
     )
     validate_required_section(data, "postprocess", REQUIRED_POSTPROCESS, errors)
     validate_required_section(data, "validation", REQUIRED_VALIDATION, errors)
+    validate_required_section(data, "runtime_use", REQUIRED_RUNTIME_USE, errors)
 
     if not isinstance(data.get("notes"), list):
         errors.append("notes must be an array")
@@ -238,7 +273,7 @@ def validate_manifest(root: Path, path: Path) -> list[str]:
     errors: list[str] = []
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as error:
+    except (json.JSONDecodeError, OSError) as error:
         return [f"invalid JSON: {error}"]
 
     if not require_mapping(data, "manifest", errors):

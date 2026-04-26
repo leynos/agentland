@@ -87,7 +87,8 @@ Use the manifest string values in JSON and validation output.
 
 ## Full asset inventory
 
-Table 2. Asset inventory with bucket assignment, processing, and manifest requirements.
+Table 2. Asset inventory with bucket assignment, processing, and manifest
+requirements.
 
 | Asset | Bucket | Source or path family | Post-processing | Runtime determinism | Manifest requirement |
 | --- | --- | --- | --- | --- | --- |
@@ -273,7 +274,7 @@ The following scripts define the intended tool surface. Those marked
 
 - `tools/remove_chroma_and_validate.py` *(planned)* — cutout removal and alpha
   checks.
-- `tools/quantize.py` *(planned)* — palette normalisation.
+- `tools/quantize.py` *(planned)* — palette normalization.
 - `tools/crop_transparent.py` *(planned)* — transparent bounds.
 - `tools/slice_sheet.py` *(planned)* — validated reference-sheet slicing.
 - `tools/crop_nineslice.py` *(planned)* — guided ornament extraction.
