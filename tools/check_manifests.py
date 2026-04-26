@@ -143,8 +143,7 @@ def require_keys(
 ) -> None:
     """Append errors for missing required keys."""
     missing = sorted(required.difference(value))
-    for key in missing:
-        errors.append(f"{field}.{key} is required")
+    errors.extend(f"{field}.{key} is required" for key in missing)
 
 
 def validate_enum(
