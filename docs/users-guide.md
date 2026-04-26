@@ -77,8 +77,9 @@ Generated art in Agentland is reference or cutout material only. It is never
 loaded by the application until it has been processed, checked, and approved
 through a manifest.
 
-To check asset metadata health, run `make manifest-check` for manifest records
-or `make assets-check` for the combined asset validation pass.
+Run `make manifest-check` to validate manifest records, or `make assets-check`
+to run the same manifest validation (the extension point for future alpha,
+palette, and runtime-use checks as they are implemented).
 
 The current build does not display final art assets. Its placeholder shapes
 reserve the dashboard regions where future approved scene, character, prop, and
