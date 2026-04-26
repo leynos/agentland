@@ -24,7 +24,7 @@ STATE_GRAPH_SVGS := $(STATE_GRAPH_DOTS:.dot=.svg)
 build: target/debug/$(TARGET) ## Build debug binary
 release: target/release/$(TARGET) ## Build release binary
 
-all: check-fmt lint test manifest-check assets-check ## Perform a comprehensive check of code
+all: check-fmt lint test assets-check ## Perform a comprehensive check of code
 
 clean: ## Remove build artifacts
 	$(CARGO) clean
@@ -61,7 +61,7 @@ markdownlint: ## Lint Markdown files
 manifest-check: ## Validate asset manifest schema
 	$(PYTHON) tools/check_manifests.py
 
-assets-check: manifest-check ## Validate asset metadata and manifests
+assets-check: ## Run combined asset validation entrypoint
 	$(PYTHON) tools/check_assets.py
 
 nixie: ## Validate Mermaid diagrams

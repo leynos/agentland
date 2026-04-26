@@ -116,12 +116,13 @@ Use these Makefile targets for asset pipeline checks:
 - `make manifest-check` validates JSON manifest structure, required fields, and
   canonical enum values documented in `docs/asset-spec.md` and
   `assets/manifests/README.md`.
-- `make assets-check` runs `manifest-check` and then checks asset metadata
-  consistency. It is the extension point for alpha, palette, atlas, scale, and
-  runtime-use validation as those checks are implemented.
+- `make assets-check` invokes `tools/check_assets.py`, which currently re-runs
+  manifest validation only. It does not yet perform separate alpha, palette,
+  atlas, scale, or runtime-use metadata consistency checks.
 
-Both targets are prerequisites of `make all`, so the aggregate repository gate
-now covers manifest schema validation and combined asset metadata validation.
+`make assets-check` is a prerequisite of `make all`, so the aggregate
+repository gate covers the current manifest-backed asset validation pass without
+running manifest validation twice.
 
 ### Bucket and intent-class classification
 
