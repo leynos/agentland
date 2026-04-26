@@ -301,6 +301,17 @@ def validate_enum(
         )
 
 
+def _resolved_path_exists(root: Path, value: str) -> bool:
+    """Return True when value resolves to an existing path inside root."""
+    root_path = root.resolve()
+    candidate = (root_path / Path(value)).resolve()
+    try:
+        candidate.relative_to(root_path)
+    except ValueError:
+        return False
+    return candidate.exists()
+
+
 def validate_optional_path(
     root: Path, value: Any, field: str, errors: list[ValidationError]
 ) -> None:
@@ -335,15 +346,15 @@ def validate_optional_path(
         errors.append(ValidationError(field, f"must be repository-relative {value!r}"))
         return
 
-    root_path = root.resolve(strict=False)
-    candidate = (root_path / path).resolve(strict=False)
+    root_path = root.resolve()
+    candidate = (root_path / path).resolve()
     try:
         candidate.relative_to(root_path)
     except ValueError:
         errors.append(ValidationError(field, f"escapes repository root {value!r}"))
         return
 
-    if not candidate.exists():
+    if not _resolved_path_exists(root, value):
         errors.append(ValidationError(field, f"points to missing path {value!r}"))
 
 
@@ -579,20 +590,24 @@ def render_failure_log(
     )
 
 
-def render_stdout_log(record: dict[str, object]) -> None:
+def render_stdout_log(
+    record: dict[str, object], output: TextIO = sys.stdout
+) -> None:
     """Write one structured manifest validation progress record.
 
     Parameters
     ----------
     record : dict[str, object]
         JSON-serializable progress record.
+    output : TextIO
+        Text stream that receives the JSON record.
 
     Returns
     -------
     None
-        Output is written to standard output.
+        Output is written to ``output``.
     """
-    print(json.dumps(record))
+    print(json.dumps(record), file=output)
 
 
 def main(argv: list[str] | None = None, output: TextIO = sys.stderr) -> int:
@@ -622,7 +637,8 @@ def main(argv: list[str] | None = None, output: TextIO = sys.stderr) -> int:
     paths = manifest_paths(root)
     failures = 0
     render_stdout_log(
-        {"op": "manifest-validation", "manifests_found": len(paths)}
+        {"op": "manifest-validation", "manifests_found": len(paths)},
+        output=sys.stdout,
     )
 
     for path in paths:
@@ -634,7 +650,10 @@ def main(argv: list[str] | None = None, output: TextIO = sys.stderr) -> int:
             render_errors(rel_path, errors, output)
 
     elapsed_ms = round((time.perf_counter() - started_at) * 1000, 3)
-    render_stdout_log({"op": "manifest-validation", "elapsed_ms": elapsed_ms})
+    render_stdout_log(
+        {"op": "manifest-validation", "elapsed_ms": elapsed_ms},
+        output=sys.stdout,
+    )
 
     if failures:
         print(f"Manifest validation failed for {failures} file(s).", file=output)
