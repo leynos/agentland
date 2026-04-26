@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
-"""Validate Agentland asset manifest structure."""
+"""Validate Agentland asset manifest structure.
+
+This module enforces the canonical manifest schema defined in
+``docs/asset-spec.md`` and ``assets/manifests/README.md``. It recursively
+validates all JSON files under ``assets/manifests/``, checking required
+fields, enum values, nested object structures, and optional path existence.
+
+Usage
+-----
+Run directly or via the Makefile target::
+
+    python tools/check_manifests.py --root /path/to/repo
+    make manifest-check
+
+Exit code is non-zero if any manifest fails validation.
+"""
 
 from __future__ import annotations
 
