@@ -167,7 +167,23 @@ class ValidationError:
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
-    """Parse command-line arguments."""
+    """Parse command-line arguments.
+
+    Parameters
+    ----------
+    argv : list[str] | None
+        Command-line argument strings, or ``None`` to read from ``sys.argv``.
+
+    Returns
+    -------
+    argparse.Namespace
+        Parsed command arguments.
+
+    Raises
+    ------
+    SystemExit
+        Raised by ``argparse`` when arguments are invalid.
+    """
     parser = argparse.ArgumentParser(
         description="Validate JSON manifests under assets/manifests."
     )
@@ -181,7 +197,19 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 
 def manifest_paths(root: Path) -> list[Path]:
-    """Return manifest JSON files below the repository manifest directory."""
+    """Return manifest JSON files below the repository manifest directory.
+
+    Parameters
+    ----------
+    root : Path
+        Repository root used to locate ``assets/manifests``.
+
+    Returns
+    -------
+    list[Path]
+        Sorted manifest JSON file paths, or an empty list when the manifest
+        directory does not exist.
+    """
     manifest_root = root / "assets" / "manifests"
     if not manifest_root.exists():
         return []
@@ -189,7 +217,22 @@ def manifest_paths(root: Path) -> list[Path]:
 
 
 def require_mapping(value: Any, field: str, errors: list[ValidationError]) -> bool:
-    """Check that a value is an object before nested validation."""
+    """Check that a value is an object before nested validation.
+
+    Parameters
+    ----------
+    value : Any
+        Candidate value to validate.
+    field : str
+        Logical field name used in validation errors.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    bool
+        ``True`` when ``value`` is a dictionary, otherwise ``False``.
+    """
     if isinstance(value, dict):
         return True
     errors.append(ValidationError(field, "must be an object"))
@@ -202,7 +245,24 @@ def require_keys(
     field: str,
     errors: list[ValidationError],
 ) -> None:
-    """Append errors for missing required keys."""
+    """Append errors for missing required keys.
+
+    Parameters
+    ----------
+    value : dict[str, Any]
+        Mapping to inspect for required keys.
+    required : set[str]
+        Required key names.
+    field : str
+        Field prefix used in validation errors.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     missing = sorted(required.difference(value))
     errors.extend(ValidationError(f"{field}.{key}", "is required") for key in missing)
 
@@ -210,7 +270,24 @@ def require_keys(
 def validate_enum(
     value: Any, allowed: set[str], field: str, errors: list[ValidationError]
 ) -> None:
-    """Validate a string enum value."""
+    """Validate a string enum value.
+
+    Parameters
+    ----------
+    value : Any
+        Candidate enum value.
+    allowed : set[str]
+        Accepted string values.
+    field : str
+        Logical field name used in validation errors.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     if not isinstance(value, str):
         errors.append(ValidationError(field, "must be a string"))
         return
@@ -227,7 +304,24 @@ def validate_enum(
 def validate_optional_path(
     root: Path, value: Any, field: str, errors: list[ValidationError]
 ) -> None:
-    """Validate an optional repository-relative path field."""
+    """Validate an optional repository-relative path field.
+
+    Parameters
+    ----------
+    root : Path
+        Repository root that valid paths must stay within.
+    value : Any
+        Candidate repository-relative path, ``None``, or allowed Codex path.
+    field : str
+        Logical field name used in validation errors.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     if value is None:
         return
     if not isinstance(value, str):
@@ -235,14 +329,41 @@ def validate_optional_path(
         return
     if value.startswith("$CODEX_HOME/") and field == "files.codex_generated_path":
         return
-    if not (root / value).exists():
+
+    path = Path(value)
+    if path.is_absolute():
+        errors.append(ValidationError(field, f"must be repository-relative {value!r}"))
+        return
+
+    root_path = root.resolve()
+    candidate = (root_path / path).resolve()
+    try:
+        candidate.relative_to(root_path)
+    except ValueError:
+        errors.append(ValidationError(field, f"escapes repository root {value!r}"))
+        return
+
+    if not candidate.exists():
         errors.append(ValidationError(field, f"points to missing path {value!r}"))
 
 
 def validate_top_level_fields(
     data: dict[str, Any], errors: list[ValidationError]
 ) -> None:
-    """Validate required top-level fields and their enum values."""
+    """Validate required top-level fields and their enum values.
+
+    Parameters
+    ----------
+    data : dict[str, Any]
+        Parsed manifest object.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     require_keys(data, REQUIRED_TOP_LEVEL, "manifest", errors)
     validate_enum(data.get("family"), ALLOWED_FAMILIES, "family", errors)
     validate_enum(data.get("status"), ALLOWED_STATUSES, "status", errors)
@@ -255,7 +376,22 @@ def validate_top_level_fields(
 def validate_files(
     root: Path, data: dict[str, Any], errors: list[ValidationError]
 ) -> None:
-    """Validate manifest file path fields."""
+    """Validate manifest file path fields.
+
+    Parameters
+    ----------
+    root : Path
+        Repository root used for path checks.
+    data : dict[str, Any]
+        Parsed manifest object.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     files = data.get("files")
     if require_mapping(files, "files", errors):
         require_keys(files, REQUIRED_FILES, "files", errors)
@@ -269,7 +405,24 @@ def validate_required_section(
     required: set[str],
     errors: list[ValidationError],
 ) -> None:
-    """Validate a required manifest object section by key set."""
+    """Validate a required manifest object section by key set.
+
+    Parameters
+    ----------
+    data : dict[str, Any]
+        Parsed manifest object.
+    field : str
+        Top-level section name.
+    required : set[str]
+        Required keys for the section.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     section = data.get(field)
     if require_mapping(section, field, errors):
         require_keys(section, required, field, errors)
@@ -278,7 +431,22 @@ def validate_required_section(
 def validate_manifest_fields(
     root: Path, data: dict[str, Any], errors: list[ValidationError]
 ) -> None:
-    """Validate a parsed manifest object."""
+    """Validate a parsed manifest object.
+
+    Parameters
+    ----------
+    root : Path
+        Repository root used for path checks.
+    data : dict[str, Any]
+        Parsed manifest object.
+    errors : list[ValidationError]
+        Mutable error collection updated in place.
+
+    Returns
+    -------
+    None
+        Errors are appended to ``errors``.
+    """
     validate_top_level_fields(data, errors)
     validate_required_section(data, "tool", REQUIRED_TOOL, errors)
     validate_required_section(data, "prompt", REQUIRED_PROMPT, errors)
@@ -296,10 +464,27 @@ def validate_manifest_fields(
 
 
 def load_manifest(path: Path) -> tuple[dict[str, Any] | None, list[ValidationError]]:
-    """Read and parse one manifest file."""
+    """Read and parse one manifest file.
+
+    Parameters
+    ----------
+    path : Path
+        Manifest JSON file path to read.
+
+    Returns
+    -------
+    tuple[dict[str, Any] | None, list[ValidationError]]
+        Parsed manifest data and validation errors. Data is ``None`` when the
+        file cannot be read, parsed, or represented as a JSON object.
+    """
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError) as error:
+        text = path.read_text(encoding="utf-8")
+    except OSError as error:
+        return None, [ValidationError("manifest", f"cannot read file: {error}")]
+
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError as error:
         return None, [ValidationError("manifest", f"invalid JSON: {error}")]
 
     if not isinstance(data, dict):
@@ -309,7 +494,20 @@ def load_manifest(path: Path) -> tuple[dict[str, Any] | None, list[ValidationErr
 
 
 def validate_manifest(root: Path, path: Path) -> list[ValidationError]:
-    """Validate one manifest and return domain validation errors."""
+    """Validate one manifest and return domain validation errors.
+
+    Parameters
+    ----------
+    root : Path
+        Repository root used for path checks.
+    path : Path
+        Manifest JSON file path to validate.
+
+    Returns
+    -------
+    list[ValidationError]
+        Domain validation errors. The list is empty when the manifest is valid.
+    """
     data, errors = load_manifest(path)
     if errors:
         return errors
@@ -326,7 +524,22 @@ def validate_manifest(root: Path, path: Path) -> list[ValidationError]:
 def render_errors(
     rel_path: Path, errors: list[ValidationError], output: TextIO
 ) -> None:
-    """Write rendered validation errors for one manifest."""
+    """Write rendered validation errors for one manifest.
+
+    Parameters
+    ----------
+    rel_path : Path
+        Manifest path relative to the repository root.
+    errors : list[ValidationError]
+        Errors to render.
+    output : TextIO
+        Text stream that receives human-readable errors.
+
+    Returns
+    -------
+    None
+        Output is written to ``output``.
+    """
     for error in errors:
         if error.message.startswith(error.field):
             message = error.message
@@ -338,7 +551,22 @@ def render_errors(
 def render_failure_log(
     rel_path: Path, errors: list[ValidationError], output: TextIO
 ) -> None:
-    """Write one structured validation failure record."""
+    """Write one structured validation failure record.
+
+    Parameters
+    ----------
+    rel_path : Path
+        Manifest path relative to the repository root.
+    errors : list[ValidationError]
+        Errors counted in the structured record.
+    output : TextIO
+        Text stream that receives the JSON record.
+
+    Returns
+    -------
+    None
+        Output is written to ``output``.
+    """
     print(
         json.dumps(
             {
@@ -352,12 +580,42 @@ def render_failure_log(
 
 
 def render_stdout_log(record: dict[str, object]) -> None:
-    """Write one structured manifest validation progress record."""
+    """Write one structured manifest validation progress record.
+
+    Parameters
+    ----------
+    record : dict[str, object]
+        JSON-serializable progress record.
+
+    Returns
+    -------
+    None
+        Output is written to standard output.
+    """
     print(json.dumps(record))
 
 
 def main(argv: list[str] | None = None, output: TextIO = sys.stderr) -> int:
-    """Run manifest validation."""
+    """Run manifest validation.
+
+    Parameters
+    ----------
+    argv : list[str] | None
+        Command-line argument strings, or ``None`` to read from ``sys.argv``.
+    output : TextIO
+        Text stream that receives validation failures and summary errors.
+
+    Returns
+    -------
+    int
+        Process-style exit code. Returns ``0`` when all manifests pass and ``1``
+        when any manifest fails validation.
+
+    Raises
+    ------
+    SystemExit
+        Raised by ``argparse`` when arguments are invalid.
+    """
     started_at = time.perf_counter()
     args = parse_args(argv)
     root = args.root.resolve()

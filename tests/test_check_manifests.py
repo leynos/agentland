@@ -186,6 +186,11 @@ def test_require_keys(
             "files.codex_generated_path",
             None,
         ),
+        (
+            "$CODEX_HOME/generated_images/example.png",
+            "files.workspace_source_path",
+            "points to missing path",
+        ),
         ("missing.png", "files.workspace_source_path", "points to missing path"),
         (123, "files.workspace_source_path", "must be a string or null"),
     ],
@@ -215,6 +220,26 @@ def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
     )
 
     assert errors == []
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_error"),
+    [
+        ("/tmp/source.png", "must be repository-relative"),
+        ("../source.png", "escapes repository root"),
+    ],
+)
+def test_validate_optional_path_rejects_root_escape(
+    tmp_path: Path, value: str, expected_error: str
+) -> None:
+    errors: list[check_manifests.ValidationError] = []
+
+    check_manifests.validate_optional_path(
+        tmp_path, value, "files.workspace_source_path", errors
+    )
+
+    assert len(errors) == 1
+    assert expected_error in rendered(errors[0])
 
 
 def test_validate_manifest_fields_accepts_minimal_valid_manifest(
@@ -264,7 +289,7 @@ def test_load_manifest_returns_error_for_unreadable_file(tmp_path: Path) -> None
     assert data is None
     assert len(errors) == 1
     assert errors[0].field == "manifest"
-    assert errors[0].message.startswith("invalid JSON:")
+    assert errors[0].message.startswith("cannot read file:")
 
 
 def test_validate_manifest_reports_missing_top_level_field(tmp_path: Path) -> None:
