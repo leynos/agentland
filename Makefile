@@ -61,7 +61,7 @@ markdownlint: ## Lint Markdown files
 manifest-check: ## Validate asset manifest schema
 	$(PYTHON) tools/check_manifests.py
 
-assets-check: ## Run combined asset validation entrypoint
+assets-check: ## Validate asset metadata and manifests
 	$(PYTHON) tools/check_assets.py
 
 nixie: ## Validate Mermaid diagrams
