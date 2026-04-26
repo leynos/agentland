@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import io
 import json
-from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -281,36 +280,37 @@ def test_render_errors_writes_path_prefixed_messages() -> None:
 
 
 @pytest.mark.parametrize(
-    ("initial_setup", "expected_manifests_found", "description"),
+    ("manifest_count", "expected_out"),
     [
-        (lambda _tmp_path: None, 0, "zero manifests"),
-        (
-            lambda tmp_path: write_manifest(
-                tmp_path, "valid.json", valid_manifest()
-            ),
-            1,
-            "one valid manifest",
-        ),
+        (0, "Validated 0 manifest file(s).\n"),
+        (1, "Validated 1 manifest file(s).\n"),
     ],
 )
-def test_main_returns_zero_for_valid_manifest_directories(
-    initial_setup: Callable[[Path], object],
-    expected_manifests_found: int,
-    description: str,
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+def test_main_returns_zero_for_valid_manifest_directory(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    manifest_count: int,
+    expected_out: str,
 ) -> None:
-    initial_setup(tmp_path)
+    for i in range(manifest_count):
+        write_manifest(tmp_path, f"valid-{i}.json", valid_manifest())
+    monkeypatch.setattr(
+        __import__("sys"),
+        "argv",
+        ["check_manifests.py", "--root", str(tmp_path)],
+    )
 
-    result = check_manifests.main(["--root", str(tmp_path)])
+    result = check_manifests.main()
     captured = capsys.readouterr()
 
-    assert result == 0, f"expected success for {description}"
-    assert captured.err == "", f"expected no stderr for {description}"
+    assert result == 0, "expected valid manifest directory to pass"
+    assert captured.err == "", "expected no stderr for valid manifest directory"
     records = json_lines(captured.out)
     assert records[0] == {
         "op": "manifest-validation",
-        "manifests_found": expected_manifests_found,
-    }, f"expected manifest count {expected_manifests_found}"
+        "manifests_found": manifest_count,
+    }, f"expected manifest count {manifest_count}"
     assert records[1]["op"] == "manifest-validation", (
         "expected elapsed-time manifest validation record"
     )
@@ -318,9 +318,8 @@ def test_main_returns_zero_for_valid_manifest_directories(
         "expected elapsed time in milliseconds"
     )
     assert (
-        f"Validated {expected_manifests_found} manifest file(s)."
-        in captured.out
-    ), f"expected validated summary for {description}"
+        expected_out in captured.out
+    ), "expected validated manifest count summary"
 
 
 def test_main_reports_invalid_manifest_path_and_error(
