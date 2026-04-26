@@ -127,7 +127,7 @@ Caption: Character roster — approved agent identity anchors.
 | --- | --- | --- | --- | --- |
 | Ava | Research specialist | Auburn hair, practical apron or waistcoat, thoughtful posture | Clipboard, laptop, mug, notebook | Warm amber, cream, moss green |
 | Byte | Operations manager | Rounded white robot shell, cyan face display, blue ear modules, brass details | Mug, gear, terminal device | Screen cyan, brass, cream |
-| Lex | Data analyst | Dark swept hair, rolled sleeves, focused standing or seated pose | Mug, glasses, calculator or tablet | Slate blue, screen cyan, brass |
+| Lex | Data analyst | Dark swept hair, rolled sleeves, focused standing or seated pose | Mug, glasses, calculator, or tablet | Slate blue, screen cyan, brass |
 | Sage | Knowledge advisor | Hooded robe, dark face recess, cyan eye glow, calm pose | Books, quill, notes, small lamp glow | Coffee brown, moss green, candle glow |
 | Nova | Systems engineer | Dark outfit, headset silhouette, resourceful operator stance | Headphones, wrench, repair kit | Screen cyan, slate blue, ember red |
 | Patch | Tech tinkerer | Goggles, cap, work vest, tool-ready posture | Screwdriver, circuit board, small tools | Moss green, warm amber, brass |
