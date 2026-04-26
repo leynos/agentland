@@ -20,6 +20,20 @@ class AssetValidationError:
     message: str
 
 
+def _is_runtime_asset(status: str | None, intent_class: str | None) -> bool:
+    """Return True when the manifest describes a runtime-promoted asset."""
+    return status == "approved-runtime" or intent_class == "runtime-processed"
+
+
+def _has_runtime_file(files: dict[str, Any]) -> bool:
+    """Return True when files contains at least one runtime output path."""
+    return bool(
+        files.get("processed_path")
+        or files.get("atlas_image_path")
+        or files.get("atlas_metadata_path")
+    )
+
+
 def _asset_errors_for_manifest(data: dict[str, Any]) -> list[AssetValidationError]:
     """Return asset metadata consistency errors for one parsed manifest."""
     errors: list[AssetValidationError] = []
@@ -33,14 +47,8 @@ def _asset_errors_for_manifest(data: dict[str, Any]) -> list[AssetValidationErro
         return errors
 
     runtime_kind = runtime_use.get("kind")
-    has_runtime_file = bool(
-        files.get("processed_path")
-        or files.get("atlas_image_path")
-        or files.get("atlas_metadata_path")
-    )
-    is_runtime = status == "approved-runtime" or intent_class == "runtime-processed"
 
-    if is_runtime and not has_runtime_file:
+    if _is_runtime_asset(status, intent_class) and not _has_runtime_file(files):
         errors.append(
             AssetValidationError(
                 "files",
