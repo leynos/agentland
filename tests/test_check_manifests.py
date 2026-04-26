@@ -102,6 +102,45 @@ def test_require_keys(
 
 
 @pytest.mark.parametrize(
+    ("argv", "expected_root"),
+    [
+        ([], Path.cwd()),
+        (["--root", "/tmp/repo"], Path("/tmp/repo")),
+    ],
+)
+def test_parse_args_sets_root(
+    argv: list[str], expected_root: Path
+) -> None:
+    """Verify parse_args resolves --root to the expected Path."""
+    result = check_manifests.parse_args(argv)
+
+    assert result.root == expected_root, "expected parsed root path"
+
+
+def test_manifest_paths_discovers_nested_files(tmp_path: Path) -> None:
+    """Verify manifest_paths returns JSON files in nested subdirectories."""
+    base = tmp_path / "assets" / "manifests"
+    (base / "sub").mkdir(parents=True)
+    (base / "a.json").write_text("{}", encoding="utf-8")
+    (base / "sub" / "b.json").write_text("{}", encoding="utf-8")
+
+    paths = check_manifests.manifest_paths(tmp_path)
+
+    assert sorted(path.name for path in paths) == ["a.json", "b.json"], (
+        "expected nested manifest files"
+    )
+
+
+def test_manifest_paths_returns_empty_when_directory_absent(
+    tmp_path: Path,
+) -> None:
+    """Verify manifest_paths returns [] when the directory does not exist."""
+    assert check_manifests.manifest_paths(tmp_path) == [], (
+        "expected no manifests when directory is absent"
+    )
+
+
+@pytest.mark.parametrize(
     ("value", "field", "expected_error"),
     [
         (None, "files.workspace_source_path", None),
@@ -290,6 +329,52 @@ def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
 
     assert "notes must be an array" in rendered_errors(errors), (
         "expected notes array error"
+    )
+
+
+SECTION_CASES = [
+    ("tool", check_manifests.REQUIRED_TOOL),
+    ("prompt", check_manifests.REQUIRED_PROMPT),
+    ("source_asset", check_manifests.REQUIRED_SOURCE_ASSET),
+    ("asset_contract", check_manifests.REQUIRED_ASSET_CONTRACT),
+    ("postprocess", check_manifests.REQUIRED_POSTPROCESS),
+    ("validation", check_manifests.REQUIRED_VALIDATION),
+    ("runtime_use", check_manifests.REQUIRED_RUNTIME_USE),
+]
+
+
+@pytest.mark.parametrize("section,required_keys", SECTION_CASES)
+def test_validate_manifest_reports_missing_section_key(
+    tmp_path: Path, section: str, required_keys: set[str]
+) -> None:
+    """Verify each required section key produces a validation error."""
+    key = next(iter(sorted(required_keys)))
+    manifest = valid_manifest()
+    del manifest[section][key]
+    manifest_path = write_manifest(
+        tmp_path, f"missing-{section}-{key}.json", manifest
+    )
+
+    errors = check_manifests.validate_manifest(tmp_path, manifest_path)
+
+    assert any(f"{section}.{key}" in rendered(error) for error in errors), (
+        f"expected missing {section}.{key} error"
+    )
+
+
+@pytest.mark.parametrize("section", [section for section, _ in SECTION_CASES])
+def test_validate_manifest_reports_section_not_object(
+    tmp_path: Path, section: str
+) -> None:
+    """Verify a non-object section value produces a mapping error."""
+    manifest = valid_manifest()
+    manifest[section] = "not-an-object"
+    manifest_path = write_manifest(tmp_path, f"bad-{section}.json", manifest)
+
+    errors = check_manifests.validate_manifest(tmp_path, manifest_path)
+
+    assert any("must be an object" in rendered(error) for error in errors), (
+        f"expected {section} mapping error"
     )
 
 
