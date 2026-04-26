@@ -62,6 +62,8 @@ This section is the canonical source for bucket and `intent_class` values.
 Other documents and prompt templates may use the numeric shorthand, but
 manifests must use the string identifier from this table.
 
+Table 1. Canonical manifest bucket values and intended usage.
+
 | Shorthand | Manifest `bucket` value | Meaning |
 | --- | --- | --- |
 | Bucket 1 | `direct-generated-reference` | Built-in `image_gen` output kept as reference, style-book, or concept art. It is not a runtime dependency. |
@@ -84,6 +86,8 @@ Use the numeric bucket shorthand in tables where it keeps the layout readable.
 Use the manifest string values in JSON and validation output.
 
 ## Full asset inventory
+
+Table 2. Asset inventory with bucket assignment, processing, and manifest requirements.
 
 | Asset | Bucket | Source or path family | Post-processing | Runtime determinism | Manifest requirement |
 | --- | --- | --- | --- | --- | --- |
