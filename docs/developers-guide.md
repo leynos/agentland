@@ -116,13 +116,38 @@ Use these Makefile targets for asset pipeline checks:
 - `make manifest-check` validates JSON manifest structure, required fields, and
   canonical enum values documented in `docs/asset-spec.md` and
   `assets/manifests/README.md`.
-- `make assets-check` invokes `tools/check_assets.py`, which currently re-runs
-  manifest validation only. It does not yet perform separate alpha, palette,
-  atlas, scale, or runtime-use metadata consistency checks.
+- `make assets-check` currently delegates to `manifest-check` and performs
+  the same manifest schema validation. It is the designated extension point:
+  alpha, palette, atlas, scale, and runtime-use validation will be added here
+  as those checks are implemented.
 
 `make assets-check` is a prerequisite of `make all`, so the aggregate
 repository gate covers the current manifest-backed asset validation pass without
 running manifest validation twice.
+
+### tools/check_manifests.py
+
+Validates JSON manifests under `assets/manifests/` against the canonical
+schema. Public API:
+
+- `parse_args(argv)` — parses the `--root` command-line interface (CLI)
+  argument.
+- `manifest_paths(root)` — discovers manifests under `assets/manifests/`.
+- `load_manifest(path)` — reads and JSON-parses one manifest file.
+- `validate_manifest(root, path)` — returns a list of `ValidationError` values
+  for one file.
+- `validate_manifest_fields(root, data, errors)` — validates a parsed manifest
+  dictionary.
+- `main(argv, output)` — CLI entrypoint; returns `0` on success and `1` on any
+  failure.
+- `ValidationError(field, message)` — frozen dataclass for domain validation
+  failures.
+
+### tools/check_assets.py
+
+Extension-point entrypoint that currently delegates to
+`check_manifests.main()`. Intended to accumulate additional asset-level checks,
+including alpha, palette, and atlas checks, as they are implemented.
 
 ### Bucket and intent-class classification
 
