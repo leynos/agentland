@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 
-def build_tool() -> dict[str, Any]:
+def _tool_section() -> dict[str, Any]:
     """Return the default tool manifest section."""
     return {
         "mode": "codex_builtin_image_gen",
@@ -17,7 +17,7 @@ def build_tool() -> dict[str, Any]:
     }
 
 
-def build_prompt() -> dict[str, Any]:
+def _prompt_section() -> dict[str, Any]:
     """Return the default prompt manifest section."""
     return {
         "path": "prompts/generated/characters/ava-reference-v1.md",
@@ -28,7 +28,7 @@ def build_prompt() -> dict[str, Any]:
     }
 
 
-def build_files(source_path: str | None = None) -> dict[str, Any]:
+def _files_section(source_path: str | None) -> dict[str, Any]:
     """Return the default files manifest section."""
     return {
         "codex_generated_path": "$CODEX_HOME/generated_images/example.png",
@@ -40,7 +40,7 @@ def build_files(source_path: str | None = None) -> dict[str, Any]:
     }
 
 
-def build_source_asset() -> dict[str, Any]:
+def _source_asset_section() -> dict[str, Any]:
     """Return the default source asset manifest section."""
     return {
         "dimensions": [1024, 1024],
@@ -51,7 +51,7 @@ def build_source_asset() -> dict[str, Any]:
     }
 
 
-def build_asset_contract() -> dict[str, Any]:
+def _asset_contract_section() -> dict[str, Any]:
     """Return the default asset contract manifest section."""
     return {
         "focal_role": "character identity",
@@ -63,7 +63,7 @@ def build_asset_contract() -> dict[str, Any]:
     }
 
 
-def build_postprocess() -> dict[str, Any]:
+def _postprocess_section() -> dict[str, Any]:
     """Return the default postprocess manifest section."""
     return {
         "steps": [],
@@ -77,7 +77,7 @@ def build_postprocess() -> dict[str, Any]:
     }
 
 
-def build_validation() -> dict[str, Any]:
+def _validation_section() -> dict[str, Any]:
     """Return the default validation manifest section."""
     return {
         "subject_correct": True,
@@ -97,7 +97,7 @@ def build_validation() -> dict[str, Any]:
     }
 
 
-def build_runtime_use() -> dict[str, Any]:
+def _runtime_use_section() -> dict[str, Any]:
     """Return the default runtime use manifest section."""
     return {
         "kind": "reference only",
@@ -133,14 +133,14 @@ def valid_manifest(source_path: str | None = None) -> dict[str, Any]:
             "status": "approved-source",
             "bucket": "direct-generated-reference",
             "intent_class": "reference-only",
-            "tool": build_tool(),
-            "prompt": build_prompt(),
-            "files": build_files(source_path),
-            "source_asset": build_source_asset(),
-            "asset_contract": build_asset_contract(),
-            "postprocess": build_postprocess(),
-            "validation": build_validation(),
-            "runtime_use": build_runtime_use(),
+            "tool": _tool_section(),
+            "prompt": _prompt_section(),
+            "files": _files_section(source_path),
+            "source_asset": _source_asset_section(),
+            "asset_contract": _asset_contract_section(),
+            "postprocess": _postprocess_section(),
+            "validation": _validation_section(),
+            "runtime_use": _runtime_use_section(),
             "notes": [],
         }
     )
