@@ -35,7 +35,7 @@ asset specification rather than the numeric shorthand.
 Use this labelled structure unless a narrower template in
 `prompts/templates/` applies:
 
-```text
+```plaintext
 Use case:
 Asset type:
 Bucket:
@@ -61,7 +61,7 @@ Avoid:
 
 For pixel-art source material, add:
 
-```text
+```plaintext
 Pixel-art requirements:
 Crisp pixel-art rendering, readable silhouettes, controlled dithering, no
 painterly smearing, no blurry anti-aliased subject edges, clear sprite-scale
@@ -93,7 +93,7 @@ Use these fields concretely:
 
 Use this structure for edits:
 
-```text
+```plaintext
 Change:
 Preserve:
 Runtime text policy:
@@ -156,7 +156,7 @@ Generated text is allowed only for:
 
 When generated text is required, use:
 
-```text
+```plaintext
 Text (verbatim): "AI Agent Dashboard"
 Typography: large cream pixel-serif title, centred at the top, high contrast.
 Runtime text policy:
@@ -213,7 +213,7 @@ flat chroma-key background, then remove the key locally.
 
 Default cutout clause:
 
-```text
+```plaintext
 Scene/backdrop:
 Perfectly flat solid #00ff00 chroma-key background for local background
 removal. The background must be one uniform colour with no shadows, gradients,

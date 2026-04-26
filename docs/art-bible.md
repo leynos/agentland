@@ -138,7 +138,7 @@ Caption: Character roster — approved agent identity anchors.
 
 Runtime character sprites must be cleaned into fixed bounds, shared scale,
 stable anchors, and palette fit before promotion. Each checklist row is
-auditable: `Owner` names who accepts cleanup, `Date` records the review date,
+auditable: `Owner` records who accepted cleanup, `Date` records the review date,
 and `Status` records whether the character is approved, pending, or blocked.
 
 Caption: Character cleanup — sprite cleanup contract and audit status.

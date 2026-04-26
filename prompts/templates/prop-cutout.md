@@ -1,6 +1,6 @@
 # Prop cutout prompt template
 
-```text
+```plaintext
 Use case:
 Runtime prop source for Agentland.
 
