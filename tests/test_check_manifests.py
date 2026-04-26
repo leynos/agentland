@@ -49,6 +49,7 @@ def json_lines(output: str) -> list[dict[str, Any]]:
     ],
 )
 def test_validate_enum(value: Any, expected: list[str]) -> None:
+    """Validate enum checks for each input."""
     errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_enum(value, {"one", "two"}, "bucket", errors)
@@ -66,6 +67,7 @@ def test_validate_enum(value: Any, expected: list[str]) -> None:
 def test_require_mapping(
     value: Any, expected_result: bool, expected_errors: list[str]
 ) -> None:
+    """Verify require_mapping returns the correct bool and expected errors."""
     errors: list[check_manifests.ValidationError] = []
 
     result = check_manifests.require_mapping(value, "manifest", errors)
@@ -89,6 +91,7 @@ def test_require_mapping(
 def test_require_keys(
     value: dict[str, Any], required: set[str], expected_errors: list[str]
 ) -> None:
+    """Verify require_keys appends the expected missing-key errors."""
     errors: list[check_manifests.ValidationError] = []
 
     check_manifests.require_keys(value, required, "manifest", errors)
@@ -123,6 +126,7 @@ def test_require_keys(
 def test_validate_optional_path_variants(
     tmp_path: Path, value: Any, field: str, expected_error: str | None
 ) -> None:
+    """Validate optional path handling for common value variants."""
     errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_optional_path(tmp_path, value, field, errors)
@@ -137,6 +141,7 @@ def test_validate_optional_path_variants(
 
 
 def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
+    """Verify validate_optional_path accepts an existing repository file."""
     asset_path = tmp_path / "assets" / "source.png"
     asset_path.parent.mkdir(parents=True)
     asset_path.write_text("image placeholder", encoding="utf-8")
@@ -159,6 +164,7 @@ def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
 def test_validate_optional_path_rejects_root_escape(
     tmp_path: Path, value: str, expected_error: str
 ) -> None:
+    """Verify validate_optional_path rejects absolute and escaping paths."""
     errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_optional_path(
@@ -174,6 +180,7 @@ def test_validate_optional_path_rejects_root_escape(
 def test_validate_manifest_fields_accepts_minimal_valid_manifest(
     tmp_path: Path,
 ) -> None:
+    """Verify validate_manifest_fields accepts the minimal valid manifest."""
     errors: list[check_manifests.ValidationError] = []
 
     check_manifests.validate_manifest_fields(tmp_path, valid_manifest(), errors)
@@ -182,6 +189,7 @@ def test_validate_manifest_fields_accepts_minimal_valid_manifest(
 
 
 def test_validate_manifest_accepts_valid_json(tmp_path: Path) -> None:
+    """Verify validate_manifest accepts a valid manifest JSON file."""
     manifest_path = write_manifest(tmp_path, "valid.json", valid_manifest())
 
     errors = check_manifests.validate_manifest(tmp_path, manifest_path)
@@ -192,6 +200,7 @@ def test_validate_manifest_accepts_valid_json(tmp_path: Path) -> None:
 def test_validate_manifest_returns_error_for_malformed_json(
     tmp_path: Path,
 ) -> None:
+    """Verify validate_manifest reports malformed JSON as a manifest error."""
     manifest_path = tmp_path / "assets" / "manifests" / "malformed.json"
     manifest_path.parent.mkdir(parents=True)
     manifest_path.write_text("{", encoding="utf-8")
@@ -206,6 +215,7 @@ def test_validate_manifest_returns_error_for_malformed_json(
 
 
 def test_load_manifest_returns_data_for_valid_json(tmp_path: Path) -> None:
+    """Verify load_manifest returns parsed data for valid JSON."""
     manifest_path = write_manifest(tmp_path, "valid.json", valid_manifest())
 
     data, errors = check_manifests.load_manifest(manifest_path)
@@ -217,6 +227,7 @@ def test_load_manifest_returns_data_for_valid_json(tmp_path: Path) -> None:
 def test_load_manifest_returns_error_for_unreadable_file(
     tmp_path: Path,
 ) -> None:
+    """Verify load_manifest reports unreadable files distinctly."""
     manifest_path = tmp_path / "assets" / "manifests" / "missing.json"
 
     data, errors = check_manifests.load_manifest(manifest_path)
@@ -232,6 +243,7 @@ def test_load_manifest_returns_error_for_unreadable_file(
 def test_validate_manifest_reports_missing_top_level_field(
     tmp_path: Path,
 ) -> None:
+    """Verify validate_manifest reports a missing required top-level field."""
     manifest = valid_manifest()
     del manifest["bucket"]
     manifest_path = write_manifest(tmp_path, "missing-bucket.json", manifest)
@@ -244,6 +256,7 @@ def test_validate_manifest_reports_missing_top_level_field(
 
 
 def test_validate_manifest_reports_invalid_bucket(tmp_path: Path) -> None:
+    """Verify validate_manifest reports invalid bucket enum values."""
     manifest = merge_manifest_parts(
         valid_manifest(), {"bucket": "not-a-bucket"}
     )
@@ -257,6 +270,7 @@ def test_validate_manifest_reports_invalid_bucket(tmp_path: Path) -> None:
 
 
 def test_validate_manifest_reports_files_mapping_error(tmp_path: Path) -> None:
+    """Verify validate_manifest reports a non-object files section."""
     manifest = merge_manifest_parts(valid_manifest(), {"files": []})
     manifest_path = write_manifest(tmp_path, "bad-files.json", manifest)
 
@@ -268,6 +282,7 @@ def test_validate_manifest_reports_files_mapping_error(tmp_path: Path) -> None:
 
 
 def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
+    """Verify validate_manifest reports a non-array notes field."""
     manifest = merge_manifest_parts(valid_manifest(), {"notes": "not a list"})
     manifest_path = write_manifest(tmp_path, "bad-notes.json", manifest)
 
@@ -279,6 +294,7 @@ def test_validate_manifest_reports_notes_array_error(tmp_path: Path) -> None:
 
 
 def test_render_errors_writes_path_prefixed_messages() -> None:
+    """Verify render_errors writes path-prefixed human-readable messages."""
     output = io.StringIO()
 
     check_manifests.render_errors(
@@ -306,6 +322,7 @@ def test_main_returns_zero_for_valid_manifest_directory(
     manifest_count: int,
     expected_out: str,
 ) -> None:
+    """Verify main succeeds for empty and valid manifest directories."""
     for i in range(manifest_count):
         write_manifest(tmp_path, f"valid-{i}.json", valid_manifest())
     monkeypatch.setattr(
@@ -338,6 +355,7 @@ def test_main_returns_zero_for_valid_manifest_directory(
 def test_main_reports_invalid_manifest_path_and_error(
     tmp_path: Path,
 ) -> None:
+    """Verify main reports invalid manifest paths and validation errors."""
     manifest = merge_manifest_parts(valid_manifest(), {"bucket": "bad-bucket"})
     write_manifest(tmp_path, "invalid.json", manifest)
     output = io.StringIO()
@@ -363,6 +381,7 @@ def test_main_reports_invalid_manifest_path_and_error(
 
 
 def test_main_writes_errors_to_injected_output(tmp_path: Path) -> None:
+    """Verify main writes validation failures to the injected error stream."""
     manifest = merge_manifest_parts(valid_manifest(), {"files": []})
     write_manifest(tmp_path, "invalid.json", manifest)
     output_path = tmp_path / "stderr.txt"
