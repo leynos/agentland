@@ -24,6 +24,11 @@ def rendered_errors(errors: list[check_manifests.ValidationError]) -> list[str]:
     return [rendered(error) for error in errors]
 
 
+def json_lines(output: str) -> list[dict[str, Any]]:
+    """Return JSON records from mixed human-readable command output."""
+    return [json.loads(line) for line in output.splitlines() if line.startswith("{")]
+
+
 def valid_manifest(source_path: str | None = None) -> dict[str, Any]:
     """Return a minimal manifest that satisfies the required schema."""
     return {
@@ -324,7 +329,11 @@ def test_main_returns_zero_for_directory_with_zero_manifests(
 
     assert result == 0
     assert captured.err == ""
-    assert captured.out == "Validated 0 manifest file(s).\n"
+    records = json_lines(captured.out)
+    assert records[0] == {"op": "manifest-validation", "manifests_found": 0}
+    assert records[1]["op"] == "manifest-validation"
+    assert isinstance(records[1]["elapsed_ms"], float)
+    assert "Validated 0 manifest file(s)." in captured.out
 
 
 def test_main_returns_zero_for_directory_with_one_valid_manifest(
@@ -337,7 +346,11 @@ def test_main_returns_zero_for_directory_with_one_valid_manifest(
 
     assert result == 0
     assert captured.err == ""
-    assert captured.out == "Validated 1 manifest file(s).\n"
+    records = json_lines(captured.out)
+    assert records[0] == {"op": "manifest-validation", "manifests_found": 1}
+    assert records[1]["op"] == "manifest-validation"
+    assert isinstance(records[1]["elapsed_ms"], float)
+    assert "Validated 1 manifest file(s)." in captured.out
 
 
 def test_main_reports_invalid_manifest_path_and_error(
@@ -351,6 +364,14 @@ def test_main_reports_invalid_manifest_path_and_error(
     result = check_manifests.main(["--root", str(tmp_path)], output)
 
     assert result == 1
+    records = json_lines(output.getvalue())
+    assert records == [
+        {
+            "op": "manifest-validation",
+            "path": "assets/manifests/invalid.json",
+            "error_count": 1,
+        }
+    ]
     assert (
         "assets/manifests/invalid.json: bucket has invalid value 'bad-bucket'"
         in output.getvalue()

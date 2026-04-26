@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, TextIO
@@ -334,19 +335,48 @@ def render_errors(
         print(f"{rel_path}: {message}", file=output)
 
 
+def render_failure_log(
+    rel_path: Path, errors: list[ValidationError], output: TextIO
+) -> None:
+    """Write one structured validation failure record."""
+    print(
+        json.dumps(
+            {
+                "op": "manifest-validation",
+                "path": str(rel_path),
+                "error_count": len(errors),
+            }
+        ),
+        file=output,
+    )
+
+
+def render_stdout_log(record: dict[str, object]) -> None:
+    """Write one structured manifest validation progress record."""
+    print(json.dumps(record))
+
+
 def main(argv: list[str] | None = None, output: TextIO = sys.stderr) -> int:
     """Run manifest validation."""
+    started_at = time.perf_counter()
     args = parse_args(argv)
     root = args.root.resolve()
     paths = manifest_paths(root)
     failures = 0
+    render_stdout_log(
+        {"op": "manifest-validation", "manifests_found": len(paths)}
+    )
 
     for path in paths:
         errors = validate_manifest(root, path)
         if errors:
             failures += 1
             rel_path = path.relative_to(root)
+            render_failure_log(rel_path, errors, output)
             render_errors(rel_path, errors, output)
+
+    elapsed_ms = round((time.perf_counter() - started_at) * 1000, 3)
+    render_stdout_log({"op": "manifest-validation", "elapsed_ms": elapsed_ms})
 
     if failures:
         print(f"Manifest validation failed for {failures} file(s).", file=output)

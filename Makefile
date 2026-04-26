@@ -24,7 +24,7 @@ STATE_GRAPH_SVGS := $(STATE_GRAPH_DOTS:.dot=.svg)
 build: target/debug/$(TARGET) ## Build debug binary
 release: target/release/$(TARGET) ## Build release binary
 
-all: check-fmt lint test ## Perform a comprehensive check of code
+all: check-fmt lint test manifest-check assets-check ## Perform a comprehensive check of code
 
 clean: ## Remove build artifacts
 	$(CARGO) clean
