@@ -394,7 +394,7 @@ def test_render_errors_writes_path_prefixed_messages() -> None:
 
 
 @pytest.mark.parametrize(
-    ("manifest_count", "expected_out"),
+    "case",
     [
         (0, "Validated 0 manifest file(s).\n"),
         (1, "Validated 1 manifest file(s).\n"),
@@ -404,10 +404,10 @@ def test_main_returns_zero_for_valid_manifest_directory(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
-    manifest_count: int,
-    expected_out: str,
+    case: tuple[int, str],
 ) -> None:
     """Verify main succeeds for empty and valid manifest directories."""
+    manifest_count, expected_out = case
     for i in range(manifest_count):
         write_manifest(tmp_path, f"valid-{i}.json", valid_manifest())
     monkeypatch.setattr(
