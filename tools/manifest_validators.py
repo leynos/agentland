@@ -192,12 +192,16 @@ def validate_top_level_fields(
         Errors are appended to ``errors``.
     """
     require_keys(data, REQUIRED_TOP_LEVEL, "manifest", errors)
-    validate_enum(data.get("family"), ALLOWED_FAMILIES, "family", errors)
-    validate_enum(data.get("status"), ALLOWED_STATUSES, "status", errors)
-    validate_enum(data.get("bucket"), ALLOWED_BUCKETS, "bucket", errors)
-    validate_enum(
-        data.get("intent_class"), ALLOWED_INTENT_CLASSES, "intent_class", errors
-    )
+    if "family" in data:
+        validate_enum(data.get("family"), ALLOWED_FAMILIES, "family", errors)
+    if "status" in data:
+        validate_enum(data.get("status"), ALLOWED_STATUSES, "status", errors)
+    if "bucket" in data:
+        validate_enum(data.get("bucket"), ALLOWED_BUCKETS, "bucket", errors)
+    if "intent_class" in data:
+        validate_enum(
+            data.get("intent_class"), ALLOWED_INTENT_CLASSES, "intent_class", errors
+        )
 
 
 def validate_files(

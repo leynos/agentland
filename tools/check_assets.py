@@ -1,5 +1,27 @@
 #!/usr/bin/env python3
-"""Run deterministic Agentland asset metadata checks."""
+"""Validate deterministic metadata for Agentland asset manifests.
+
+This module checks asset metadata that must stay deterministic after the
+manifest schema has validated. It catches runtime assets without processed
+outputs and direct generated references that are marked for runtime use. Run it
+after editing manifests, adding processed assets, or changing how assets are
+promoted into the runtime.
+
+Use ``python tools/check_assets.py [--root PATH]`` from the command line, or
+import and call ``main()`` or ``validate_assets_metadata()`` from tests and
+tooling. The ``--root`` flag selects the repository root passed through to the
+manifest checker.
+
+For example, a clean run exits with status ``0`` and writes no files:
+
+```
+$ python tools/check_assets.py --root .
+```
+
+On failure, the entrypoint writes JSON summaries and readable diagnostics to
+standard error before returning a non-zero process-style status. See ``main()``
+for the combined manifest and asset validation entrypoint.
+"""
 
 from __future__ import annotations
 

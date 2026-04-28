@@ -105,7 +105,7 @@ def test_require_keys(
     ("argv", "expected_root"),
     [
         ([], Path.cwd()),
-        (["--root", "/tmp/repo"], Path("/tmp/repo")),
+        (["--root", "tmp/repo"], Path("tmp/repo")),
     ],
 )
 def test_parse_args_sets_root(
@@ -196,7 +196,7 @@ def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("value", "expected_error"),
     [
-        ("/tmp/source.png", "must be repository-relative"),
+        ("__ABSOLUTE__", "must be repository-relative"),
         ("../source.png", "escapes repository root"),
     ],
 )
@@ -205,9 +205,14 @@ def test_validate_optional_path_rejects_root_escape(
 ) -> None:
     """Verify validate_optional_path rejects absolute and escaping paths."""
     errors: list[check_manifests.ValidationError] = []
+    candidate = (
+        str(tmp_path.parent.resolve() / "source.png")
+        if value == "__ABSOLUTE__"
+        else value
+    )
 
     check_manifests.validate_optional_path(
-        tmp_path, value, "files.workspace_source_path", errors
+        tmp_path, candidate, "files.workspace_source_path", errors
     )
 
     assert len(errors) == 1, "expected one root escape error"
