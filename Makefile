@@ -1,6 +1,8 @@
 .PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie graphs check-graphs manifest-check assets-check
 
 
+export PATH := $(HOME)/.cargo/bin:$(HOME)/.bun/bin:$(PATH)
+
 TARGET ?= agentland
 
 CARGO ?= cargo
