@@ -128,6 +128,36 @@ def _resolved_path_exists(root: Path, value: str) -> bool:
     return candidate.exists()
 
 
+def _is_codex_home_path(value: str, field: str) -> bool:
+    """Return True for the permitted ``$CODEX_HOME/`` prefix on ``codex_generated_path``."""
+    return value.startswith("$CODEX_HOME/") and field == "files.codex_generated_path"
+
+
+def _is_root_or_empty(value: str) -> bool:
+    """Return True when *value* is empty or resolves to the repository root sentinel."""
+    if value == "":
+        return True
+    return Path(value).as_posix().rstrip("/") == "."
+
+
+def _root_containment_error(
+    root: Path, path: Path, value: str, field: str
+) -> ValidationError | None:
+    """Return a ``ValidationError`` when *path* is or escapes the repository root.
+
+    Returns ``None`` when the path is safely contained within *root*.
+    """
+    root_path = root.resolve()
+    candidate = (root_path / path).resolve()
+    if candidate == root_path:
+        return ValidationError(field, f"must not be the repository root {value!r}")
+    try:
+        candidate.relative_to(root_path)
+        return None
+    except ValueError:
+        return ValidationError(field, f"escapes repository root {value!r}")
+
+
 def validate_optional_path(
     root: Path, value: Any, field: str, errors: list[ValidationError]
 ) -> None:
@@ -154,11 +184,11 @@ def validate_optional_path(
     if not isinstance(value, str):
         errors.append(ValidationError(field, "must be a string or null"))
         return
-    if value.startswith("$CODEX_HOME/") and field == "files.codex_generated_path":
+    if _is_codex_home_path(value, field):
         return
 
     path = Path(value)
-    if value == "" or path.as_posix().rstrip("/") == ".":
+    if _is_root_or_empty(value):
         errors.append(
             ValidationError(
                 field,
@@ -171,17 +201,9 @@ def validate_optional_path(
         errors.append(ValidationError(field, f"must be repository-relative {value!r}"))
         return
 
-    root_path = root.resolve()
-    candidate = (root_path / path).resolve()
-    if candidate == root_path:
-        errors.append(
-            ValidationError(field, f"must not be the repository root {value!r}")
-        )
-        return
-    try:
-        candidate.relative_to(root_path)
-    except ValueError:
-        errors.append(ValidationError(field, f"escapes repository root {value!r}"))
+    containment_error = _root_containment_error(root, path, value, field)
+    if containment_error is not None:
+        errors.append(containment_error)
         return
 
     if not _resolved_path_exists(root, value):
