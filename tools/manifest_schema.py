@@ -1,4 +1,29 @@
-"""Canonical schema values for Agentland asset manifests."""
+"""Define the canonical schema contract for Agentland asset manifests.
+
+Downstream manifest tools import these constants to keep required keys and
+enum-like values in one compatible source of truth. Validators should compare
+parsed manifest mappings against ``REQUIRED_*`` key sets and validate field
+values against ``ALLOWED_*`` sets, returning diagnostics from their own public
+entrypoints rather than mutating these constants.
+
+Each exported value is a ``Final[frozenset[str]]``. ``ALLOWED_*`` constants
+list accepted string values for top-level manifest categories, while
+``REQUIRED_*`` constants list mandatory keys for the corresponding manifest
+object or nested section. For example:
+
+```
+from manifest_schema import ALLOWED_STATUSES, REQUIRED_FILES
+
+if manifest["status"] not in ALLOWED_STATUSES:
+    ...
+missing_file_keys = REQUIRED_FILES - manifest["files"].keys()
+```
+
+Keep additions backward-compatible where existing manifests rely on a value.
+When the manifest schema changes, update this module first, then update
+``tools/manifest_validators.py``, fixtures, documentation, and manifests that
+consume the changed contract.
+"""
 
 from typing import Final
 

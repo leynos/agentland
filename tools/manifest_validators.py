@@ -158,12 +158,26 @@ def validate_optional_path(
         return
 
     path = Path(value)
+    if value == "" or path.as_posix().rstrip("/") == ".":
+        errors.append(
+            ValidationError(
+                field,
+                "must be a repository-relative file path, not the repository "
+                "root or empty",
+            )
+        )
+        return
     if path.is_absolute():
         errors.append(ValidationError(field, f"must be repository-relative {value!r}"))
         return
 
     root_path = root.resolve()
     candidate = (root_path / path).resolve()
+    if candidate == root_path:
+        errors.append(
+            ValidationError(field, f"must not be the repository root {value!r}")
+        )
+        return
     try:
         candidate.relative_to(root_path)
     except ValueError:

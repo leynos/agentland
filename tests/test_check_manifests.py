@@ -196,6 +196,32 @@ def test_validate_optional_path_existing_file(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     ("value", "expected_error"),
     [
+        ("", "must be a repository-relative file path"),
+        (".", "must be a repository-relative file path"),
+        ("./", "must be a repository-relative file path"),
+        ("assets/..", "must not be the repository root"),
+    ],
+)
+def test_validate_optional_path_rejects_root_aliases(
+    tmp_path: Path, value: str, expected_error: str
+) -> None:
+    """Verify validate_optional_path rejects empty and root-alias paths."""
+    (tmp_path / "assets").mkdir()
+    errors: list[check_manifests.ValidationError] = []
+
+    check_manifests.validate_optional_path(
+        tmp_path, value, "files.workspace_source_path", errors
+    )
+
+    assert len(errors) == 1, "expected one root-alias error"
+    assert expected_error in rendered(errors[0]), (
+        f"expected error contains {expected_error!r}"
+    )
+
+
+@pytest.mark.parametrize(
+    ("value", "expected_error"),
+    [
         ("__ABSOLUTE__", "must be repository-relative"),
         ("../source.png", "escapes repository root"),
     ],
