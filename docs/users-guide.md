@@ -71,6 +71,20 @@ dashboard. In the current build each card has a brass border, slate-blue body,
 dark content strip, and a coloured accent. These shapes reserve space for
 future team and task summary information.
 
+## Asset pipeline overview
+
+Generated art in Agentland is reference or cutout material only. It is never
+loaded by the application until it has been processed, checked, and approved
+through a manifest.
+
+Run `make manifest-check` to validate manifest records, or `make assets-check`
+to validate those records and run deterministic asset metadata checks on the
+manifested assets.
+
+The current build does not display final art assets. Its placeholder shapes
+reserve the dashboard regions where future approved scene, character, prop, and
+interface assets will appear.
+
 ## Window resizing
 
 The renderer keeps the virtual framebuffer fixed at `512x288` for every window

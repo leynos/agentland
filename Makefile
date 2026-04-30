@@ -1,9 +1,12 @@
-.PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie graphs check-graphs
+.PHONY: help all clean test build release lint fmt check-fmt markdownlint nixie graphs check-graphs manifest-check assets-check
 
+
+export PATH := $(HOME)/.cargo/bin:$(HOME)/.bun/bin:$(PATH)
 
 TARGET ?= agentland
 
 CARGO ?= cargo
+PYTHON ?= python3
 BUILD_JOBS ?=
 RUST_FLAGS ?=
 RUST_FLAGS := -D warnings $(RUST_FLAGS)
@@ -23,7 +26,7 @@ STATE_GRAPH_SVGS := $(STATE_GRAPH_DOTS:.dot=.svg)
 build: target/debug/$(TARGET) ## Build debug binary
 release: target/release/$(TARGET) ## Build release binary
 
-all: check-fmt lint test ## Perform a comprehensive check of code
+all: check-fmt lint test assets-check ## Perform a comprehensive check of code
 
 clean: ## Remove build artifacts
 	$(CARGO) clean
@@ -56,6 +59,12 @@ check-fmt: ## Verify formatting
 
 markdownlint: ## Lint Markdown files
 	$(MDLINT) '**/*.md'
+
+manifest-check: ## Validate asset manifest schema
+	$(PYTHON) tools/check_manifests.py
+
+assets-check: ## Validate asset metadata and manifests
+	$(PYTHON) tools/check_assets.py
 
 nixie: ## Validate Mermaid diagrams
 	$(NIXIE) --no-sandbox

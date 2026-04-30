@@ -22,14 +22,19 @@ Do not reference generated images from code while they exist only under
 Each manifest records:
 
 - asset `id`, `family`, and `status`;
+- canonical `bucket` and `intent_class` values;
 - tool mode, model family, and fallback state;
 - prompt path, final prompt text, and input image roles;
 - Codex generated path when known;
 - workspace source path;
+- `files.validation_report_path`, even when no report exists yet;
+- `asset_contract` for focal role, layer, anchors, hit areas, screen regions,
+  and text policy;
 - processed and atlas paths when present;
 - source dimensions and format;
-- post-processing settings;
+- post-processing settings, including the `nine_slice` key;
 - validation notes;
 - runtime use.
 
 See [`docs/asset-spec.md`](../../docs/asset-spec.md) for the canonical schema.
+Run `make manifest-check` to validate manifest shape and canonical values.
