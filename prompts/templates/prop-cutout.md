@@ -7,32 +7,15 @@ Runtime prop source for Agentland.
 Asset type:
 Pixel-art prop cutout source.
 
-Bucket:
-Bucket 2, using manifest value `generated-source-converted`. Use
-`docs/asset-spec.md` as the canonical bucket source.
-
 Primary request:
-Create one isolated [prop name] for the Agentland coffee-shop dashboard.
-The prop is a [role prop / zone prop / ambient prop / user interface (UI) icon
-source].
+Create one isolated [prop name] for the Agentland coffee-shop dashboard. The
+prop is a [role prop / zone prop / ambient prop / UI icon source].
 
-Input images:
-Image 1: approved dashboard-world mockup, material and lighting reference,
+Input images: (optional, label each image by role)
+Image 1, material reference: approved dashboard-world mockup,
 `ref/design-book-9.png`.
-Image 2: approved environment guide, shared prop vocabulary reference,
+Image 2, prop vocabulary reference: approved environment guide,
 `ref/design-book-11.png`.
-
-Visual source of truth:
-Use the approved Agentland pixel-art material language: dark walnut wood,
-brick, brass trim, ceramic, paper, glass, screen-cyan displays, warm amber
-lamp highlights, and deep navy shadow.
-
-Focal priority:
-Prop silhouette first, functional details second, material texture third.
-
-Layer intent:
-Cutout source for later chroma-key removal, crop, quantization, bounds
-validation, and atlas packing.
 
 Scene/backdrop:
 Perfectly flat solid #00ff00 chroma-key background for local background
@@ -55,7 +38,7 @@ Composition/framing:
 Single centred prop, no crop, generous padding on all sides. Use a straight
 front, side, or three-quarter view as specified: [view].
 
-Lighting zones:
+Lighting/mood:
 Small warm amber highlight from upper left. No cast shadow, contact shadow, or
 grounding shadow. If the prop has a screen, leave a simple screen area that
 Rust can fill later.
@@ -69,33 +52,13 @@ grain, glass screen, paper edge, leather cover, or metal tool shaft.
 
 Text (verbatim): ""
 
-Runtime text policy:
-No generated text. Any sign, screen, label, or status content will be rendered
-by Rust.
-
-Post-processing target:
-Run `tools/remove_chroma_and_validate.py` with deterministic flags:
-python tools/remove_chroma_and_validate.py \
-  --input <source.png> \
-  --out <output.png> \
-  --auto-key border \
-  --soft-matte \
-  --transparent-threshold 12 \
-  --opaque-threshold 220 \
-  --despill \
-  --edge-contract 0
-Retry once with `--edge-contract 1` only if a thin fringe remains. Then crop
-transparent bounds, quantize towards the master palette, record anchor and
-bounds, and pack into the prop atlas if approved.
-
-Acceptance checks:
-Uniform chroma-key background; clean prop separation; no key-colour fringe;
-no watermark; no real brand logo; prop reads at 1x, 2x, 3x, and 4x.
-
 Constraints:
-Keep the prop fully separated from the background with crisp edges and
-generous padding. Use no cast shadow, no contact shadow, no reflection, and no
-extra props unless listed under Subject.
+Keep the prop fully separated from the background with crisp edges and generous
+padding. Use no cast shadow, no contact shadow, no reflection, and no extra
+props unless listed under Subject. No generated text; any sign, screen, label,
+or status content will be rendered by Rust. After accepting the source, run
+`tools/remove_chroma_and_validate.py` and record the prompt, source, processed
+path, validation notes, and post-processing settings in the manifest.
 
 Avoid:
 Scene backgrounds, gradients, floor plane, labels, duplicate props, brand

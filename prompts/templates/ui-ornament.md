@@ -1,41 +1,24 @@
-# User interface (UI) ornament reference prompt template
+# UI ornament prompt template
 
-```text
+```plaintext
 Use case:
-User-interface ornament reference for Agentland.
+UI ornament reference for Agentland.
 
 Asset type:
 Pixel-art UI ornament reference sheet.
-
-Bucket:
-Bucket 2, using manifest value `generated-source-converted`. Use
-`docs/asset-spec.md` as the canonical bucket source.
 
 Primary request:
 Create a clean reference sheet of [ornament family], such as brass corner
 caps, dividers, title plaques, number badges, icon badges, swatch frames,
 callout tags, status-strip frames, or outer-frame trim.
 
-Input images:
-Image 1: approved dashboard-world mockup, UI frame and panel reference,
+Input images: (optional, label each image by role)
+Image 1, panel reference: approved dashboard-world mockup,
 `ref/design-book-9.png`.
-Image 2: approved character roster mockup, card and badge reference,
+Image 2, card reference: approved character roster mockup,
 `ref/design-book-10.png`.
-Image 3: approved isometric environment sheet, callout tag reference,
+Image 3, callout reference: approved isometric environment sheet,
 `ref/design-book-12.png`.
-
-Visual source of truth:
-Use deep navy recesses, brass-gold trim, cream highlight pixels, clipped
-ornamental corners, compact plaques, and disciplined pixel-grid spacing from
-the approved mockups.
-
-Focal priority:
-Reusable ornament silhouette first, edge readability second, material texture
-third.
-
-Layer intent:
-Source reference for deterministic UI geometry, nine-slice metrics, or cleaned
-ornament sprites. Runtime text, state, layout, and hit areas remain code-owned.
 
 Scene/backdrop:
 Simple dark navy sheet background. Keep each ornament isolated with enough
@@ -56,7 +39,7 @@ Composition/framing:
 Arrange variants in rows. Keep corresponding corners, dividers, badges, and
 plaques aligned to an implied pixel grid. Avoid full dashboard mockups.
 
-Lighting zones:
+Lighting/mood:
 Subtle warm highlight on upper or left edges, dark navy inner recesses, and no
 glow that would blur the shape.
 
@@ -70,22 +53,12 @@ or carved corner detail as appropriate.
 
 Text (verbatim): ""
 
-Runtime text policy:
-No runtime-critical text. Plaques and badges must leave blank areas for Rust
-text or deterministic icons.
-
-Post-processing target:
-Crop candidate ornaments, normalize symmetry, define nine-slice metrics where
-needed, quantize to palette, and pack approved pieces into a UI atlas.
-
-Acceptance checks:
-Clean isolated parts; consistent style across variants; no baked labels; no
-watermark; no brand marks; corner and edge pieces can be mirrored or
-nine-sliced without visible seams.
-
 Constraints:
 Generate ornament parts only. Do not create a full application screen. Keep
-blank plaque interiors usable for deterministic text.
+blank plaque interiors usable for deterministic text. No runtime-critical text;
+plaques and badges must leave blank areas for Rust text or deterministic icons.
+Accepted image-derived ornaments need manifests, slice coordinates, palette
+notes, and atlas metadata before runtime use.
 
 Avoid:
 Complete dashboard screenshots, decorative text, irregular scaling, soft
