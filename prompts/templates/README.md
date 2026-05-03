@@ -56,7 +56,7 @@ Repeat the full `Preserve` list every edit iteration.
 
 - Use built-in `image_gen` by default.
 - Do not use CLI fallback unless explicitly requested or confirmed for true
-  native transparency.
+native transparency.
 - Do not rely on a destination-path argument for the built-in tool.
 - After generation, copy project-bound outputs from the built-in output area
   into the workspace.

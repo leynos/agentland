@@ -1,5 +1,7 @@
 # Transparent chroma-key prompt template
 
+Triage: `[type:docstyle]`
+
 ```plaintext
 Use case:
 Transparent-source cutout for Agentland.
@@ -41,9 +43,9 @@ Small warm amber edge highlight only. No cast shadow, no contact shadow, no
 reflection, and no floor plane.
 
 Colour palette:
-Use the Agentland master palette. Do not use #00ff00 anywhere in the subject.
-If the subject is normally green, shift its hue towards moss or leaf tones that
-remain visibly different from #00ff00.
+Use the Agentland master palette. Do not use #00ff00 anywhere in the
+subject. If the subject is normally green, shift its hue towards moss or leaf
+tones that remain visibly different from #00ff00.
 
 Materials/textures:
 [Name material facts: brass, walnut wood, ceramic, leather, paper, glass,
@@ -58,8 +60,8 @@ label, screen content, or status indicator will be rendered by Rust after
 processing. After accepting the source, run
 `tools/remove_chroma_and_validate.py` with `--auto-key border`, `--soft-matte`,
 `--transparent-threshold 12`, `--opaque-threshold 220`, `--despill`, and
-`--edge-contract 0`. Retry once with `--edge-contract 1` only if a thin fringe
-remains.
+`--edge-contract 0`. Retry once with `--edge-contract 1` only if a thin
+fringe remains.
 
 Avoid:
 Gradients, shadows, floor planes, reflections, watermarks, text, brand logos,

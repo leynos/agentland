@@ -62,7 +62,7 @@ Keep all poses on one sheet. Keep the background simple. Keep hands, props,
 face, and display areas clear enough for later cleanup. No runtime-critical
 text; names, roles, labels, statuses, and UI copy will be rendered by Rust.
 Designed as source or reference art for a 512x288 fixed-virtual-resolution Rust
-`pixels` renderer.
+pixels renderer.
 
 Avoid:
 Tiny unreadable labels, duplicated text, realistic rendering, blurred subject

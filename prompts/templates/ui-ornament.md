@@ -32,7 +32,7 @@ Subject:
 - Variant 4:
 
 Style/medium:
-Crisp pixel-art UI ornaments with clean edges, consistent outline weight, and
+Crisp pixel-art UI ornaments with clean edges, consistent outline weight,
 controlled brass highlights.
 
 Composition/framing:
@@ -56,12 +56,13 @@ Text (verbatim): ""
 Constraints:
 Generate ornament parts only. Do not create a full application screen. Keep
 blank plaque interiors usable for deterministic text. No runtime-critical text;
-plaques and badges must leave blank areas for Rust text or deterministic icons.
-Accepted image-derived ornaments need manifests, slice coordinates, palette
-notes, and atlas metadata before runtime use.
+plaques and badges must leave blank areas for Rust text or deterministic
+icons.
+Accepted image-derived ornaments need manifests, `slice`, `palette`, and
+`atlas` before runtime use.
 
 Avoid:
-Complete dashboard screenshots, decorative text, irregular scaling, soft
-blurred edges, overly thin lines, and ornament shapes that cannot be cropped or
+Complete dashboard screenshots, decorative text, irregular scaling, soft blurred
+edges, overly thin lines, and ornament shapes that cannot be cropped or
 redrawn cleanly.
 ```

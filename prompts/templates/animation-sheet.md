@@ -8,9 +8,9 @@ Asset type:
 Pixel-art animation reference sheet.
 
 Primary request:
-Create a reference sheet for [agent name] performing [motion name], such as
-idle, blink, typing, thinking, reading, alert, or celebrating. Show [frame
-count] clear frame poses with consistent identity and equal visual scale.
+Create a reference sheet for [agent name] performing [motion name], such as idle,
+blink, typing, thinking, reading, alert, or celebrating. Show [frame count]
+clear frame poses with consistent identity and equal visual scale.
 
 Input images: (optional, label each image by role)
 Image 1, identity reference: approved character reference for [agent name],
@@ -30,16 +30,16 @@ Subject:
 - Approximate height and scale:
 
 Style/medium:
-Crisp pixel-art frame poses with controlled dithering, readable silhouettes,
-and no blurry anti-aliased subject edges.
+Crisp pixel-art frame poses with controlled dithering, readable silhouettes, and
+no blurry anti-aliased subject edges.
 
 Composition/framing:
-Arrange frames left to right in a single row or labelled grid. Keep frame
-spacing even and leave padding around every pose.
+Arrange frames left to right in a single row or labelled grid. Keep frame spacing
+even and leave padding around every pose.
 
 Lighting/mood:
-Consistent warm rim light across all frames. Preserve screen-cyan glows or
-small display lights only where part of the character identity.
+Consistent warm rim light across all frames. Preserve screen-cyan glows or small
+display lights only where part of the character identity.
 
 Colour palette:
 Use the Agentland master palette and the character accent colours. Avoid

@@ -11,13 +11,14 @@ product surface.
 Do not call `image_gen` while writing prompt standards or templates. Generation
 tasks must be explicit.
 
-Do not configure PixelLab Model Context Protocol (MCP), create one-off image
-generation software development kit (SDK) runners, or ask for
+Do not configure PixelLab Model Context Protocol (MCP), create one-off
+image generation software development kit (SDK) runners, or ask for
 `OPENAI_API_KEY` when using the built-in tool.
 
-CLI fallback is out of scope unless the user explicitly asks for command-line,
-application programming interface (API), or model controls, or explicitly
-confirms true native transparency after the chroma-key path has been explained.
+CLI fallback is out of scope unless the user explicitly asks for
+command-line, application programming interface (API), or model controls, or
+explicitly confirms true native transparency after the chroma-key path has been
+explained.
 
 ## Standard generation schema
 
@@ -42,12 +43,13 @@ Constraints:
 Avoid:
 ```
 
-For multi-image generation or compositing, label each input image by role, such
-as `style reference`, `edit target`, `composition reference`, or `subject to
-insert`. Include the path or manifest identifier where known.
+For multi-image generation or compositing, label each input image by role,
+such as `style reference`, `edit target`, `composition reference`, or
+`subject to insert`. Include the path or manifest identifier where known.
 
 For exact text, put the literal copy under `Text (verbatim)`. State the
-typography, placement, size, colour, and `no duplicate text` in `Constraints`.
+typography, placement, size, colour, and `no duplicate text` in
+`Constraints`.
 Important runtime user interface (UI) text belongs in the Rust renderer, not in
 generated images.
 
@@ -70,13 +72,15 @@ time so preservation failures and identity drift are easy to detect.
 - Use one built-in generation call per distinct asset or variant.
 - Do not rely on a destination-path argument for the built-in tool.
 - Inspect generated outputs before accepting them.
-- After generation, copy or move every accepted project-bound output from the
-  built-in output area into the workspace.
-- Never leave a project-referenced image only under `$CODEX_HOME` or another
-  Codex-private generated-output path.
-- Save accepted files under stable, descriptive, non-destructive filenames.
+- After generation, copy or move every accepted project-bound output from
+  the built-in output area into the workspace.
+- Never leave a project-referenced image only under `$CODEX_HOME` or
+  another Codex-private generated-output path.
+- Save accepted files under stable, descriptive, non-destructive
+  filenames.
 - Do not overwrite existing assets unless the user explicitly requests
-  replacement. Prefer sibling versioned names such as `ava-reference-v2.png`.
+  replacement. Prefer sibling versioned names such as
+  `ava-reference-v2.png`.
 - Every accepted generated image needs a manifest under `assets/manifests/`.
 - Discarded preview variants do not need manifests unless the user asks to keep
   them or they influenced the final accepted asset.
@@ -108,8 +112,9 @@ painterly smearing, no blurry anti-aliased subject edges, clear sprite-scale
 forms.
 
 Constraints:
-Designed as source or reference art for a 512x288 fixed-virtual-resolution Rust
-`pixels` renderer. Final runtime UI will be assembled deterministically.
+Designed as source or reference art for a 512x288
+fixed-virtual-resolution Rust `pixels` renderer. Final runtime UI will be
+assembled deterministically.
 ```
 
 ## Transparent assets
@@ -148,18 +153,18 @@ python tools/remove_chroma_and_validate.py \
 ```
 
 Validate alpha, transparent corners, subject coverage, palette fit, and edge
-fringing before accepting the result. If a thin fringe remains, retry once with
-`--edge-contract 1`.
+fringing before accepting the result.
+If a thin fringe remains, retry once with `--edge-contract 1`.
 
-Ask before using CLI `gpt-image-1.5` for true transparency. Use that fallback
-only after the user explicitly requests it or confirms that native transparency
-is worth the additional CLI path.
+Ask before using CLI `gpt-image-1.5` for true transparency.
+Use that fallback only after the user explicitly requests it or confirms
+that native transparency is worth the additional CLI path.
 
 ## Runtime text policy
 
 Runtime-critical text belongs in Rust. This includes agent names, statuses,
-task descriptions, chart labels, tab labels, button labels, tooltip text, debug
-labels, and any copy that reflects application state.
+task descriptions, chart labels, tab labels, button labels, tooltip text,
+debug labels, and any copy that reflects application state.
 
 Generated text is allowed only for:
 
@@ -179,6 +184,7 @@ text exactly once, no extra words, no duplicate text, no watermark.
 
 If exact text fails, reject or iterate. Do not silently accept near-miss text
 for a prompt, manifest, or design-book source.
+Triage: `[type:docstyle]`
 
 ## Manifest requirements
 

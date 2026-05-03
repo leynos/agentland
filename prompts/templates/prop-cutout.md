@@ -1,5 +1,7 @@
 # Prop cutout prompt template
 
+Triage: `[type:docstyle]`
+
 ```plaintext
 Use case:
 Runtime prop source for Agentland.
@@ -8,8 +10,8 @@ Asset type:
 Pixel-art prop cutout source.
 
 Primary request:
-Create one isolated [prop name] for the Agentland coffee-shop dashboard. The
-prop is a [role prop / zone prop / ambient prop / UI icon source].
+Create one isolated [prop name] for the Agentland coffee-shop dashboard.
+The prop is a [role prop / zone prop / ambient prop / UI icon source].
 
 Input images: (optional, label each image by role)
 Image 1, material reference: approved dashboard-world mockup,
@@ -39,8 +41,8 @@ Single centred prop, no crop, generous padding on all sides. Use a straight
 front, side, or three-quarter view as specified: [view].
 
 Lighting/mood:
-Small warm amber highlight from upper left. No cast shadow, contact shadow, or
-grounding shadow. If the prop has a screen, leave a simple screen area that
+Small warm amber highlight from upper left. No cast shadow, contact shadow,
+or grounding shadow. If the prop has a screen, leave a simple screen area that
 Rust can fill later.
 
 Colour palette:

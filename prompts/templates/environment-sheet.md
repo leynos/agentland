@@ -1,5 +1,7 @@
 # Environment sheet prompt template
 
+Triage: [type:docstyle]
+
 ```plaintext
 Use case:
 Environment reference for Agentland.
@@ -39,9 +41,9 @@ Crisp pixel-art environment reference with readable silhouettes, controlled
 dithering, clear furniture edges, and no painterly smearing.
 
 Composition/framing:
-Use a clear room or scene layout with obvious work areas and walking or viewing
-clearance. Do not let decorative clutter obscure characters, screens, or future
-UI panels.
+Use a clear room or scene layout with obvious work areas and walking or
+viewing clearance. Do not let decorative clutter obscure characters, screens,
+or future UI panels.
 
 Lighting/mood:
 Warm amber lamp pools, screen-cyan work glows, readable focal areas at 1x,
@@ -49,8 +51,8 @@ controlled shadow pockets, and rim light on important silhouettes.
 
 Colour palette:
 Use Agentland deep navy, coffee brown, walnut wood, brass gold, warm amber,
-candle glow, moss green, screen cyan, ember red, and cream. Add local accents
-only when tied to the environment function.
+candle glow, moss green, screen cyan, ember red, and cream.
+Add local accents only when tied to the environment function.
 
 Materials/textures:
 Name the expected materials, such as brick, wood, brass, ceramic, leather,
