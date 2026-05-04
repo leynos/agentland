@@ -1,6 +1,6 @@
 # Environment sheet prompt template
 
-Triage: [type:docstyle]
+Triage: `[type:docstyle]`
 
 ```plaintext
 Use case:

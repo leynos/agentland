@@ -141,7 +141,7 @@ requirements.
 | Hit-test and draw-order metadata | 3 | Rust structs or atlas JSON | Schema validation | Deterministic input mapping | Atlas or validation metadata |
 | Character, prop, UI, and environment atlases | 3 | `assets/atlases/**` | Deterministic packing and validation | Stable sprite IDs, rects, anchors | `atlas` manifest |
 | Atlas metadata JSON | 3 | `assets/atlases/**/*.json` | Schema and path validation | Runtime loading contract | `atlas` manifest |
-| Chroma-key removal outputs | 2 | `tools/remove_chroma_and_validate.py` outputs | Alpha validation and despill | Deterministic command settings recorded in the Bucket 2 source manifest | Source manifest postprocess update required before runtime promotion |
+| Chroma-key removal outputs | 2 | Manual workflow outputs (`assets/processed/`) | Alpha validation and despill | Manual notes and manifest fields recorded in the Bucket 2 source manifest | Source manifest postprocess update required before runtime promotion |
 | Quantized runtime assets | 2 | `tools/quantize.py` outputs | Palette remap and readability check | Deterministic palette mapping recorded in the Bucket 2 source manifest | Source manifest postprocess update required before runtime promotion |
 | Sprite slicing metadata | 3 | `tools/slice_sheet.py` outputs | Equal-cell and bounds checks | Deterministic frame extraction | Source manifest `slice` data |
 | Nine-slice crop metrics | 3 | `tools/crop_nineslice.py` outputs | Validate all nine regions | Deterministic panel rendering | Ornament and atlas manifests |
@@ -272,8 +272,8 @@ Use this baseline structure:
 The following scripts define the intended tool surface. Those marked
 *(planned)* do not yet exist.
 
-- `tools/remove_chroma_and_validate.py` *(planned)* — cutout removal and alpha
-  checks.
+- Manual chroma-key cleanup workflow *(planned)* — cutout removal and alpha checks
+  while the automation script is unavailable.
 - `tools/quantize.py` *(planned)* — palette normalization.
 - `tools/crop_transparent.py` *(planned)* — transparent bounds.
 - `tools/slice_sheet.py` *(planned)* — validated reference-sheet slicing.

@@ -138,23 +138,13 @@ no contact shadow, no reflection, no watermark, and no text unless explicitly
 requested.
 ```
 
-Run chroma-key removal with:
+Chroma-key removal is not yet automated. For now:
 
-```bash
-python tools/remove_chroma_and_validate.py \
-  --input <source.png> \
-  --out <output.png> \
-  --auto-key border \
-  --soft-matte \
-  --transparent-threshold 12 \
-  --opaque-threshold 220 \
-  --despill \
-  --edge-contract 0
-```
-
-Validate alpha, transparent corners, subject coverage, palette fit, and edge
-fringing before accepting the result.
-If a thin fringe remains, retry once with `--edge-contract 1`.
+- duplicate the source locally;
+- remove #00ff00 using a hard-edged manual keying workflow;
+- save a transparent PNG and validate alpha, transparent corners, subject
+  coverage, palette fit, and edge fringing before accepting the result.
+- if a thin fringe remains, perform one additional manual edge-cleanup pass.
 
 Ask before using CLI `gpt-image-1.5` for true transparency.
 Use that fallback only after the user explicitly requests it or confirms
@@ -184,7 +174,6 @@ text exactly once, no extra words, no duplicate text, no watermark.
 
 If exact text fails, reject or iterate. Do not silently accept near-miss text
 for a prompt, manifest, or design-book source.
-Triage: `[type:docstyle]`
 
 ## Manifest requirements
 

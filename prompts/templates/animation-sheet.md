@@ -55,7 +55,7 @@ Constraints:
 Do not change costume, silhouette, palette, or role prop between frames. Do
 not add labels inside the frame cells. No runtime-critical text; motion names,
 frame IDs, and timing metadata will be stored outside the image. Designed as
-source or reference art for a 512x288 fixed-virtual-resolution Rust `pixels`
+source or reference art for a 512x288 fixed-virtual-resolution Rust pixels
 renderer.
 
 Avoid:

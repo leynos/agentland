@@ -58,8 +58,8 @@ Generate ornament parts only. Do not create a full application screen. Keep
 blank plaque interiors usable for deterministic text. No runtime-critical text;
 plaques and badges must leave blank areas for Rust text or deterministic
 icons.
-Accepted image-derived ornaments need manifests, `slice`, `palette`, and
-`atlas` before runtime use.
+Accepted image-derived ornaments need manifests with populated `slice`, `palette`,
+and `atlas` fields before runtime use.
 
 Avoid:
 Complete dashboard screenshots, decorative text, irregular scaling, soft blurred

@@ -58,9 +58,12 @@ Constraints:
 Keep the prop fully separated from the background with crisp edges and generous
 padding. Use no cast shadow, no contact shadow, no reflection, and no extra
 props unless listed under Subject. No generated text; any sign, screen, label,
-or status content will be rendered by Rust. After accepting the source, run
-`tools/remove_chroma_and_validate.py` and record the prompt, source, processed
-path, validation notes, and post-processing settings in the manifest.
+or status content will be rendered by Rust. Chroma-key removal is not yet
+available. For accepted sources, remove the #00ff00 key manually with these current
+steps: duplicate the source locally, key out pure #00ff00 with a hard-edged matte,
+run local checks for alpha, key spill, and transparent corners, then save a
+transparent PNG. Record the prompt, source, processed path, validation notes, and
+post-processing settings in the manifest.
 
 Avoid:
 Scene backgrounds, gradients, floor plane, labels, duplicate props, brand
