@@ -57,7 +57,7 @@ Constraints:
 Keep the subject fully separated from the background with crisp edges and
 generous padding. No extra props unless listed under Subject. No text; any
 label, screen content, or status indicator will be rendered by Rust after
-processing. Chroma-key removal is not yet available. For accepted sources, remove
+processing. Automation for chroma-key removal is not yet available. For accepted sources, remove
 the #00ff00 key manually with these current steps: duplicate the source locally,
 extract a hard-edged transparent background, validate transparent corners, clean
 halo, and edge spill, then save the transparent PNG. Record the prompt, source,
