@@ -114,7 +114,7 @@ composition, or typography.
 
 ---
 
-## Prompt 03 - Install the GPT Images 2 prompt standard
+## [x] Prompt 03 - Install the GPT Images 2 prompt standard
 
 ```text
 Create a repository prompt standard for Codex built-in GPT Images 2 work.
