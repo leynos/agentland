@@ -1,34 +1,19 @@
 # Transparent chroma-key prompt template
 
-```text
+```plaintext
 Use case:
 Transparent-source cutout for Agentland.
 
 Asset type:
 Pixel-art chroma-key source.
 
-Bucket:
-Bucket 2, using manifest value `generated-source-converted`. Use
-`docs/asset-spec.md` as the canonical bucket source.
-
 Primary request:
 Create one isolated [asset name] on a perfectly flat chroma-key background for
 local background removal.
 
-Input images:
-Image 1: approved Agentland mockup or accepted manifest reference, [path].
-
-Visual source of truth:
-Use the approved Agentland coffee-shop pixel-art style: readable silhouettes,
-warm amber highlights, deep navy shadows, brass accents, walnut wood, ceramic,
-paper, glass, screen-cyan glow where appropriate, and controlled dithering.
-
-Focal priority:
-Subject silhouette first, functional details second, material texture third.
-
-Layer intent:
-Cutout source only. Runtime bounds, anchors, hit areas, palette mapping, and
-atlas placement will be deterministic.
+Input images: (optional, label each image by role)
+Image 1, style reference: approved Agentland mockup or accepted manifest
+reference, `[path]`.
 
 Scene/backdrop:
 Perfectly flat solid #00ff00 chroma-key background for local background
@@ -37,28 +22,28 @@ texture, reflections, floor plane, or lighting variation.
 
 Subject:
 [asset name] as a [character accessory / role prop / zone prop / ambient prop /
-user interface (UI) ornament source].
+UI ornament source].
 Required details:
 - Detail:
 - Detail:
 - Detail:
 
 Style/medium:
-Crisp pixel-art rendering, readable sprite-scale form, controlled dithering,
-no painterly smearing, and no blurry anti-aliased subject edges.
+Crisp pixel-art rendering, readable sprite-scale form, controlled dithering, no
+painterly smearing, and no blurry anti-aliased subject edges.
 
 Composition/framing:
 Single centred subject with generous padding on all sides. Do not crop any
 part of the subject.
 
-Lighting zones:
+Lighting/mood:
 Small warm amber edge highlight only. No cast shadow, no contact shadow, no
 reflection, and no floor plane.
 
 Colour palette:
-Use the Agentland master palette. Do not use #00ff00 anywhere in the subject.
-If the subject is normally green, shift its hue towards moss or leaf tones that
-remain visibly different from #00ff00.
+Use the Agentland master palette. Do not use #00ff00 anywhere in the
+subject. If the subject is normally green, shift its hue towards moss or leaf
+tones that remain visibly different from #00ff00.
 
 Materials/textures:
 [Name material facts: brass, walnut wood, ceramic, leather, paper, glass,
@@ -66,25 +51,19 @@ painted shell, metal, cloth, or plants.]
 
 Text (verbatim): ""
 
-Runtime text policy:
-No text. Any label, screen content, or status indicator will be rendered by
-Rust after processing.
-
-Post-processing target:
-Run `tools/remove_chroma_and_validate.py` with `--auto-key border`,
-`--soft-matte`, `--transparent-threshold 12`, `--opaque-threshold 220`,
-`--despill`, and `--edge-contract 0`. Retry once with `--edge-contract 1` only
-if a thin fringe remains.
-
-Acceptance checks:
-Uniform #00ff00 background; transparent corners after removal; clean alpha;
-no key-colour fringe; subject coverage is sufficient; silhouette reads at
-runtime scale; manifest records source, prompt, settings, processed path, and
-validation notes.
-
 Constraints:
 Keep the subject fully separated from the background with crisp edges and
-generous padding. No extra props unless listed under Subject.
+generous padding. No extra props unless listed under Subject. No text; any
+label, screen content, or status indicator will be rendered by Rust after
+processing. Automation for chroma-key removal is not yet available. For accepted
+sources, remove the #00ff00 key manually with these current steps: duplicate the
+source locally, extract a hard-edged transparent background, validate
+transparent corners, clean halo, and edge spill; if a thin fringe remains
+perform one additional manual edge-cleanup pass, then re-validate transparent
+corners and edges before acceptance, then save the transparent PNG. Record the
+prompt, source, processed path, validation notes, post-processing settings,
+tool, bucket, intent, runtime-text safety explicitly true/false, consuming
+runtime layer, and asset ID in the manifest.
 
 Avoid:
 Gradients, shadows, floor planes, reflections, watermarks, text, brand logos,

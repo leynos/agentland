@@ -181,7 +181,38 @@ Intent classes:
 
 `prompts/templates/` contains concrete prompt templates for repeatable
 development-time asset generation. Keep prompts specific, visual, and aligned
-with `docs/prompt-style-guide.md`.
+with `docs/prompt-style-guide.md`. The shared GPT Images 2 standard lives in
+`docs/imagegen-workflow.md` and `prompts/templates/README.md`; update both when
+the schema or image-generation rules change.
+
+Use the labelled generation schema for new asset prompts unless a narrower
+template applies: `Use case`, `Asset type`, `Primary request`, labelled input
+images, `Scene/backdrop`, `Subject`, `Style/medium`,
+`Composition/framing`, `Lighting/mood`, `Colour palette`,
+`Materials/textures`, `Text (verbatim)`, `Constraints`, and `Avoid`.
+
+Use the edit schema for image edits: `Change`, `Preserve`, and `Constraints`.
+Repeat the full `Preserve` list on every edit iteration so identity, layout,
+palette, lighting, and text-safety invariants remain explicit.
+
+Codex built-in `image_gen` is the default authoring path for generated raster
+references and source art. Do not document CLI fallback or API runners as the
+normal workflow. Ask before using CLI `gpt-image-1.5` for true transparency, and
+do not rely on a destination-path argument for the built-in tool.
+
+For project-bound outputs, copy accepted images from the built-in output area
+into the workspace before any code, manifest, or documentation references them.
+Every accepted generated image needs a manifest under `assets/manifests/`.
+
+For exact generated text, put the copy under `Text (verbatim)` and specify
+typography, placement, size, colour, and `no duplicate text`. Runtime-critical
+text such as agent names, statuses, task labels, buttons, and chart labels
+belongs in Rust rendering rather than baked into generated images.
+
+For transparent assets, prompt for a perfectly flat chroma-key background.
+Automation for chroma-key removal is not yet available, so templates must keep
+manual keying as the current workflow until the helper exists under `tools/` and
+has validation coverage.
 
 - `character-sheet.md` defines character reference sheets for roster identity,
   silhouettes, accessories, pose language, and cleanup notes.

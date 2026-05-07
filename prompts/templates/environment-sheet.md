@@ -1,42 +1,25 @@
 # Environment sheet prompt template
 
-```text
+Triage: `[type:docstyle]`
+
+```plaintext
 Use case:
 Environment reference for Agentland.
 
 Asset type:
 Pixel-art environment sheet.
 
-Bucket:
-Bucket 1, using manifest value `direct-generated-reference`, or Bucket 2,
-using manifest value `generated-source-converted`, when the sheet is explicitly
-meant for backplate, tile, or prop extraction. Use `docs/asset-spec.md` as the
-canonical bucket source.
-
 Primary request:
 Create an environment sheet for [environment name], a [perspective type]
 workspace where agents [function].
 
-Input images:
-Image 1: approved dashboard-world mockup, coffee-shop visual authority,
+Input images: (optional, label each image by role)
+Image 1, style reference: approved dashboard-world mockup,
 `ref/design-book-9.png`.
-Image 2: approved locations guide, environment-card hierarchy reference,
+Image 2, environment-card reference: approved locations guide,
 `ref/design-book-11.png`.
-Image 3: approved isometric environment sheet, spatial-zone reference,
+Image 3, spatial-zone reference: approved isometric environment sheet,
 `ref/design-book-12.png`.
-
-Visual source of truth:
-Use the approved Agentland mockups for cosy pixel-art workplace materials,
-disciplined panel hierarchy, warm amber lighting, screen-cyan work glows, and
-clear functional zones.
-
-Focal priority:
-Primary work zone first, active agents or scale markers second, signature
-props third, ambient detail fourth.
-
-Layer intent:
-Environment concept and spatial reference. Runtime layout, camera framing,
-layer order, hit areas, and user interface (UI) overlays remain deterministic.
 
 Scene/backdrop:
 [side-view coffee shop / isometric room / location card / material study]
@@ -62,17 +45,14 @@ Use a clear room or scene layout with obvious work areas and walking or
 viewing clearance. Do not let decorative clutter obscure characters, screens,
 or future UI panels.
 
-Lighting zones:
-Key light:
-Secondary glow:
-Readable areas at 1x:
-Shadow pockets:
-Rim-light targets:
+Lighting/mood:
+Warm amber lamp pools, screen-cyan work glows, readable focal areas at 1x,
+controlled shadow pockets, and rim light on important silhouettes.
 
 Colour palette:
 Use Agentland deep navy, coffee brown, walnut wood, brass gold, warm amber,
-candle glow, moss green, screen cyan, ember red, and cream. Add local accents
-only when tied to the environment function.
+candle glow, moss green, screen cyan, ember red, and cream.
+Add local accents only when tied to the environment function.
 
 Materials/textures:
 Name the expected materials, such as brick, wood, brass, ceramic, leather,
@@ -80,24 +60,11 @@ paper, glass, plants, metal, stone, or circuit boards.
 
 Text (verbatim): ""
 
-Runtime text policy:
-Any labels, callouts, status text, signs, and screen content are reference
-only unless quoted here for a design-book page. Runtime copy will be rendered
-by Rust.
-
-Post-processing target:
-Reference-only inspection unless explicitly marked for layer extraction. If
-promoted, split into backplate, large props, foreground overlaps, material
-tiles, and light-origin notes.
-
-Acceptance checks:
-Mood and function are clear; zones are readable; palette matches the approved
-mockups; lighting does not hide focal areas; no real brand logos; no
-unrequested slogans; no critical text baked into runtime source.
-
 Constraints:
 Preserve the Agentland material language and 512x288 runtime fit. Keep
-functional zones clear enough to guide deterministic layout later.
+functional zones clear enough to guide deterministic layout later. Any labels,
+callouts, status text, signs, and screen content are reference only unless
+quoted exactly; runtime copy will be rendered by Rust.
 
 Avoid:
 Generic office styling, overfilled shelves that obscure the scene, blurred
