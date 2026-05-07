@@ -1,7 +1,5 @@
 # Transparent chroma-key prompt template
 
-Triage: `[type:docstyle]`
-
 ```plaintext
 Use case:
 Transparent-source cutout for Agentland.

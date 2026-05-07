@@ -1,7 +1,5 @@
 # Prop cutout prompt template
 
-Triage: `[type:docstyle]`
-
 ```plaintext
 Use case:
 Runtime prop source for Agentland.
