@@ -29,7 +29,7 @@ jobs:
       - name: Lint
         run: make lint
       - name: Test and Measure Coverage
-        uses: leynos/shared-actions/.github/actions/generate-coverage@a150eb3a60aec3ebb2c5dd8ef3df4d68eb15152e
+        uses: leynos/shared-actions/.github/actions/generate-coverage@80935e57261986b39b958d7873435a50f14d592e
         with:
           output-path: coverage.xml
           format: cobertura
