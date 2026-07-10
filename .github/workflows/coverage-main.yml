@@ -1,0 +1,42 @@
+name: Coverage (main)
+
+# CodeScene accepts `cs-coverage upload` only for analysed branches, so
+# main-branch coverage is uploaded here on push. The pull-request
+# changed-line gate (`cs-coverage check`) is deferred in ci.yml until
+# CodeScene enables the coverage-gates configuration for project 79465
+# (see the comment there). This workflow also advances the coverage
+# ratchet baseline: caches saved on main are readable by every
+# pull-request run, so the baseline written here is the one ci.yml's
+# ratchet check compares against.
+
+'on':
+  push:
+    branches: [main]
+
+jobs:
+  coverage-upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      CARGO_TERM_COLOR: always
+      BUILD_PROFILE: debug
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      - name: Setup Rust
+        uses: leynos/shared-actions/.github/actions/setup-rust@927edd45ae77be4251a8a18ca9eb5613a2e32cbd
+      - name: Generate coverage
+        uses: leynos/shared-actions/.github/actions/generate-coverage@927edd45ae77be4251a8a18ca9eb5613a2e32cbd
+        with:
+          output-path: coverage.xml
+          format: cobertura
+          with-ratchet: 'true'
+      - name: Upload coverage data to CodeScene
+        env:
+          CS_ACCESS_TOKEN: ${{ secrets.CS_ACCESS_TOKEN }}
+        if: ${{ env.CS_ACCESS_TOKEN }}
+        uses: leynos/shared-actions/.github/actions/upload-codescene-coverage@927edd45ae77be4251a8a18ca9eb5613a2e32cbd
+        with:
+          format: cobertura
+          access-token: ${{ env.CS_ACCESS_TOKEN }}
+          installer-checksum: ${{ vars.CODESCENE_CLI_SHA256 }}

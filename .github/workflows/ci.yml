@@ -16,8 +16,10 @@ jobs:
       WHITAKER_INSTALLER_VERSION: '0.2.5'
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          fetch-depth: 0
       - name: Setup Rust
-        uses: leynos/shared-actions/.github/actions/setup-rust@b1b9861104e75bbbc4b2b192c37b1c60b6ed86c0
+        uses: leynos/shared-actions/.github/actions/setup-rust@927edd45ae77be4251a8a18ca9eb5613a2e32cbd
       - name: Format
         run: make check-fmt
       - name: Markdown lint
@@ -50,16 +52,18 @@ jobs:
       - name: Lint
         run: make lint
       - name: Test and Measure Coverage
-        uses: leynos/shared-actions/.github/actions/generate-coverage@80935e57261986b39b958d7873435a50f14d592e
+        uses: leynos/shared-actions/.github/actions/generate-coverage@927edd45ae77be4251a8a18ca9eb5613a2e32cbd
         with:
           output-path: coverage.xml
           format: cobertura
-      - name: Upload coverage data to CodeScene
-        env:
-          CS_ACCESS_TOKEN: ${{ secrets.CS_ACCESS_TOKEN }}
-        if: ${{ env.CS_ACCESS_TOKEN }}
-        uses: leynos/shared-actions/.github/actions/upload-codescene-coverage@a150eb3a60aec3ebb2c5dd8ef3df4d68eb15152e
-        with:
-          format: cobertura
-          access-token: ${{ env.CS_ACCESS_TOKEN }}
-          installer-checksum: ${{ vars.CODESCENE_CLI_SHA256 }}
+          with-ratchet: 'true'
+      # The `mode: check` PR coverage gate is deliberately not wired in
+      # yet: CodeScene project 79465 has no coverage-gates
+      # configuration, so `cs-coverage check` would fail every run with
+      # "HTTP call succeeded, but the received project-config isn't
+      # valid. Lacks the gates configuration." — a CodeScene-side
+      # per-project setting, not a CI defect (ddlint#287 and
+      # chutoro#156 hit the byte-identical error). Coverage is uploaded
+      # for main-branch pushes only, via coverage-main.yml. Add the
+      # check step here in a fast-follow PR once CodeScene confirms the
+      # project's coverage gate is enabled.
