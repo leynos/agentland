@@ -1,3 +1,6 @@
 [tool.pytest.ini_options]
 pythonpath = ["tools"]
-testpaths = ["tests"]
+testpaths = ["tests", "scripts/tests"]
+
+[dependency-groups]
+dev = ["pathspec==1.1.1"]
