@@ -3,6 +3,15 @@
 This guide is an internal reference for maintaining the current Agentland
 placeholder runtime and its documentation-adjacent asset workflow.
 
+## Spelling policy
+
+The tracked `typos.toml` is generated from the shared estate dictionary and
+the repository-specific `typos.local.toml` overlay. Never edit generated
+entries by hand. Add only narrow repository terminology to the overlay, then
+run `make spelling-config`. The focused shared config builder refreshes the
+dictionary into an untracked local cache only when the authoritative copy is
+newer. A valid cache remains usable when the network is unavailable.
+
 ## Repository layout
 
 `src/` contains the Rust runtime, including window setup, display mapping,
@@ -44,13 +53,13 @@ blue, alpha (RGBA) channel bytes. `FrameBuffer::clear` fills the whole frame,
 and `FrameBuffer::fill_rect` performs bounds-checked rectangle drawing.
 
 `render::primitives` contains `render_placeholder_dashboard`. The draw order is
-backplate, top bar, scene viewport, then stat cards. `PALETTE` centralises the
+backplate, top bar, scene viewport, then stat cards. `PALETTE` centralizes the
 placeholder colours, and `card_accent` maps stat-card indices to their accent
 colours.
 
 `app` contains `AppError`, `run()`, `Runtime`, and `AgentlandApp`. This module
 owns the `winit` event loop, window creation, `pixels` surface, redraw
-scheduling, render calls, and zero-sized resize handling for minimised windows.
+scheduling, render calls, and zero-sized resize handling for minimized windows.
 
 ## Coordinate systems
 
@@ -96,7 +105,7 @@ deterministic section geometry in `layout`, clipped rectangle drawing in
 `render::frame`, placeholder pixel regression checks in `render::primitives`,
 and zero-sized surface detection in `app`.
 
-Use `rstest` for parametrised cases when a behaviour has multiple clear input
+Use `rstest` for parametrized cases when a behaviour has multiple clear input
 and output examples, such as viewport scale selection or resize edge cases.
 
 ## Asset pipeline

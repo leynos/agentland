@@ -509,7 +509,16 @@ adding a target once the workflow stabilizes.
 
 ## Documentation and Markdown
 
-- Validate Markdown with `make markdownlint` when available.
+- Validate Markdown with `make markdownlint` when available. This target also
+  enforces en-GB-oxendict spelling with the pinned `typos` release.
+- The spelling configuration `typos.toml` is generated. Edit
+  `typos.local.toml` for narrow repository terminology, then run
+  `make spelling-config`; never edit generated entries by hand. The shared
+  config builder refreshes its untracked dictionary cache when the authoritative
+  dictionary is newer.
+- Quoted APIs and identifiers retain upstream spelling. Put them in backticks
+  or fenced code blocks, which the spelling gate ignores, rather than adding
+  word-level exceptions.
 - Run `make fmt` after documentation changes if the target formats Markdown in
   this repository.
 - Validate Mermaid diagrams with `make nixie` when diagrams changed.

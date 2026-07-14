@@ -140,7 +140,7 @@ fields, and planned post-processing tools. Templates should refer to this file
 for manifest field names.
 
 `docs/developers-guide.md` is the maintainer-facing overview. Its section 5 now
-summarises the prompt-template rules that contributors should follow.
+summarizes the prompt-template rules that contributors should follow.
 
 ## Plan of work
 
@@ -207,9 +207,9 @@ exists and has validation coverage.
 If markdown lint fails, inspect the reported file and line, rewrap paragraphs
 or bullets at 80 columns, and rerun `make markdownlint`.
 
-## Artifacts and notes
+## Artefacts and notes
 
-Relevant artifacts:
+Relevant artefacts:
 
 - `docs/imagegen-workflow.md`
 - `prompts/templates/README.md`
