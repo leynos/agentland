@@ -43,7 +43,7 @@ them.
 The virtual framebuffer is always `512x288`. Window size never becomes layout
 authority. Resize events resize the `pixels` surface and recalculate the
 letterbox viewport, but the framebuffer width and height remain unchanged.
-Zero-width or zero-height resize events are treated as a minimised presentation
+Zero-width or zero-height resize events are treated as a minimized presentation
 surface: the app skips `pixels::Pixels::resize_surface`, preserves the last
 valid viewport, and pauses redraw work until a non-zero size arrives.
 

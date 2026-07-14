@@ -896,7 +896,7 @@ Mitigation:
 - quote exact text and specify placement for concept images
 - render final app text in code
 
-### Risk 4: transparency artifacts
+### Risk 4: transparency artefacts
 
 Mitigation:
 

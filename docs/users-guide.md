@@ -32,7 +32,7 @@ components installed.
 
 ## Building and launching
 
-Build an optimised release binary with:
+Build an optimized release binary with:
 
 ```bash
 cargo build --release
@@ -97,7 +97,7 @@ dashboard. Those regions are outside the virtual dashboard and are rejected by
 the coordinate mapper.
 
 The configured minimum inner size is `512x288`. Window managers may still emit
-temporary zero-sized resize events during minimisation; the runtime treats
+temporary zero-sized resize events during minimization; the runtime treats
 those events as a hidden surface and resumes rendering after a non-zero size
 returns.
 

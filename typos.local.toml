@@ -1,0 +1,32 @@
+# Repository-specific exceptions to the shared en-GB-oxendict policy.
+
+schema = 1
+
+[oxford]
+stems = []
+
+[words]
+accepted = []
+
+[words.corrections]
+
+[patterns]
+ignore = [
+  # Cargo requires this exact environment variable.
+  '\bCARGO_TERM_COLOR\b',
+  # GitHub requires this exact pull-request event list.
+  'types: \[opened, reopened, synchronize, labeled, ready_for_review\]',
+  # Preserve exact formal upstream documentation titles across line wrapping.
+  'Azure Architecture\s+Center \| Microsoft Learn',
+  'GitHub Flavored\s+Markdown \(GFM\)',
+  'LogRocket Blog — Organizing Rust tests',
+  # Preserve the established Rust type and exact local parameter syntax.
+  '\bColor\b',
+  '\bcolor: Color\b',
+  '\bcolor\.channels\(\)',
+  # Graphviz requires this exact colour attribute spelling.
+  '\bcolor=',
+]
+
+[files]
+exclude = []
