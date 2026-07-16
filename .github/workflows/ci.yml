@@ -74,13 +74,14 @@ jobs:
           # differs between interpreter versions (94.30% on 3.12 vs 91.71%
           # on 3.14 for identical source), so this job and coverage-main
           # must resolve the same Python or the ratchet baseline drifts.
-      # The `mode: check` PR coverage gate is deliberately not wired in
-      # yet: CodeScene project 79465 has no coverage-gates
-      # configuration, so `cs-coverage check` would fail every run with
-      # "HTTP call succeeded, but the received project-config isn't
-      # valid. Lacks the gates configuration." — a CodeScene-side
-      # per-project setting, not a CI defect (ddlint#287 and
-      # chutoro#156 hit the byte-identical error). Coverage is uploaded
-      # for main-branch pushes only, via coverage-main.yml. Add the
-      # check step here in a fast-follow PR once CodeScene confirms the
-      # project's coverage gate is enabled.
+      - name: Check coverage against CodeScene gates
+        env:
+          CS_ACCESS_TOKEN: ${{ secrets.CS_ACCESS_TOKEN }}
+        if: env.CS_ACCESS_TOKEN != '' && github.event_name == 'pull_request'
+        uses: leynos/shared-actions/.github/actions/upload-codescene-coverage@3c1fa01bcf4c26dac79975c18b74c01d577dcf95
+        with:
+          format: cobertura
+          mode: check
+          project-url: https://api.codescene.io/v2/projects/79465
+          access-token: ${{ env.CS_ACCESS_TOKEN }}
+          installer-checksum: ${{ vars.CODESCENE_CLI_SHA256 }}
