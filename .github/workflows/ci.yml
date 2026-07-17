@@ -13,7 +13,7 @@ jobs:
     env:
       CARGO_TERM_COLOR: always
       BUILD_PROFILE: debug
-      WHITAKER_INSTALLER_VERSION: '0.2.5'
+      WHITAKER_INSTALLER_VERSION: '0.2.6'
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
@@ -69,6 +69,11 @@ jobs:
           output-path: coverage.xml
           format: cobertura
           with-ratchet: 'true'
+          # The Python interpreter for the coverage run is pinned by the
+          # repository's .python-version file. Slipcover's line accounting
+          # differs between interpreter versions (94.30% on 3.12 vs 91.71%
+          # on 3.14 for identical source), so this job and coverage-main
+          # must resolve the same Python or the ratchet baseline drifts.
       # The `mode: check` PR coverage gate is deliberately not wired in
       # yet: CodeScene project 79465 has no coverage-gates
       # configuration, so `cs-coverage check` would fail every run with
