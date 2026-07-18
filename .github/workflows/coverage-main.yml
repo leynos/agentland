@@ -31,6 +31,9 @@ jobs:
           output-path: coverage.xml
           format: cobertura
           with-ratchet: 'true'
+          # The coverage interpreter is pinned by .python-version so the
+          # baseline seeded here matches ci.yml's measurement. See the
+          # comment on the equivalent step in ci.yml.
       - name: Upload coverage data to CodeScene
         env:
           CS_ACCESS_TOKEN: ${{ secrets.CS_ACCESS_TOKEN }}
