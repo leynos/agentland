@@ -435,9 +435,9 @@ Rust rules:
   `std::path` where capability-oriented filesystem access or UTF-8 paths
   improve correctness.
 - Dependency versions in `Cargo.toml` must use implicit caret semantics (for
-  example, `1.2.3`) and must not include a literal caret character
-  (`^1.2.3`), wildcard, open-ended requirement, or tilde except for documented
-  patch-level locks.
+  example, `1.2.3`) and must not include a literal caret character (`^1.2.3`),
+  wildcard, open-ended requirement, or tilde except for documented patch-level
+  locks.
 
 ### Rust tests
 
@@ -514,8 +514,8 @@ adding a target once the workflow stabilizes.
 - The spelling configuration `typos.toml` is generated. Edit
   `typos.local.toml` for narrow repository terminology, then run
   `make spelling-config`; never edit generated entries by hand. The shared
-  config builder refreshes its untracked dictionary cache when the authoritative
-  dictionary is newer.
+  config builder refreshes its untracked dictionary cache when the
+  authoritative dictionary is newer.
 - Quoted APIs and identifiers retain upstream spelling. Put them in backticks
   or fenced code blocks, which the spelling gate ignores, rather than adding
   word-level exceptions.

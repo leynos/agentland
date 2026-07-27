@@ -5,10 +5,10 @@ placeholder runtime and its documentation-adjacent asset workflow.
 
 ## Spelling policy
 
-The tracked `typos.toml` is generated from the shared estate dictionary and
-the repository-specific `typos.local.toml` overlay. Never edit generated
-entries by hand. Add only narrow repository terminology to the overlay, then
-run `make spelling-config`. The focused shared config builder refreshes the
+The tracked `typos.toml` is generated from the shared estate dictionary and the
+repository-specific `typos.local.toml` overlay. Never edit generated entries by
+hand. Add only narrow repository terminology to the overlay, then run
+`make spelling-config`. The focused shared config builder refreshes the
 dictionary into an untracked local cache only when the authoritative copy is
 newer. A valid cache remains usable when the network is unavailable.
 
@@ -71,10 +71,10 @@ Physical window space is the operating-system window size in physical pixels.
 `Viewport::from_window_size` selects the largest integer scale that fits the
 virtual framebuffer inside that physical size.
 
-Any unused physical pixels become letterbox margins around the centred
-viewport. `Viewport::physical_to_virtual` must be used for input and
-hit-testing so points in those margins are rejected instead of being mapped to
-dashboard content.
+Any unused physical pixels become letterbox margins around the centred viewport.
+`Viewport::physical_to_virtual` must be used for input and hit-testing so
+points in those margins are rejected instead of being mapped to dashboard
+content.
 
 ## Adding a new render region
 
@@ -131,8 +131,8 @@ Use these Makefile targets for asset pipeline checks:
   checks are implemented.
 
 `make assets-check` is a prerequisite of `make all`, so the aggregate
-repository gate covers the current manifest-backed asset validation pass without
-running manifest validation twice.
+repository gate covers the current manifest-backed asset validation pass
+without running manifest validation twice.
 
 #### tools/check_manifests.py
 
@@ -196,9 +196,9 @@ the schema or image-generation rules change.
 
 Use the labelled generation schema for new asset prompts unless a narrower
 template applies: `Use case`, `Asset type`, `Primary request`, labelled input
-images, `Scene/backdrop`, `Subject`, `Style/medium`,
-`Composition/framing`, `Lighting/mood`, `Colour palette`,
-`Materials/textures`, `Text (verbatim)`, `Constraints`, and `Avoid`.
+images, `Scene/backdrop`, `Subject`, `Style/medium`, `Composition/framing`,
+`Lighting/mood`, `Colour palette`, `Materials/textures`, `Text (verbatim)`,
+`Constraints`, and `Avoid`.
 
 Use the edit schema for image edits: `Change`, `Preserve`, and `Constraints`.
 Repeat the full `Preserve` list on every edit iteration so identity, layout,
@@ -206,8 +206,8 @@ palette, lighting, and text-safety invariants remain explicit.
 
 Codex built-in `image_gen` is the default authoring path for generated raster
 references and source art. Do not document CLI fallback or API runners as the
-normal workflow. Ask before using CLI `gpt-image-1.5` for true transparency, and
-do not rely on a destination-path argument for the built-in tool.
+normal workflow. Ask before using CLI `gpt-image-1.5` for true transparency,
+and do not rely on a destination-path argument for the built-in tool.
 
 For project-bound outputs, copy accepted images from the built-in output area
 into the workspace before any code, manifest, or documentation references them.
@@ -220,8 +220,8 @@ belongs in Rust rendering rather than baked into generated images.
 
 For transparent assets, prompt for a perfectly flat chroma-key background.
 Automation for chroma-key removal is not yet available, so templates must keep
-manual keying as the current workflow until the helper exists under `tools/` and
-has validation coverage.
+manual keying as the current workflow until the helper exists under `tools/`
+and has validation coverage.
 
 - `character-sheet.md` defines character reference sheets for roster identity,
   silhouettes, accessories, pose language, and cleanup notes.
@@ -240,9 +240,9 @@ has validation coverage.
 
 ### 6. Planned tools
 
-The intended post-processing tool surface is listed in the
-`docs/asset-spec.md` "Post-processing scripts" section. Several tools are
-marked *(planned)* there, including chroma-key removal, palette normalization,
-transparent-bounds cropping, sheet slicing, nine-slice extraction, sprite
-packing, and light-mask generation. Do not document those planned scripts as
-available commands until the corresponding files exist under `tools/`.
+The intended post-processing tool surface is listed in the `docs/asset-spec.md`
+"Post-processing scripts" section. Several tools are marked *(planned)* there,
+including chroma-key removal, palette normalization, transparent-bounds
+cropping, sheet slicing, nine-slice extraction, sprite packing, and light-mask
+generation. Do not document those planned scripts as available commands until
+the corresponding files exist under `tools/`.

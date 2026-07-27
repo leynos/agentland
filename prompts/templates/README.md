@@ -9,8 +9,8 @@ Do not generate images while editing these templates.
 
 ## Standard generation schema
 
-Use this labelled schema for every generation prompt unless a narrower
-template in this directory applies:
+Use this labelled schema for every generation prompt unless a narrower template
+in this directory applies:
 
 ```plaintext
 Use case:

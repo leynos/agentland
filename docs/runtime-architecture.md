@@ -35,8 +35,8 @@ The bootstrap slice uses these modules:
 - `src/render/primitives.rs`: placeholder dashboard drawing.
 
 Future slices should add `input`, `hit`, `scene`, `ui`, `text`, `assets`,
-`lighting`, `timing`, and debug overlay modules only when a vertical slice needs
-them.
+`lighting`, `timing`, and debug overlay modules only when a vertical slice
+needs them.
 
 ## Fixed virtual resolution
 

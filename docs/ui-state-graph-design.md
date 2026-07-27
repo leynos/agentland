@@ -5,11 +5,11 @@
 This graph explains the user-facing states, the asset authoring states, and the
 repository hand-off points for the pixel-art agent dashboard.
 
-The key boundary is simple: the Rust app never calls Codex built-in
-`image_gen` at runtime. The app edits and saves structured briefs, then Codex
-uses those briefs during an authoring session to generate or edit images. The
-runtime consumes only repository files: manifests, processed assets, atlases,
-palette data, and deterministic UI code.
+The key boundary is simple: the Rust app never calls Codex built-in `image_gen`
+at runtime. The app edits and saves structured briefs, then Codex uses those
+briefs during an authoring session to generate or edit images. The runtime
+consumes only repository files: manifests, processed assets, atlases, palette
+data, and deterministic UI code.
 
 ## Mental model
 
@@ -135,43 +135,43 @@ stateDiagram-v2
 
 ## UI surface states
 
-| State | Owner | What the user sees | Data source |
-| --- | --- | --- | --- |
-| `Boot` | Runtime | Splash or blank frame | App config |
-| `LoadProjectState` | Runtime | Loading indicator | Docs, manifests, palettes |
-| `PlaceholderMode` | Runtime | Dashboard with warning badges | Missing or invalid assets |
-| `DashboardShell` | Runtime | Main coffee-shop dashboard | Atlases and deterministic UI |
-| `Overview` | Runtime | Scene, queue, activity, stats | App view model |
-| `Agents` | Runtime | Agent roster and state cards | Agent model and assets |
-| `Tasks` | Runtime | Queue, filters, task details | Task model |
-| `Analytics` | Runtime | Charts and system metrics | Deterministic widgets |
-| `AgentDetail` | Runtime | Agent drawer or modal | Agent model, portrait asset |
-| `TaskDetail` | Runtime | Task drawer or modal | Task model |
-| `DebugOverlay` | Runtime | Bounds, IDs, draw order | Renderer debug model |
-| `CharacterBriefEditor` | Runtime | Structured controls | JSON brief |
-| `AwaitCodexAuthoring` | Runtime | Waiting state with instructions | Saved brief, no asset yet |
-| `PendingImport` | Runtime | Import pending badge | Manifest draft or marker |
-| `ProcessedPreview` | Runtime | Preview image or sprite | Processed file and metadata |
-| `RejectedPreview` | Runtime | Failure reason and revise action | Validation notes |
-| `ApprovedPreview` | Runtime | Ready-to-use character | Approved manifest and atlas |
-| `ErrorView` | Runtime | Recoverable error panel | Typed error enum |
+| State                  | Owner   | What the user sees               | Data source                  |
+| ---------------------- | ------- | -------------------------------- | ---------------------------- |
+| `Boot`                 | Runtime | Splash or blank frame            | App config                   |
+| `LoadProjectState`     | Runtime | Loading indicator                | Docs, manifests, palettes    |
+| `PlaceholderMode`      | Runtime | Dashboard with warning badges    | Missing or invalid assets    |
+| `DashboardShell`       | Runtime | Main coffee-shop dashboard       | Atlases and deterministic UI |
+| `Overview`             | Runtime | Scene, queue, activity, stats    | App view model               |
+| `Agents`               | Runtime | Agent roster and state cards     | Agent model and assets       |
+| `Tasks`                | Runtime | Queue, filters, task details     | Task model                   |
+| `Analytics`            | Runtime | Charts and system metrics        | Deterministic widgets        |
+| `AgentDetail`          | Runtime | Agent drawer or modal            | Agent model, portrait asset  |
+| `TaskDetail`           | Runtime | Task drawer or modal             | Task model                   |
+| `DebugOverlay`         | Runtime | Bounds, IDs, draw order          | Renderer debug model         |
+| `CharacterBriefEditor` | Runtime | Structured controls              | JSON brief                   |
+| `AwaitCodexAuthoring`  | Runtime | Waiting state with instructions  | Saved brief, no asset yet    |
+| `PendingImport`        | Runtime | Import pending badge             | Manifest draft or marker     |
+| `ProcessedPreview`     | Runtime | Preview image or sprite          | Processed file and metadata  |
+| `RejectedPreview`      | Runtime | Failure reason and revise action | Validation notes             |
+| `ApprovedPreview`      | Runtime | Ready-to-use character           | Approved manifest and atlas  |
+| `ErrorView`            | Runtime | Recoverable error panel          | Typed error enum             |
 
 ## Event contract
 
-| Event | From | To | Notes |
-| --- | --- | --- | --- |
-| `AppStarted` | `Boot` | `LoadProjectState` | Starts asset and config load. |
-| `ManifestLoadFailed` | `LoadManifests` | `PlaceholderMode` | Keep the app usable. |
-| `TabSelected(tab)` | Dashboard tabs | Dashboard tabs | Preserve shell and scene. |
-| `AgentSelected(id)` | `Overview` or `Agents` | `AgentDetail` | Use roster model and portrait. |
-| `TaskSelected(id)` | `Tasks` | `TaskDetail` | No image-generation side effect. |
-| `DebugToggled` | Any main tab | `DebugOverlay` | Overlay, not a navigation tab. |
-| `BriefSaved` | `EditingBrief` | `AwaitCodexAuthoring` | Writes strict JSON only. |
-| `CodexGenerationStarted` | `AwaitCodexAuthoring` | `PendingImport` | Recorded in manifest or marker. |
-| `ProcessedAssetDetected` | `PendingImport` | `ProcessedPreview` | Runtime can show preview. |
-| `PreviewApproved` | `ProcessedPreview` | `ApprovedPreview` | Manifest becomes runtime-ready. |
-| `AssetRejected` | `PendingImport` | `RejectedPreview` | Keep validation notes visible. |
-| `AssetsReloaded` | `RuntimeReady` | `DashboardShell` | Reload manifests and atlases. |
+| Event                    | From                   | To                    | Notes                            |
+| ------------------------ | ---------------------- | --------------------- | -------------------------------- |
+| `AppStarted`             | `Boot`                 | `LoadProjectState`    | Starts asset and config load.    |
+| `ManifestLoadFailed`     | `LoadManifests`        | `PlaceholderMode`     | Keep the app usable.             |
+| `TabSelected(tab)`       | Dashboard tabs         | Dashboard tabs        | Preserve shell and scene.        |
+| `AgentSelected(id)`      | `Overview` or `Agents` | `AgentDetail`         | Use roster model and portrait.   |
+| `TaskSelected(id)`       | `Tasks`                | `TaskDetail`          | No image-generation side effect. |
+| `DebugToggled`           | Any main tab           | `DebugOverlay`        | Overlay, not a navigation tab.   |
+| `BriefSaved`             | `EditingBrief`         | `AwaitCodexAuthoring` | Writes strict JSON only.         |
+| `CodexGenerationStarted` | `AwaitCodexAuthoring`  | `PendingImport`       | Recorded in manifest or marker.  |
+| `ProcessedAssetDetected` | `PendingImport`        | `ProcessedPreview`    | Runtime can show preview.        |
+| `PreviewApproved`        | `ProcessedPreview`     | `ApprovedPreview`     | Manifest becomes runtime-ready.  |
+| `AssetRejected`          | `PendingImport`        | `RejectedPreview`     | Keep validation notes visible.   |
+| `AssetsReloaded`         | `RuntimeReady`         | `DashboardShell`      | Reload manifests and atlases.    |
 
 ## Repository hand-off points
 

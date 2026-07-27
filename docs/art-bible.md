@@ -26,9 +26,9 @@ created and promoted.
 
 ## Mockup reading
 
-The approved visual language is a design-book treatment of a cosy,
-productive workplace dashboard. The key pattern is not the poster layout; it is
-the combination of warm material detail, disciplined user-interface hierarchy,
+The approved visual language is a design-book treatment of a cosy, productive
+workplace dashboard. The key pattern is not the poster layout; it is the
+combination of warm material detail, disciplined user-interface hierarchy,
 agent personality, and deterministic operational widgets.
 
 - `design-book-9.png` establishes the main runtime fantasy: a side-view
@@ -88,27 +88,27 @@ lighting, or iteration.
 
 The palette is a contract for runtime clarity, not a limit on exploratory
 reference images. Generated sources may contain richer colour, but approved
-runtime assets should be quantized or remapped towards the master palette unless
-a manifest records an exception.
+runtime assets should be quantized or remapped towards the master palette
+unless a manifest records an exception.
 
 Caption: Palette — primary colour palette.
 
-| Name | Hex | Primary use |
-| --- | --- | --- |
-| Near black | `#07101B` | Deep outlines, recesses, and contrast anchors |
-| Deep navy | `#0F1A2E` | Primary dashboard surfaces and night interiors |
-| Slate blue | `#1E2B44` | Inactive panels, subtitle text, and shadowed pockets |
-| Coffee brown | `#4B2E1A` | Leather, darkest wood, books, and shelf shadows |
-| Walnut wood | `#7A4A2B` | Counter fronts, furniture, floorboards, and prop bases |
-| Brass gold | `#D4AF37` | Trim, dividers, corner ornaments, and icon accents |
-| Warm amber | `#FFB347` | Lamp light, warm highlights, and active attention points |
-| Candle glow | `#FFD98A` | Bright lamp centres, title emphasis, and rim highlights |
-| Moss green | `#2E5B3F` | Positive state, plants, research accents, and garden zones |
-| Screen cyan | `#61D6FF` | Robot faces, monitors, data glow, and active analysis |
-| Ember red | `#B94A2E` | Warning, blocked, busy, and heat accents |
-| Cream | `#F2E6C9` | Runtime text, parchment, labels, and readable glyphs |
-| Neon magenta | `#D84FA3` | Data-loft signage and rare high-energy accents |
-| Leaf green | `#75A65A` | Plant highlights and friendly positive details |
+| Name         | Hex       | Primary use                                                |
+| ------------ | --------- | ---------------------------------------------------------- |
+| Near black   | `#07101B` | Deep outlines, recesses, and contrast anchors              |
+| Deep navy    | `#0F1A2E` | Primary dashboard surfaces and night interiors             |
+| Slate blue   | `#1E2B44` | Inactive panels, subtitle text, and shadowed pockets       |
+| Coffee brown | `#4B2E1A` | Leather, darkest wood, books, and shelf shadows            |
+| Walnut wood  | `#7A4A2B` | Counter fronts, furniture, floorboards, and prop bases     |
+| Brass gold   | `#D4AF37` | Trim, dividers, corner ornaments, and icon accents         |
+| Warm amber   | `#FFB347` | Lamp light, warm highlights, and active attention points   |
+| Candle glow  | `#FFD98A` | Bright lamp centres, title emphasis, and rim highlights    |
+| Moss green   | `#2E5B3F` | Positive state, plants, research accents, and garden zones |
+| Screen cyan  | `#61D6FF` | Robot faces, monitors, data glow, and active analysis      |
+| Ember red    | `#B94A2E` | Warning, blocked, busy, and heat accents                   |
+| Cream        | `#F2E6C9` | Runtime text, parchment, labels, and readable glyphs       |
+| Neon magenta | `#D84FA3` | Data-loft signage and rare high-energy accents             |
+| Leaf green   | `#75A65A` | Plant highlights and friendly positive details             |
 
 Use ramps rather than single flat colours. At minimum, runtime and
 post-processing tools should define ramps for navy, wood, brass, amber glow,
@@ -123,36 +123,37 @@ mockup already establishes their silhouettes, roles, and accessory language.
 
 Caption: Character roster — approved agent identity anchors.
 
-| Agent | Role | Silhouette and identity anchors | Role props | Accent colours |
-| --- | --- | --- | --- | --- |
-| Ava | Research specialist | Auburn hair, practical apron or waistcoat, thoughtful posture | Clipboard, laptop, mug, notebook | Warm amber, cream, moss green |
-| Byte | Operations manager | Rounded white robot shell, cyan face display, blue ear modules, brass details | Mug, gear, terminal device | Screen cyan, brass, cream |
-| Lex | Data analyst | Dark swept hair, rolled sleeves, focused standing or seated pose | Mug, glasses, calculator, or tablet | Slate blue, screen cyan, brass |
-| Sage | Knowledge advisor | Hooded robe, dark face recess, cyan eye glow, calm pose | Books, quill, notes, small lamp glow | Coffee brown, moss green, candle glow |
-| Nova | Systems engineer | Dark outfit, headset silhouette, resourceful operator stance | Headphones, wrench, repair kit | Screen cyan, slate blue, ember red |
-| Patch | Tech tinkerer | Goggles, cap, work vest, tool-ready posture | Screwdriver, circuit board, small tools | Moss green, warm amber, brass |
-| Ember | Community liaison | Red hair, open stance, energetic expression, casual workwear | Megaphone, heart badge, mug | Ember red, warm amber, cream |
-| Echo | Support assistant | Small hovering robot body, wing-like side shapes, cyan face display | Halo ring, cube, support beacon | Screen cyan, candle glow, brass |
+| Agent | Role                | Silhouette and identity anchors                                               | Role props                              | Accent colours                        |
+| ----- | ------------------- | ----------------------------------------------------------------------------- | --------------------------------------- | ------------------------------------- |
+| Ava   | Research specialist | Auburn hair, practical apron or waistcoat, thoughtful posture                 | Clipboard, laptop, mug, notebook        | Warm amber, cream, moss green         |
+| Byte  | Operations manager  | Rounded white robot shell, cyan face display, blue ear modules, brass details | Mug, gear, terminal device              | Screen cyan, brass, cream             |
+| Lex   | Data analyst        | Dark swept hair, rolled sleeves, focused standing or seated pose              | Mug, glasses, calculator, or tablet     | Slate blue, screen cyan, brass        |
+| Sage  | Knowledge advisor   | Hooded robe, dark face recess, cyan eye glow, calm pose                       | Books, quill, notes, small lamp glow    | Coffee brown, moss green, candle glow |
+| Nova  | Systems engineer    | Dark outfit, headset silhouette, resourceful operator stance                  | Headphones, wrench, repair kit          | Screen cyan, slate blue, ember red    |
+| Patch | Tech tinkerer       | Goggles, cap, work vest, tool-ready posture                                   | Screwdriver, circuit board, small tools | Moss green, warm amber, brass         |
+| Ember | Community liaison   | Red hair, open stance, energetic expression, casual workwear                  | Megaphone, heart badge, mug             | Ember red, warm amber, cream          |
+| Echo  | Support assistant   | Small hovering robot body, wing-like side shapes, cyan face display           | Halo ring, cube, support beacon         | Screen cyan, candle glow, brass       |
 
 ## Character cleanup notes
 
 Runtime character sprites must be cleaned into fixed bounds, shared scale,
 stable anchors, and palette fit before promotion. Each checklist row is
-auditable: `Owner` records who accepted cleanup, `Date` records the review date,
-and `Status` records whether the character is approved, pending, or blocked.
+auditable: `Owner` records who accepted cleanup, `Date` records the review
+date, and `Status` records whether the character is approved, pending, or
+blocked.
 
 Caption: Character cleanup — sprite cleanup contract and audit status.
 
-| Agent | Decision | Cleanup actions | Runtime sprite requirements | Owner | Date | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| Ava | Requires redraw/cleanup | Redraw hair silhouette into fewer readable clusters; simplify clipboard and mug overlap; keep auburn accent clear at 1x. | Fixed bounds; shared human scale; stable seated and standing anchors; palette fit against amber light. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Byte | Requires redraw/cleanup | Convert robot shoulders, elbows, wrists, hips, and feet to fixed pivots; simplify shell seams; preserve cyan face rectangle. | Fixed bounds; shared robot scale; stable foot and hover anchors; palette fit for white shell and cyan glow. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Lex | Requires redraw/cleanup | Simplify jacket folds and tablet or mug details; separate dark hair from navy background; remove overlapping small props. | Fixed bounds; shared human scale; stable seated and standing anchors; palette fit for slate and cyan accents. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Sage | Requires redraw/cleanup | Fix face glow into a stable two-eye mask; simplify hood edge; separate book, quill, and sleeve shapes. | Fixed bounds; shared robed scale; stable cloak-base anchor; palette fit for brown robe and cyan glow. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Nova | Requires redraw/cleanup | Simplify headset and wrench details; separate dark outfit from background; remove overlapping tool clutter. | Fixed bounds; shared mascot scale; stable standing anchor; palette fit for slate, cyan, and ember accents. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Patch | Requires redraw/cleanup | Simplify goggles and circuit-board chips; reduce small tool marks; keep cap and vest silhouette readable. | Fixed bounds; shared mascot scale; stable standing anchor; palette fit for moss, brass, and amber accents. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Ember | Requires redraw/cleanup | Redraw hair silhouette into fewer clusters; simplify megaphone and heart badge; keep arm and mug shapes separated. | Fixed bounds; shared human scale; stable standing anchor; palette fit for ember, amber, and cream accents. | Art pipeline | 2026-04-25 | Pending cleanup |
-| Echo | Requires redraw/cleanup | Convert hover body and wing shapes to fixed pivots; simplify halo and cube props; preserve cyan display expression. | Fixed bounds; shared small-robot scale; stable hover anchor; palette fit for cyan and candle-glow accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Agent | Decision                | Cleanup actions                                                                                                              | Runtime sprite requirements                                                                                   | Owner        | Date       | Status          |
+| ----- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ------------ | ---------- | --------------- |
+| Ava   | Requires redraw/cleanup | Redraw hair silhouette into fewer readable clusters; simplify clipboard and mug overlap; keep auburn accent clear at 1x.     | Fixed bounds; shared human scale; stable seated and standing anchors; palette fit against amber light.        | Art pipeline | 2026-04-25 | Pending cleanup |
+| Byte  | Requires redraw/cleanup | Convert robot shoulders, elbows, wrists, hips, and feet to fixed pivots; simplify shell seams; preserve cyan face rectangle. | Fixed bounds; shared robot scale; stable foot and hover anchors; palette fit for white shell and cyan glow.   | Art pipeline | 2026-04-25 | Pending cleanup |
+| Lex   | Requires redraw/cleanup | Simplify jacket folds and tablet or mug details; separate dark hair from navy background; remove overlapping small props.    | Fixed bounds; shared human scale; stable seated and standing anchors; palette fit for slate and cyan accents. | Art pipeline | 2026-04-25 | Pending cleanup |
+| Sage  | Requires redraw/cleanup | Fix face glow into a stable two-eye mask; simplify hood edge; separate book, quill, and sleeve shapes.                       | Fixed bounds; shared robed scale; stable cloak-base anchor; palette fit for brown robe and cyan glow.         | Art pipeline | 2026-04-25 | Pending cleanup |
+| Nova  | Requires redraw/cleanup | Simplify headset and wrench details; separate dark outfit from background; remove overlapping tool clutter.                  | Fixed bounds; shared mascot scale; stable standing anchor; palette fit for slate, cyan, and ember accents.    | Art pipeline | 2026-04-25 | Pending cleanup |
+| Patch | Requires redraw/cleanup | Simplify goggles and circuit-board chips; reduce small tool marks; keep cap and vest silhouette readable.                    | Fixed bounds; shared mascot scale; stable standing anchor; palette fit for moss, brass, and amber accents.    | Art pipeline | 2026-04-25 | Pending cleanup |
+| Ember | Requires redraw/cleanup | Redraw hair silhouette into fewer clusters; simplify megaphone and heart badge; keep arm and mug shapes separated.           | Fixed bounds; shared human scale; stable standing anchor; palette fit for ember, amber, and cream accents.    | Art pipeline | 2026-04-25 | Pending cleanup |
+| Echo  | Requires redraw/cleanup | Convert hover body and wing shapes to fixed pivots; simplify halo and cube props; preserve cyan display expression.          | Fixed bounds; shared small-robot scale; stable hover anchor; palette fit for cyan and candle-glow accents.    | Art pipeline | 2026-04-25 | Pending cleanup |
 
 Character sheets must capture a full-body pose, seated or working pose,
 expression chips, accessory callouts, and identity notes. Runtime sprites must
@@ -166,14 +167,14 @@ targets for later slices and should keep the same material discipline.
 
 Caption: Environments — location mood, function, zones, and lighting.
 
-| Environment | Mood | Function | Signature zones | Lighting |
-| --- | --- | --- | --- | --- |
-| Hipster coffee shop | Warm, welcoming, productive | Casual work, quick syncs, ideation | Briefing desk, espresso bar, collab tables, lounge corner | Warm pendant lamps, shelf glow, screen cyan |
-| Library archive | Quiet, focused, timeless | Deep research and knowledge preservation | Terminal bank, archive stacks, reading nook, research table | Desk lamps, sconces, shelf shadows |
-| Neon data loft | Energetic, modern, collaborative | Team sprints, brainstorming, analysis | Data-wall displays, server racks, analysis table, workshop bench | Cool LEDs, cyan displays, magenta signage |
-| Rooftop garden workspace | Calm, refreshing, inspiring | Solo focus, writing, creative thinking | Plant terrace, focus booths, meeting circle, outlook deck | String lights, natural sun, city dusk |
-| Observatory terrace | Serene, expansive, reflective | Long-term strategy and planning | Telescope deck, lantern table, skyline rail | Lanterns, starlight, cool night fill |
-| Bot workshop | Hands-on, inventive, industrious | Building, prototyping, maintenance | Tool wall, workbench, parts shelves, diagnostic screens | Task lamps, industrial lights, screen glow |
+| Environment              | Mood                             | Function                                 | Signature zones                                                  | Lighting                                    |
+| ------------------------ | -------------------------------- | ---------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------- |
+| Hipster coffee shop      | Warm, welcoming, productive      | Casual work, quick syncs, ideation       | Briefing desk, espresso bar, collab tables, lounge corner        | Warm pendant lamps, shelf glow, screen cyan |
+| Library archive          | Quiet, focused, timeless         | Deep research and knowledge preservation | Terminal bank, archive stacks, reading nook, research table      | Desk lamps, sconces, shelf shadows          |
+| Neon data loft           | Energetic, modern, collaborative | Team sprints, brainstorming, analysis    | Data-wall displays, server racks, analysis table, workshop bench | Cool LEDs, cyan displays, magenta signage   |
+| Rooftop garden workspace | Calm, refreshing, inspiring      | Solo focus, writing, creative thinking   | Plant terrace, focus booths, meeting circle, outlook deck        | String lights, natural sun, city dusk       |
+| Observatory terrace      | Serene, expansive, reflective    | Long-term strategy and planning          | Telescope deck, lantern table, skyline rail                      | Lanterns, starlight, cool night fill        |
+| Bot workshop             | Hands-on, inventive, industrious | Building, prototyping, maintenance       | Tool wall, workbench, parts shelves, diagnostic screens          | Task lamps, industrial lights, screen glow  |
 
 Environment prompts and manifests should record mood, function, lighting,
 materials, zones, local palette, reusable props, and whether the perspective is
@@ -212,17 +213,17 @@ The mockups establish a coherent set of panel families:
 
 Caption: UI component families — visual treatment and runtime ownership.
 
-| Family | Visual treatment | Runtime rule |
-| --- | --- | --- |
-| Hero scene frame | Large navy recess, brass border, clipped ornamental corners | Deterministic panel geometry; optional ornament sprites |
-| Agent status card | Compact card with name, two task rows, icon chips, and status pill | Rust owns text, icons, status, progress, and layout |
-| Character roster card | Portrait or full-body slot, name band, role label, accessory area | Generated portraits may be processed; labels are Rust text |
-| Environment card | Wide image slot, mood/function rows, material notes, palette chips | Reference-page pattern; runtime uses cards only if code-built |
-| Isometric callout | Small brass-edged tag with connector line | Deterministic annotation geometry and text |
-| Palette strip | Swatch row with captions | Palette data and labels are deterministic |
-| Prop vocabulary strip | Repeated prop cells with icon and label | Prop icons may be processed; text is deterministic |
-| Footer note band | Low-height explanatory or status strip | Code-built layout and text |
-| Outer ornament frame | Corner caps, divider strokes, centre medallion, brass flourishes | Crop, redraw, or render algorithmically with nine-slice metrics |
+| Family                | Visual treatment                                                   | Runtime rule                                                    |
+| --------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------- |
+| Hero scene frame      | Large navy recess, brass border, clipped ornamental corners        | Deterministic panel geometry; optional ornament sprites         |
+| Agent status card     | Compact card with name, two task rows, icon chips, and status pill | Rust owns text, icons, status, progress, and layout             |
+| Character roster card | Portrait or full-body slot, name band, role label, accessory area  | Generated portraits may be processed; labels are Rust text      |
+| Environment card      | Wide image slot, mood/function rows, material notes, palette chips | Reference-page pattern; runtime uses cards only if code-built   |
+| Isometric callout     | Small brass-edged tag with connector line                          | Deterministic annotation geometry and text                      |
+| Palette strip         | Swatch row with captions                                           | Palette data and labels are deterministic                       |
+| Prop vocabulary strip | Repeated prop cells with icon and label                            | Prop icons may be processed; text is deterministic              |
+| Footer note band      | Low-height explanatory or status strip                             | Code-built layout and text                                      |
+| Outer ornament frame  | Corner caps, divider strokes, centre medallion, brass flourishes   | Crop, redraw, or render algorithmically with nine-slice metrics |
 
 The runtime should favour nine-slice panels, fixed grid metrics, shared spacing
 tokens, and reusable component families over one-off bitmaps.
@@ -288,10 +289,10 @@ readability:
   animation reference sheets, environment concepts, typography references, and
   presentation-only icon mood.
 - Bucket 2 (`generated-source-converted`): standing sprites, seated sprites,
-  portrait chips, expression chips, accessory crops,
-  coffee-shop backplate layers, material tiles, espresso machine, lamps,
-  shelves, books, mugs, plants, laptops, desk clutter, sign frames, brass
-  corners, plaques, and outer-frame ornaments.
+  portrait chips, expression chips, accessory crops, coffee-shop backplate
+  layers, material tiles, espresso machine, lamps, shelves, books, mugs,
+  plants, laptops, desk clutter, sign frames, brass corners, plaques, and
+  outer-frame ornaments.
 - Bucket 3 (`algorithmic`): nine-slice panels, tabs, status cards, status
   pills, charts, progress bars, deterministic icons, bitmap text layout,
   palette files, colour ramps, light masks, focus rings, hit-test data, atlas

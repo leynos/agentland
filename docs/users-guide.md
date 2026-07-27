@@ -1,7 +1,7 @@
 # User's guide
 
-This guide describes the current Agentland desktop placeholder build for
-people launching, viewing, or diagnosing the application.
+This guide describes the current Agentland desktop placeholder build for people
+launching, viewing, or diagnosing the application.
 
 ## Overview
 

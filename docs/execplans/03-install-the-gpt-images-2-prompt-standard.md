@@ -1,9 +1,8 @@
 # Install the GPT Images 2 prompt standard
 
-This ExecPlan (execution plan) is a living document. The sections
-`Constraints`, `Tolerances`, `Risks`, `Progress`, `Surprises & Discoveries`,
-`Decision Log`, and `Outcomes & Retrospective` must be kept up to date as work
-proceeds.
+This ExecPlan (execution plan) is a living document. The sections `Constraints`,
+`Tolerances`, `Risks`, `Progress`, `Surprises & Discoveries`, `Decision Log`,
+and `Outcomes & Retrospective` must be kept up to date as work proceeds.
 
 Status: COMPLETE
 
@@ -11,9 +10,9 @@ Status: COMPLETE
 
 Agentland needs one repository-owned prompt standard for development-time Codex
 built-in GPT Images 2 work. After this change, a developer can open
-`docs/imagegen-workflow.md` or `prompts/templates/README.md` and find the shared
-schema, edit schema, generation rules, text rules, transparency policy, and
-template catalogue without relying on chat history.
+`docs/imagegen-workflow.md` or `prompts/templates/README.md` and find the
+shared schema, edit schema, generation rules, text rules, transparency policy,
+and template catalogue without relying on chat history.
 
 Success is observable when:
 
@@ -49,16 +48,14 @@ Success is observable when:
 ## Risks
 
 - Risk: The chroma-key helper may not exist yet.
-  Severity: medium.
-  Likelihood: observed.
-  Mitigation: document manual chroma-key cleanup as the current workflow and
-  mark automation as unavailable or planned.
+  Severity: medium. Likelihood: observed. Mitigation: document manual
+  chroma-key cleanup as the current workflow and mark automation as unavailable
+  or planned.
 
 - Risk: Prompt template rules may drift from the asset manifest schema.
-  Severity: medium.
-  Likelihood: medium.
-  Mitigation: reference `docs/asset-spec.md` for canonical manifest fields such
-  as `slice`, `palette`, and `atlas`.
+  Severity: medium. Likelihood: medium. Mitigation: reference
+  `docs/asset-spec.md` for canonical manifest fields such as `slice`,
+  `palette`, and `atlas`.
 
 ## Progress
 
@@ -80,37 +77,31 @@ Success is observable when:
 ## Surprises & discoveries
 
 - Observation: `tools/remove_chroma_and_validate.py` is referenced by older
-  workflow text but does not exist in the repository.
-  Evidence: searching `tools/` found no such file.
-  Impact: prompt templates now describe manual chroma-key cleanup while
-  automation is unavailable.
+  workflow text but does not exist in the repository. Evidence: searching
+  `tools/` found no such file. Impact: prompt templates now describe manual
+  chroma-key cleanup while automation is unavailable.
 
 - Observation: reviewer comments expected section 5 of
   `docs/developers-guide.md` to explain the prompt standard, not only list
-  template files.
-  Evidence: the failed documentation check named that section explicitly.
-  Impact: section 5 now includes the schema, image generation, text, edit, and
-  transparency rules maintainers need.
+  template files. Evidence: the failed documentation check named that section
+  explicitly. Impact: section 5 now includes the schema, image generation,
+  text, edit, and transparency rules maintainers need.
 
 ## Decision log
 
 - Decision: Keep GPT Images 2 generation as a development-time Codex workflow,
-  not a Rust runtime API.
-  Rationale: runtime determinism belongs in Rust, manifests, processed assets,
-  and local validation.
-  Date/Author: 2026-05-04, Codex.
+  not a Rust runtime API. Rationale: runtime determinism belongs in Rust,
+  manifests, processed assets, and local validation. Date/Author: 2026-05-04,
+  Codex.
 
 - Decision: Treat automation for chroma-key removal as unavailable until a real
-  script exists under `tools/`.
-  Rationale: documentation should not instruct developers to run missing
-  commands.
-  Date/Author: 2026-05-05, Codex.
+  script exists under `tools/`. Rationale: documentation should not instruct
+  developers to run missing commands. Date/Author: 2026-05-05, Codex.
 
 - Decision: Use `docs/imagegen-workflow.md` and `prompts/templates/README.md` as
-  the primary source for the shared prompt standard.
-  Rationale: workflow rules and reusable templates need stable, reviewable
-  repository paths.
-  Date/Author: 2026-05-06, Codex.
+  the primary source for the shared prompt standard. Rationale: workflow rules
+  and reusable templates need stable, reviewable repository paths. Date/Author:
+  2026-05-06, Codex.
 
 ## Outcomes & retrospective
 

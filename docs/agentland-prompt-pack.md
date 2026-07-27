@@ -16,7 +16,7 @@ Use the prompts sequentially. Each one assumes the prior one has already
 completed. The flock has an order; no asset goose should wander off with an
 uncited PNG.
 
----
+______________________________________________________________________
 
 ## Prompt 01 - Bootstrap the repo
 
@@ -64,7 +64,7 @@ Do not generate final art yet. This task is about structure, manifests, prompt
 standards, and a running placeholder renderer.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 02 - Build the art bible from the approved mockup
 
@@ -112,7 +112,7 @@ write prompts containing words such as "stunning", "epic", "masterpiece", or
 composition, or typography.
 ```
 
----
+______________________________________________________________________
 
 ## [x] Prompt 03 - Install the GPT Images 2 prompt standard
 
@@ -172,7 +172,7 @@ Create these template files:
 Do not generate images in this prompt. This is the prompt-law codex, not the paintbrush.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 04 - Generate style anchors and design-book pages
 
@@ -211,7 +211,7 @@ Prompt requirements:
 The goal is to establish the visual language before final asset extraction. Do not start slicing sprites yet.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 05 - Generate character reference sheets
 
@@ -253,7 +253,7 @@ Do not claim these sheets are deterministic sprite atlases. Treat them as source
 references until slicing, cleanup, and validation pass.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 06 - Generate animation reference sheets
 
@@ -287,7 +287,7 @@ For each generated sheet:
 Reject sheets that drift identity, change scale per frame, introduce noisy backgrounds, or cannot be sliced cleanly.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 07 - Generate environments and isometric sheets
 
@@ -323,7 +323,7 @@ After generation:
   rather than baking into one giant bitmap
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 08 - Generate prop cutouts and texture references
 
@@ -377,7 +377,7 @@ translucent material, reflective objects, or soft realistic shadows, stop and
 ask before using true native transparency via CLI fallback.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 09 - Build the post-processing pipeline
 
@@ -414,7 +414,7 @@ Add tests or smoke checks where practical:
 Do not generate new art in this prompt. This is the little factory behind the café curtains.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 10 - Build the deterministic UI kit
 
@@ -451,7 +451,7 @@ The runtime should own the final assembly:
 Update the app so the dashboard now looks structurally complete even if some scene art still needs polish.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 11 - Compose the scene with generated references
 
@@ -484,7 +484,7 @@ Add a lightweight debug overlay toggle showing:
 Update manifests or docs when an asset is used differently from its original plan.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 12 - Add lighting, motion, and polish
 
@@ -519,7 +519,7 @@ Also perform a QA pass:
 - verify that all final assets have manifests and provenance
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 13 - Hardening and review
 
@@ -547,7 +547,7 @@ Do not balloon scope. This pass is for correctness, consistency, and explicit
 limitations.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 14 - Day 2 character brief authoring
 
@@ -593,7 +593,7 @@ Also create:
 - tests for JSON validation and state transitions
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 15 - Character brief JSON-to-prompt system prompt
 
@@ -647,7 +647,7 @@ Return this schema exactly:
 }
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 16 - Character brief user-prompt template
 
@@ -694,7 +694,7 @@ Additional notes:
 Return strict JSON matching the required schema. Do not generate prose.
 ```
 
----
+______________________________________________________________________
 
 ## Prompt 17 - One-shot full pipeline prompt
 
@@ -739,7 +739,7 @@ Bias toward shipping a coherent, runnable vertical slice rather than beginning
 a giant unfinished architecture rewrite.
 ```
 
----
+______________________________________________________________________
 
 ## Appendix A - Copy-paste GPT Images 2 asset prompts
 
