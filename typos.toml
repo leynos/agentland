@@ -31,7 +31,10 @@ extend-exclude = [
 locale = "en-gb"
 extend-ignore-re = [
     "(?s)```.*?```",
+    "-fuse-ld=mold",
     "Azure Architecture\\s+Center \\| Microsoft Learn",
+    "Cranelift \\+ mold",
+    "Cranelift and mold",
     "GitHub Flavored\\s+Markdown \\(GFM\\)",
     "LogRocket Blog — Organizing Rust tests",
     "\\bCARGO_TERM_COLOR\\b",
@@ -41,6 +44,8 @@ extend-ignore-re = [
     "\\bcolor\\.channels\\(\\)",
     "\\brust-analyzer\\b",
     "`[^`\\n]+`",
+    "`mold`",
+    "mold linker",
     "types: \\[opened, reopened, synchronize, labeled, ready_for_review\\]",
 ]
 
