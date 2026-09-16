@@ -273,8 +273,7 @@ The following scripts define the intended tool surface. Those marked
 *(planned)* do not yet exist.
 
 - Manual chroma-key cleanup workflow *(planned)* — cutout removal and alpha
-  checks
-  while the automation script is unavailable.
+  checks while the automation script is unavailable.
 - `tools/quantize.py` *(planned)* — palette normalization.
 - `tools/crop_transparent.py` *(planned)* — transparent bounds.
 - `tools/slice_sheet.py` *(planned)* — validated reference-sheet slicing.
