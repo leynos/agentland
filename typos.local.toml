@@ -32,5 +32,4 @@ ignore = [
 exclude = [
   # Tracked reference images are binary; the phrase scanner fails closed on
   # any tracked file it cannot decode as UTF-8.
-  "*.png",
 ]

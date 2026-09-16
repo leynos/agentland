@@ -3,7 +3,6 @@
 
 [files]
 extend-exclude = [
-    "*.png",
     ".git",
     ".hypothesis",
     ".pytest_cache",
