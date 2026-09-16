@@ -510,12 +510,11 @@ adding a target once the workflow stabilizes.
 ## Documentation and Markdown
 
 - Validate Markdown with `make markdownlint` when available. This target also
-  enforces en-GB-oxendict spelling with the pinned `typos` release.
-- The spelling configuration `typos.toml` is generated. Edit
-  `typos.local.toml` for narrow repository terminology, then run
-  `make spelling-config`; never edit generated entries by hand. The shared
-  config builder refreshes its untracked dictionary cache when the
-  authoritative dictionary is newer.
+  enforces en-GB-oxendict spelling.
+- Enforce spelling with `make spelling`. It regenerates `typos.toml` from the
+  live shared dictionary and the `typos.local.toml` overlay, then checks the
+  tracked files. Never edit generated entries by hand; add narrow
+  repository-specific entries to `typos.local.toml` instead.
 - Quoted APIs and identifiers retain upstream spelling. Put them in backticks
   or fenced code blocks, which the spelling gate ignores, rather than adding
   word-level exceptions.
