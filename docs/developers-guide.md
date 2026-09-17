@@ -21,6 +21,13 @@ The shared config builder refreshes the dictionary into an untracked local
 cache only when the authoritative copy is newer. A valid cache remains usable
 when the network is unavailable.
 
+## Coverage publication
+
+Pull-request CI runs the local coverage ratchet without a CodeScene token,
+project URL, upload action, or full-history checkout. `coverage-main.yml`
+measures the same source after a `main` push, advances the ratchet baseline,
+and publishes its Cobertura report to CodeScene in explicit upload mode.
+
 ## Repository layout
 
 `src/` contains the Rust runtime, including window setup, display mapping,
