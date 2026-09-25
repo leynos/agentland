@@ -53,7 +53,7 @@ jobs:
         # pull request is measured against. The action decides by the event
         # whether it writes the baseline or compares with it. The coverage
         # interpreter is pinned by .python-version, as in ci.yml.
-        uses: leynos/shared-actions/.github/actions/generate-coverage@3822201c597078a5ed1939bdf067fe06a3d78a9d
+        uses: leynos/shared-actions/.github/actions/generate-coverage@2a910bfcfd1ea4216419f9290331785f05b33320
         with:
           output-path: coverage.xml
           format: cobertura
