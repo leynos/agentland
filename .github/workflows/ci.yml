@@ -7,7 +7,15 @@ name: CI
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    # Ubicloud, to avoid the hosted queue: the hosted wait was a median of
+    # 2 s but a p90 of 563 s over six runs after 2026-09-24 (jobs API,
+    # needs-aware). A pull request from a fork cannot obtain an Ubicloud
+    # runner, so it falls back to the hosted pool.
+    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || 'ubicloud-standard-2' }}
+    # An Ubicloud runner is a self-hosted just-in-time runner with no
+    # six-hour hosted cap, so the job states its own ceiling: twice the
+    # hosted p90 of 11.2 min over ten runs to 2026-09-27 (jobs API).
+    timeout-minutes: 25
     permissions:
       contents: read
     env:
