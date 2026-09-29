@@ -33,7 +33,16 @@ concurrency:
 
 jobs:
   coverage-upload:
-    runs-on: ubuntu-latest
+    # Ubicloud's cache proxy is scoped by ref, so a pull request's Ubicloud
+    # build-test reads a warm main scope only if a main job on Ubicloud
+    # writes it. This is that writer. The fork arm never applies on push or
+    # dispatch; it is kept so every Ubicloud lane reads the same way.
+    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || 'ubicloud-standard-2' }}
+    # An Ubicloud runner is a self-hosted just-in-time runner with no
+    # six-hour hosted cap, so the job states its own ceiling: twice the
+    # 2.4 min the first Ubicloud main run took (run 36556909060), rounded
+    # up to 5.
+    timeout-minutes: 5
     # The CodeScene token lives in this environment, whose deployment policy
     # admits `main` alone; the codescene environment contract holds it to
     # this job.
@@ -46,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Setup Rust
-        uses: leynos/shared-actions/.github/actions/setup-rust@8a83824b29dfe8f861714b544dc85fb925ed010c
+        uses: leynos/shared-actions/.github/actions/setup-rust@d4d248bbbecdcf7b4f5bc79ffd4d6caee370bd79
         with:
           install-mold: 'true'
       - name: Test and Measure Coverage

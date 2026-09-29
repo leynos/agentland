@@ -7,7 +7,15 @@ name: CI
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    # Ubicloud, to avoid the hosted queue: the hosted wait was a median of
+    # 2 s but a p90 of 563 s over six runs after 2026-09-24 (jobs API,
+    # needs-aware). A pull request from a fork cannot obtain an Ubicloud
+    # runner, so it falls back to the hosted pool.
+    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || 'ubicloud-standard-2' }}
+    # An Ubicloud runner is a self-hosted just-in-time runner with no
+    # six-hour hosted cap, so the job states its own ceiling: twice the
+    # warm Ubicloud run of 12.7 min (run 36558912722), rounded up to 30.
+    timeout-minutes: 30
     permissions:
       contents: read
     env:
@@ -17,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Setup Rust
-        uses: leynos/shared-actions/.github/actions/setup-rust@8a83824b29dfe8f861714b544dc85fb925ed010c
+        uses: leynos/shared-actions/.github/actions/setup-rust@d4d248bbbecdcf7b4f5bc79ffd4d6caee370bd79
         with:
           install-mold: 'true'
       - name: Setup uv

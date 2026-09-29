@@ -11,6 +11,10 @@ Run the spelling gate with:
 make spelling
 ```
 
+`TYPOS_CONFIG_BUILDER_VERSION` in the `Makefile` pins the
+`typos-config-builder` release the gate runs (currently `v0.1.3`). Raise it
+together with the regenerated `typos.toml`, never on its own.
+
 The tracked `typos.toml` is regenerated on every run from the live shared
 en-GB-oxendict dictionary and the repository-specific `typos.local.toml`
 overlay. Never edit generated entries by hand; add only narrow repository
@@ -124,6 +128,39 @@ and release builds use the release profile, which Cranelift does not touch.
 Re-measure the whole suite on the next toolchain bump; if it fails, record the
 failing tests here as an exception and remove the backend from
 `.cargo/config.toml`.
+
+## Runner placement
+
+`ci.yml`'s `build-test` and `coverage-main.yml`'s `coverage-upload`, main's
+only cache writer, run on `ubicloud-standard-2`. `runs-on` selects it with the
+runner-selection expression
+`${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' ||
+'ubicloud-standard-2' }}`.
+A pull request from a fork cannot obtain an Ubicloud runner, so it falls back
+to `ubuntu-latest`; a push and a dispatch have no pull request, so the fork
+value is null and they select Ubicloud. A fork's pull request therefore
+restores a hosted cache that main no longer refreshes; fork pull requests are
+rare here (Dependabot pull requests are branches, not forks), and a second
+hosted writer would pay double on every main push.
+
+The writer sits on Ubicloud because Ubicloud's cache proxy is scoped by ref. A
+pull request's Ubicloud lane reads a warm main scope only when a main job on
+Ubicloud writes it, so a lane can move to Ubicloud only after its main writer
+has.
+
+An Ubicloud runner is a self-hosted just-in-time runner, so GitHub's six-hour
+cap for hosted jobs does not bound it and a hung job would hold a billable
+runner. Every job whose `runs-on` can select Ubicloud therefore states its own
+`timeout-minutes`, twice a measured warm Ubicloud run. `build-test` is at 30
+minutes (a warm run took 12.7 min, run 36558912722); `coverage-upload` is at 5
+minutes (its first Ubicloud main run took 2.4 min, run 36556909060).
+
+`tests/coverage_workflows/placement_cases.rs` holds this to the files. It
+evaluates the expression for a push or dispatch, a same-repository pull request
+and a fork, rejects a literal label, inverted arms, another label and another
+condition, and asserts an exact inventory of the jobs that can land on Ubicloud
+with their ceilings. A change that adds, removes or re-times such a job fails
+it until the inventory is updated in the same commit.
 
 ## Repository layout
 
