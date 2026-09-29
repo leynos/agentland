@@ -93,7 +93,7 @@ clause a change breaks.
 
 `ci.yml`'s `build-test` and `coverage-main.yml`'s `coverage-upload`, main's
 only cache writer, run on `ubicloud-standard-2`. `runs-on` selects it with the
-estate expression
+runner-selection expression
 `${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' ||
 'ubicloud-standard-2' }}`.
 A pull request from a fork cannot obtain an Ubicloud runner, so it falls back
