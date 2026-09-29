@@ -55,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Setup Rust
-        uses: leynos/shared-actions/.github/actions/setup-rust@22c1a57865e42ba7e2ca4f88ae49fa6f81f58013
+        uses: leynos/shared-actions/.github/actions/setup-rust@d4d248bbbecdcf7b4f5bc79ffd4d6caee370bd79
       - name: Test and Measure Coverage
         # The same action, format, output path and default baseline files as
         # the pull-request lane, so the figure written here is the figure a
