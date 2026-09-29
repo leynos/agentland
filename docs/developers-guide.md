@@ -111,8 +111,9 @@ has.
 An Ubicloud runner is a self-hosted just-in-time runner, so GitHub's six-hour
 cap for hosted jobs does not bound it and a hung job would hold a billable
 runner. Every job whose `runs-on` can select Ubicloud therefore states its own
-`timeout-minutes`, twice a measured warm Ubicloud run. `coverage-upload` is at
-a provisional 30 minutes, sized for its first cold run.
+`timeout-minutes`, twice a measured warm Ubicloud run. `build-test` is at 30
+minutes (a warm run took 12.7 min, run 36558912722); `coverage-upload` is at 5
+minutes (its first Ubicloud main run took 2.4 min, run 36556909060).
 
 `tests/coverage_workflows/placement_cases.rs` holds this to the files. It
 evaluates the expression for a push or dispatch, a same-repository pull request

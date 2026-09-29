@@ -14,8 +14,8 @@ jobs:
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || 'ubicloud-standard-2' }}
     # An Ubicloud runner is a self-hosted just-in-time runner with no
     # six-hour hosted cap, so the job states its own ceiling: twice the
-    # hosted p90 of 11.2 min over ten runs to 2026-09-27 (jobs API).
-    timeout-minutes: 25
+    # warm Ubicloud run of 12.7 min (run 36558912722), rounded up to 30.
+    timeout-minutes: 30
     permissions:
       contents: read
     env:
