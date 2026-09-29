@@ -60,9 +60,9 @@ jobs:
               cargo install --locked whitaker-installer --version "${WHITAKER_INSTALLER_VERSION}"
             fi
           fi
-          # The repository does not use the Cranelift backend, so the
-          # default installer invocation suffices.
-          whitaker-installer
+          # --cranelift provisions rustc-codegen-cranelift on Whitaker's pinned
+          # toolchain; the dev profile builds with the Cranelift backend.
+          whitaker-installer --cranelift
       - name: Lint
         run: make lint
       - name: Test and Measure Coverage
@@ -81,6 +81,12 @@ jobs:
         # differs between interpreter versions (94.30% on 3.12 vs 91.71% on
         # 3.14 for identical source), so this job and coverage-main must
         # resolve the same Python or the ratchet baseline drifts.
+        env:
+          # One of the two exclusions from the build standard: a coverage build is
+          # a measurement, so it takes neither the parallel frontend nor the mold
+          # linker. Assigning RUSTFLAGS displaces every `rustflags` table in
+          # .cargo/config.toml.
+          RUSTFLAGS: -D warnings
         uses: leynos/shared-actions/.github/actions/generate-coverage@2a910bfcfd1ea4216419f9290331785f05b33320
         with:
           output-path: coverage.xml
