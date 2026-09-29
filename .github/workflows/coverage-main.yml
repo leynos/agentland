@@ -26,7 +26,7 @@ name: Coverage (main)
 # uploads land in commit order. A manual re-run of an older main run is an
 # operator action: it republishes that commit's coverage and baseline until
 # the next push. Keying on the event too would let an earlier dispatch finish
-# after a newer push and upload older coverage last. `tests/coverage_workflows.rs` pins this group.
+# after a newer push and upload older coverage last. `make test-workflow-contracts` pins this group.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
@@ -54,6 +54,8 @@ jobs:
       BUILD_PROFILE: debug
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
       - name: Setup Rust
         uses: leynos/shared-actions/.github/actions/setup-rust@d4d248bbbecdcf7b4f5bc79ffd4d6caee370bd79
       - name: Test and Measure Coverage
@@ -62,7 +64,7 @@ jobs:
         # pull request is measured against. The action decides by the event
         # whether it writes the baseline or compares with it. The coverage
         # interpreter is pinned by .python-version, as in ci.yml.
-        uses: leynos/shared-actions/.github/actions/generate-coverage@2a910bfcfd1ea4216419f9290331785f05b33320
+        uses: leynos/shared-actions/.github/actions/generate-coverage@a42e2569fe1fc09f2e966c52dcad5ff285081017
         with:
           output-path: coverage.xml
           format: cobertura
