@@ -26,6 +26,8 @@ ignore = [
   '\bcolor=',
   # Inline code spans are masked; the shared dictionary does not mask them yet.
   '`[^`\n]+`',
+  # The mold linker, named by the build standard section and a CI comment.
+  '\bmold\b',
 ]
 
 [files]
