@@ -72,7 +72,7 @@ jobs:
         # differs between interpreter versions (94.30% on 3.12 vs 91.71% on
         # 3.14 for identical source), so this job and coverage-main must
         # resolve the same Python or the ratchet baseline drifts.
-        uses: leynos/shared-actions/.github/actions/generate-coverage@6cec89bac47a21cf756d68d638a9a510998e57f8
+        uses: leynos/shared-actions/.github/actions/generate-coverage@013346ccfd37bd1e02eb430525233f1a4cd942b8
         with:
           output-path: coverage.xml
           format: cobertura
