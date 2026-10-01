@@ -53,7 +53,7 @@ jobs:
         with:
           globs: '**/*.md'
       - name: Install the Whitaker Dylint suite
-        uses: leynos/shared-actions/.github/actions/install-whitaker@6cec89bac47a21cf756d68d638a9a510998e57f8
+        uses: leynos/shared-actions/.github/actions/install-whitaker@013346ccfd37bd1e02eb430525233f1a4cd942b8
       - name: Lint
         run: make lint
       - name: Test and Measure Coverage
