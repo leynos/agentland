@@ -21,11 +21,10 @@ jobs:
     env:
       CARGO_TERM_COLOR: always
       BUILD_PROFILE: debug
-      WHITAKER_INSTALLER_VERSION: '0.2.6'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Setup Rust
-        uses: leynos/shared-actions/.github/actions/setup-rust@d4d248bbbecdcf7b4f5bc79ffd4d6caee370bd79
+        uses: leynos/shared-actions/.github/actions/setup-rust@c4ed5ffaf0640b1907d5359a87fd1677034eec27
         with:
           install-mold: 'true'
       - name: Setup uv
@@ -43,7 +42,7 @@ jobs:
       - name: Install mdtablefix
         # `make check-fmt` runs `mdtablefix --check --git`; 0.6.0 is the
         # first release with `--check` and `--git`.
-        uses: leynos/shared-actions/.github/actions/install-mdtablefix@a5765019912a8ab6882b12db049c7cde635f3a85
+        uses: leynos/shared-actions/.github/actions/install-mdtablefix@6cec89bac47a21cf756d68d638a9a510998e57f8
         with:
           version: "0.6.0"
 
@@ -55,26 +54,12 @@ jobs:
         uses: DavidAnson/markdownlint-cli2-action@21c1be1b93ad9ed58fa840aacc3f279cde2a72ff
         with:
           globs: '**/*.md'
-      - name: Cache whitaker-installer
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
-        with:
-          path: |
-            ~/.cargo/bin/whitaker-installer
-            ~/.cache/cargo-binstall
-          key: whitaker-installer-${{ runner.os }}-${{ runner.arch }}-${{ env.WHITAKER_INSTALLER_VERSION }}
       - name: Install the Whitaker Dylint suite
-        run: |
-          if ! command -v whitaker-installer >/dev/null 2>&1; then
-            if cargo binstall --version >/dev/null 2>&1; then
-              cargo binstall --no-confirm --locked "whitaker-installer@${WHITAKER_INSTALLER_VERSION}"
-            else
-              echo "cargo-binstall unavailable; building whitaker-installer from crates.io"
-              cargo install --locked whitaker-installer --version "${WHITAKER_INSTALLER_VERSION}"
-            fi
-          fi
-          # --cranelift provisions rustc-codegen-cranelift on Whitaker's pinned
-          # toolchain; the dev profile builds with the Cranelift backend.
-          whitaker-installer --cranelift
+        uses: leynos/shared-actions/.github/actions/install-whitaker@6cec89bac47a21cf756d68d638a9a510998e57f8
+        with:
+          # The dev profile builds with the Cranelift backend, so the lint suite's
+          # toolchain needs rustc-codegen-cranelift too.
+          cranelift: 'true'
       - name: Lint
         run: make lint
       - name: Test and Measure Coverage
@@ -99,7 +84,7 @@ jobs:
           # linker. Assigning RUSTFLAGS displaces every `rustflags` table in
           # .cargo/config.toml.
           RUSTFLAGS: -D warnings
-        uses: leynos/shared-actions/.github/actions/generate-coverage@a42e2569fe1fc09f2e966c52dcad5ff285081017
+        uses: leynos/shared-actions/.github/actions/generate-coverage@6cec89bac47a21cf756d68d638a9a510998e57f8
         with:
           output-path: coverage.xml
           format: cobertura
