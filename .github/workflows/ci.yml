@@ -25,6 +25,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Setup Rust
         uses: leynos/shared-actions/.github/actions/setup-rust@c4ed5ffaf0640b1907d5359a87fd1677034eec27
+        with:
+          install-mold: 'true'
       - name: Setup uv
         uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7
         with:
@@ -54,6 +56,10 @@ jobs:
           globs: '**/*.md'
       - name: Install the Whitaker Dylint suite
         uses: leynos/shared-actions/.github/actions/install-whitaker@6cec89bac47a21cf756d68d638a9a510998e57f8
+        with:
+          # The dev profile builds with the Cranelift backend, so the lint suite's
+          # toolchain needs rustc-codegen-cranelift too.
+          cranelift: 'true'
       - name: Lint
         run: make lint
       - name: Test and Measure Coverage
@@ -72,6 +78,12 @@ jobs:
         # differs between interpreter versions (94.30% on 3.12 vs 91.71% on
         # 3.14 for identical source), so this job and coverage-main must
         # resolve the same Python or the ratchet baseline drifts.
+        env:
+          # One of the two exclusions from the build standard: a coverage build is
+          # a measurement, so it takes neither the parallel frontend nor the mold
+          # linker. Assigning RUSTFLAGS displaces every `rustflags` table in
+          # .cargo/config.toml.
+          RUSTFLAGS: -D warnings
         uses: leynos/shared-actions/.github/actions/generate-coverage@6cec89bac47a21cf756d68d638a9a510998e57f8
         with:
           output-path: coverage.xml
