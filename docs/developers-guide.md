@@ -149,15 +149,24 @@ failing tests here as an exception and remove the backend from
 
 `ci.yml`'s `build-test` and `coverage-main.yml`'s `coverage-upload`, main's
 only cache writer, run on `ubicloud-standard-2`. `runs-on` selects it with the
-runner-selection expression
-`${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' ||
-'ubicloud-standard-2' }}`.
-A pull request from a fork cannot obtain an Ubicloud runner, so it falls back
-to `ubuntu-latest`; a push and a dispatch have no pull request, so the fork
-value is null and they select Ubicloud. A fork's pull request therefore
-restores a hosted cache that main no longer refreshes; fork pull requests are
-rare here (Dependabot pull requests are branches, not forks), and a second
-hosted writer would pay double on every main push.
+runner-selection expression:
+
+```yaml
+runs-on: >-
+  ${{ (github.event.pull_request.head.repo.fork
+  || github.event.pull_request.user.login == 'dependabot[bot]')
+  && 'ubuntu-latest' || 'ubicloud-standard-2' }}
+```
+
+A pull request from a fork cannot obtain an Ubicloud runner, so it falls back to
+`ubuntu-latest`. So does a pull request Dependabot opened: hosted minutes cost
+nothing on a public repository, and Dependabot opens many pull requests. The
+expression tests the pull request's author, not `github.actor`, because the
+actor changes when someone re-runs a job or pushes to the branch, which would
+flip the runner. A push and a dispatch have no pull request, so both values are
+null and they select Ubicloud. A fork's or Dependabot's pull request therefore
+restores a hosted cache that main no longer refreshes, and a Dependabot pull
+request builds cold; a second hosted writer would pay double on every main push.
 
 The writer sits on Ubicloud because Ubicloud's cache proxy is scoped by ref. A
 pull request's Ubicloud lane reads a warm main scope only when a main job on
@@ -172,11 +181,12 @@ minutes (a warm run took 12.7 min, run 36558912722); `coverage-upload` is at 5
 minutes (its first Ubicloud main run took 2.4 min, run 36556909060).
 
 `tests/runner_placement/placement_cases.rs` holds this to the files. It
-evaluates the expression for a push or dispatch, a same-repository pull request
-and a fork, rejects a literal label, inverted arms, another label and another
-condition, and asserts an exact inventory of the jobs that can land on Ubicloud
-with their ceilings. A change that adds, removes or re-times such a job fails
-it until the inventory is updated in the same commit.
+evaluates the expression for a push or dispatch, a same-repository pull
+request, a fork and a Dependabot pull request, rejects a literal label,
+inverted arms, another label, another condition, a missing Dependabot arm and
+an actor test, and asserts an exact inventory of the jobs that can land on
+Ubicloud with their ceilings. A change that adds, removes or re-times such a
+job fails it until the inventory is updated in the same commit.
 
 ## Repository layout
 
