@@ -11,7 +11,13 @@ jobs:
     # 2 s but a p90 of 563 s over six runs after 2026-09-24 (jobs API,
     # needs-aware). A pull request from a fork cannot obtain an Ubicloud
     # runner, so it falls back to the hosted pool.
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || 'ubicloud-standard-2' }}
+    # Dependabot pull requests run on the hosted pool too (free on a public
+    # repository). The author is tested, not the actor, which changes when
+    # someone else pushes to the branch.
+    runs-on: >-
+      ${{ (github.event.pull_request.head.repo.fork
+      || github.event.pull_request.user.login == 'dependabot[bot]')
+      && 'ubuntu-latest' || 'ubicloud-standard-2' }}
     # An Ubicloud runner is a self-hosted just-in-time runner with no
     # six-hour hosted cap, so the job states its own ceiling: twice the
     # warm Ubicloud run of 12.7 min (run 36558912722), rounded up to 30.
