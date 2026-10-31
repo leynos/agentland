@@ -79,7 +79,10 @@ the development standard.
 - Consequence: Whitaker links with the platform linker, and a caller's
   `RUSTFLAGS` no longer reaches it.
 - `tests/build_standard_support/make.rs` reads an isolated Whitaker command as
-  exempt from the restatement clauses.
+  exempt from the restatement clauses only when a `cd` precedes it on the
+  recipe line; `tests/whitaker_isolation_contract.rs` proves the parent
+  directory, the absolute manifest path and the literal `RUSTFLAGS` against the
+  real `make -n lint` output.
 - The development profile also sets `incremental = false` and `debug = 0`, and
   `.cargo/config.toml` the native `[unstable] embed-metadata = false` key for
   the dated nightly (the `rust-dev-build-footprint` rule), described in the

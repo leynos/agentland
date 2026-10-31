@@ -27,7 +27,7 @@ No project-specific graphics hardware feature is required by the placeholder
 build.
 
 Building from source requires the Rust toolchain pinned by
-`rust-toolchain.toml`: `nightly-2026-03-26`, with `rustfmt` and `clippy`
+`rust-toolchain.toml`: `nightly-2026-10-30`, with `rustfmt` and `clippy`
 components installed.
 
 ## Building and launching
