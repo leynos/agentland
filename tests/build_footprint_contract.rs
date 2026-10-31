@@ -153,7 +153,8 @@ mod cargo_boundary {
             .expect(".cargo must be creatable");
         dir.write(
             "Cargo.toml",
-            "[package]\nname = \"footprint\"\nversion = \"0.0.0\"\nedition = \"2024\"\n",
+            "[package]\nname = \"footprint\"\nversion = \"0.0.0\"\nedition = \
+             \"2024\"\n\n[workspace]\n",
         )
         .expect("the manifest must be writable");
         dir.write("src/lib.rs", "pub fn footprint() {}\n")
