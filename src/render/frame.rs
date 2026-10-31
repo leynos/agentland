@@ -39,7 +39,7 @@ impl<'frame> FrameBuffer<'frame> {
     pub(crate) fn clear(&mut self, color: Color) {
         let channels = color.channels();
 
-        for pixel in self.pixels.chunks_exact_mut(CHANNEL_COUNT) {
+        for pixel in self.pixels.as_chunks_mut::<CHANNEL_COUNT>().0 {
             pixel.copy_from_slice(&channels);
         }
     }
@@ -61,7 +61,12 @@ impl<'frame> FrameBuffer<'frame> {
 }
 
 fn fill_row_segment(row: &mut [u8], rect: Rect, width: usize, channels: [u8; CHANNEL_COUNT]) {
-    for (column_x, pixel) in row.chunks_exact_mut(CHANNEL_COUNT).enumerate() {
+    for (column_x, pixel) in row
+        .as_chunks_mut::<CHANNEL_COUNT>()
+        .0
+        .iter_mut()
+        .enumerate()
+    {
         if should_fill_column(rect, column_x, width) {
             pixel.copy_from_slice(&channels);
         }
@@ -87,7 +92,9 @@ mod tests {
         frame.fill_rect(Rect::new(1, 1, 4, 4), Color::rgba(1, 2, 3, 4));
 
         let coloured_pixels = pixels
-            .chunks_exact(4)
+            .as_chunks::<4>()
+            .0
+            .iter()
             .filter(|pixel| pixel.iter().copied().any(|channel| channel != 0))
             .count();
 
