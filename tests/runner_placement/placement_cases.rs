@@ -29,7 +29,10 @@ const ESTATE: &str = concat!(
 ///
 /// The inventory is exact, so a new Ubicloud lane without a ceiling, or a
 /// ceiling removed or changed, fails here until the change is reviewed.
-const CEILINGS: [(&str, &str, u64); 1] = [("ci.yml", "build-test", 30)];
+const CEILINGS: [(&str, &str, u64); 2] = [
+    ("ci.yml", "build-test", 30),
+    ("coverage-main.yml", "coverage-baseline", 15),
+];
 
 /// Scenario: the runner-selection expression is evaluated for each kind of run.
 ///

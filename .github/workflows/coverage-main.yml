@@ -105,7 +105,13 @@ jobs:
   # nothing. It carries no `if`: the action publishes only from a push.
   coverage-baseline:
     needs: coverage-upload
-    runs-on: ubicloud-standard-2
+    # The estate's selection expression, as ci.yml writes it: this
+    # repository's placement contract requires it of every Ubicloud lane,
+    # though a push-only workflow can never take the hosted arm.
+    runs-on: >-
+      ${{ (github.event.pull_request.head.repo.fork
+      || github.event.pull_request.user.login == 'dependabot[bot]')
+      && 'ubuntu-latest' || 'ubicloud-standard-2' }}
     timeout-minutes: 15
     permissions:
       contents: read
