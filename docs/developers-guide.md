@@ -127,7 +127,7 @@ own `RUSTFLAGS`) and for the release target (the coverage exclusion is checked
 in the workflow steps) on a Linux host, and the `setup-rust` steps of the CI
 workflows (each must pass `install-mold`), so a flag lost through a recipe or
 workflow edit fails there. The decision is recorded in
-[ADR 001](adr-001-rust-build-standard.md). The contract also holds the
+[ADR 001](adrs/adr-0001-rust-build-standard.md). The contract also holds the
 Cranelift declarations the development profile needs
 (`[unstable] codegen-backend = true`, the `rustc-codegen-cranelift-preview`
 component and the Whitaker action's `cranelift: 'true'` input). It runs
