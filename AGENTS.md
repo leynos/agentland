@@ -575,22 +575,6 @@ After a functional change passes quality gates, review nearby code for these
 signals. If refactoring helps, make it a separate atomic change after the
 functional change. Ensure tests pass before and after the refactor.
 
-## Additional tools
-
-Use available tools when they genuinely help:
-
-- `ripgrep` or `fd` for fast search
-- `bat`, `delta`, or `difft` for readable inspection and diffs
-- `mbake validate Makefile` or `checkmake` for Makefile validation
-- `shellcheck` for shell scripts
-- `hyperfine` for benchmark comparisons
-- `strace`, `ltrace`, `gdb`, `lldb`, `valgrind`, `bpftrace`, `lsof`, `htop`,
-  `iotop`, `ncdu`, `tree`, `eza`, `fzf`, `tcpdump`, and `nmap` for targeted
-  debugging and diagnostics
-
-Do not use a dramatic tool when a small command answers the question. Debugging
-should feel like turning on lights, not summoning weather.
-
 ## Key takeaway
 
 Use GPT Images 2 to explore and source visual richness. Use scripts and Rust to
