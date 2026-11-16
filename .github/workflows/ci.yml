@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Setup Rust
-        uses: leynos/shared-actions/.github/actions/setup-rust@a0519a1476ab769ca7b8badfa794f3751213f1ea
+        uses: leynos/shared-actions/.github/actions/setup-rust@1123a35f1cc7810f65bfffa5ea4c8b981d6c0090
         with:
           install-mold: 'true'
       - name: Setup uv
@@ -48,7 +48,7 @@ jobs:
       - name: Install mdtablefix
         # `make check-fmt` runs `mdtablefix --check --git`; 0.6.0 is the
         # first release with `--check` and `--git`.
-        uses: leynos/shared-actions/.github/actions/install-mdtablefix@a0519a1476ab769ca7b8badfa794f3751213f1ea
+        uses: leynos/shared-actions/.github/actions/install-mdtablefix@1123a35f1cc7810f65bfffa5ea4c8b981d6c0090
         with:
           version: "0.6.1"
 
@@ -61,7 +61,7 @@ jobs:
         with:
           globs: '**/*.md'
       - name: Install the Whitaker Dylint suite
-        uses: leynos/shared-actions/.github/actions/install-whitaker@a0519a1476ab769ca7b8badfa794f3751213f1ea
+        uses: leynos/shared-actions/.github/actions/install-whitaker@1123a35f1cc7810f65bfffa5ea4c8b981d6c0090
         with:
           # Cranelift is an opt-in backend, and the lint suite's toolchain
           # keeps rustc-codegen-cranelift so the opt-in works there too.
@@ -90,7 +90,7 @@ jobs:
           # linker. Assigning RUSTFLAGS displaces every `rustflags` table in
           # .cargo/config.toml.
           RUSTFLAGS: -D warnings
-        uses: leynos/shared-actions/.github/actions/generate-coverage@a0519a1476ab769ca7b8badfa794f3751213f1ea
+        uses: leynos/shared-actions/.github/actions/generate-coverage@1123a35f1cc7810f65bfffa5ea4c8b981d6c0090
         with:
           output-path: coverage.xml
           format: cobertura
