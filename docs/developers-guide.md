@@ -163,6 +163,16 @@ checkout precedes it on the same recipe line, and ADR 001 records the exception.
 and fails unless Whitaker starts from the checkout's parent, assigns the literal
 `RUSTFLAGS="-D warnings"` and names the manifest by absolute path.
 
+Whitaker also gates cognitive complexity. Clippy's `cognitive_complexity`
+scores code after macro expansion, so it counts branching a macro generated,
+and neither `Cargo.toml` nor `clippy.toml` enables it. Whitaker's experimental
+`macro_aware_cognitive_complexity` gates it at `max_complexity = 9`,
+CodeScene's ceiling. `dylint.toml` opts in with
+`[whitaker] experimental = ["macro_aware_cognitive_complexity"]`; Dylint reads
+it from the manifest's workspace root even though Whitaker starts outside the
+checkout. Fix a finding by extracting named helpers, never by raising the
+threshold.
+
 ### Cranelift
 
 LLVM is the default codegen backend: the estate standard dropped Cranelift,
