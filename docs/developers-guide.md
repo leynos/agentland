@@ -168,7 +168,7 @@ scores code after macro expansion, so it counts branching a macro generated,
 and neither `Cargo.toml` nor `clippy.toml` enables it. Whitaker's experimental
 `macro_aware_cognitive_complexity` gates it at `max_complexity = 9`,
 CodeScene's ceiling. `dylint.toml` opts in with
-`[whitaker] experimental = ["macro_aware_cognitive_complexity"]`; Dylint reads
+the `experimental` key in its `[whitaker]` table; Dylint reads
 it from the manifest's workspace root even though Whitaker starts outside the
 checkout. Fix a finding by extracting named helpers, never by raising the
 threshold.
